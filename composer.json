@@ -1,5 +1,5 @@
 {
-	"name": "icanboogie/icanboogie",
+	"name": "icanboogie/module",
 	"type": "library",
 	"description": "Provides module support to ICanBoogie.",
 	"keywords": [ "framework", "module" ],
