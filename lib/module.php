@@ -11,6 +11,7 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\ActiveRecord\Connection;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\ModelNotDefined;
 use ICanBoogie\I18n;
@@ -204,6 +205,8 @@ class Module extends Object
 	/**
 	 * Returns the identifier of the module as defined by its descriptor.
 	 *
+	 * This method is the getter for the {@link $id} magic property.
+	 *
 	 * @return string
 	 */
 	protected function volatile_get_id()
@@ -214,6 +217,8 @@ class Module extends Object
 	/**
 	 * Returns the path of the module as defined by its descriptor.
 	 *
+	 * This method is the getter for the {@link $path} magic property.
+	 *
 	 * @return string
 	 */
 	protected function volatile_get_path()
@@ -222,17 +227,16 @@ class Module extends Object
 	}
 
 	/**
-	 * Module's descriptor.
+	 * The descriptor of the module.
 	 *
 	 * @var array[string]mixed
 	 */
 	protected $descriptor;
 
 	/**
-	 * Returns the module's descriptor.
+	 * Returns the descriptor of the module.
 	 *
-	 * This is the getter for the {@link $descriptor} property, making the protected property
-	 * readable while out of scope.
+	 * This method is the getter for the {@link $descriptor} magic property.
 	 *
 	 * @return array[string]mixed
 	 */
@@ -241,11 +245,23 @@ class Module extends Object
 		return $this->descriptor;
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * Initializes the {@link $descriptor} property.
+	 *
+	 * @param array $descriptor
+	 */
 	public function __construct(array $descriptor)
 	{
 		$this->descriptor = $descriptor;
 	}
 
+	/**
+	 * Returns the identifier of the module.
+	 *
+	 * @return string
+	 */
 	public function __toString()
 	{
 		return $this->id;
@@ -298,7 +314,7 @@ class Module extends Object
 
 		$extends = $this->descriptor[self::T_EXTENDS];
 
-		return $extends ? $core->modules[$extends] : null;
+		return $extends ? ($extends instanceof self ? $extends : $core->modules[$extends]) : null;
 	}
 
 	/**
@@ -475,8 +491,8 @@ class Module extends Object
 	{
 		global $core;
 
-		$ns = $this->flat_id;
-		$table_name = $ns;
+		$id = $this->id;
+		$table_name = $this->flat_id;
 
 		if ($which != 'primary')
 		{
@@ -484,7 +500,7 @@ class Module extends Object
 		}
 
 		#
-		# The model may use another model, in which case the model to used is defined using a
+		# The model may use another model, in which case the model to use is defined using a
 		# string e.g. 'contents' or 'terms/nodes'
 		#
 
@@ -496,14 +512,14 @@ class Module extends Object
 			{
 				$class = get_parent_class($this);
 
-				foreach ($core->modules->descriptors as $id => $descriptor)
+				foreach ($core->modules->descriptors as $module_id => $descriptor)
 				{
 					if ($class != $descriptor['class'])
 					{
 						continue;
 					}
 
-					$model_name = $core->models[$id];
+					$model_name = $core->models[$module_id];
 
 					break;
 				}
@@ -522,8 +538,8 @@ class Module extends Object
 		$tags += array
 		(
 			Model::CONNECTION => 'primary',
-			Model::ID => $which == 'primary' ? $this->id : $this->id . '/' . $which,
-// 			Model::NAME => $table_name
+			Model::ID => $which == 'primary' ? $id : $id . '/' . $which,
+			Model::NAME => $table_name
 		);
 
 		#
@@ -557,16 +573,16 @@ class Module extends Object
 			{
 				if (isset($implement['model']))
 				{
-					list($i_module, $i_which) = explode('/', $implement['model']) + array(1 => 'primary');
+					list($implement_id, $implement_which) = explode('/', $implement['model']) + array(1 => 'primary');
 
-					if ($this->id == $i_module && $which == $i_which)
+					if ($id == $implement_id && $which == $implement_which)
 					{
-						throw new Exception('Model %module/%model implements itself !', array('%module' => $this->id, '%model' => $which));
+						throw new Exception('Model %module/%model implements itself !', array('%module' => $id, '%model' => $which));
 					}
 
-					$module = ($i_module == $this->id) ? $this : $core->modules[$i_module];
+					$module = ($implement_id == $id) ? $this : $core->modules[$implement_id];
 
-					$implement['table'] = $module->model($i_which);
+					$implement['table'] = $module->model($implement_which);
 				}
 				else if (is_string($implement['table']))
 				{
@@ -575,7 +591,7 @@ class Module extends Object
 						'Model %model of module %module implements a table: %table', array
 						(
 							'%model' => $which,
-							'%module' => $this->id,
+							'%module' => $id,
 							'%table' => $implement['table']
 						)
 					);
@@ -600,12 +616,10 @@ class Module extends Object
 
 		$connection = $tags[Model::CONNECTION];
 
-		if (is_string($connection))
+		if (!($connection instanceof Connection))
 		{
 			$tags[Model::CONNECTION] = $core->connections[$connection];
 		}
-
-		var_dump($tags);
 
 		return $tags;
 	}
