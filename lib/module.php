@@ -20,9 +20,10 @@ use ICanBoogie\I18n;
  *
  * @property-read array $description The description of the module.
  * @property-read string $flat_id Underscored identifier.
- * @property-read string $id The identifier of the module.
+ * @property-read string $id The identifier of the module, defined by {@link T_ID}.
  * @property-read Model $model The primary model of the module.
  * @property-read Module $parent The parent module, defined by {@link T_EXTENDS}.
+ * @property-read string $path The path to the module, defined by {@link T_PATH}.
  * @property-read string $title The localized title of the module.
  */
 class Module extends Object
@@ -201,25 +202,24 @@ class Module extends Object
 	const OPERATION_DELETE = 'delete';
 
 	/**
-	 * Unique identifier of the module.
-	 *
-	 * This property is usually defined by the {@link T_ID} tag.
-	 *
-	 * @var string
-	 */
-	protected $id;
-
-	/**
-	 * Returns the module identifier.
+	 * Returns the identifier of the module as defined by its descriptor.
 	 *
 	 * @return string
 	 */
 	protected function volatile_get_id()
 	{
-		return $this->id;
+		return $this->descriptor[self::T_ID];
 	}
 
-	protected $path;
+	/**
+	 * Returns the path of the module as defined by its descriptor.
+	 *
+	 * @return string
+	 */
+	protected function volatile_get_path()
+	{
+		return $this->descriptor[self::T_PATH];
+	}
 
 	/**
 	 * Module's descriptor.
@@ -244,20 +244,11 @@ class Module extends Object
 	public function __construct(array $descriptor)
 	{
 		$this->descriptor = $descriptor;
-		$this->id = $descriptor[self::T_ID];
-		$this->path = $descriptor[self::T_PATH];
 	}
 
 	public function __toString()
 	{
 		return $this->id;
-	}
-
-	protected function volatile_get_tags()
-	{
-		trigger_error("The <q>tags</q> property is deprecated");
-
-		return $this->descriptor;
 	}
 
 	/**
@@ -485,19 +476,12 @@ class Module extends Object
 		global $core;
 
 		$ns = $this->flat_id;
-
-		$has_model_class = file_exists($this->path . $which . '.model.php');
-		$has_ar_class = file_exists($this->path . $which . '.ar.php');
-
 		$table_name = $ns;
 
 		if ($which != 'primary')
 		{
 			$table_name .= '__' . $which;
 		}
-
-		$modules = $core->modules;
-		$models = $core->models;
 
 		#
 		# The model may use another model, in which case the model to used is defined using a
@@ -512,14 +496,14 @@ class Module extends Object
 			{
 				$class = get_parent_class($this);
 
-				foreach ($modules->descriptors as $id => $descriptor)
+				foreach ($core->modules->descriptors as $id => $descriptor)
 				{
 					if ($class != $descriptor['class'])
 					{
 						continue;
 					}
 
-					$model_name = $models[$id];
+					$model_name = $core->models[$id];
 
 					break;
 				}
@@ -531,15 +515,15 @@ class Module extends Object
 			);
 		}
 
-
 		#
 		# defaults
 		#
 
 		$tags += array
 		(
-			Model::T_CONNECTION => 'primary',
-			Model::T_ID => $which == 'primary' ? $this->id : $this->id . '/' . $which
+			Model::CONNECTION => 'primary',
+			Model::ID => $which == 'primary' ? $this->id : $this->id . '/' . $which,
+// 			Model::NAME => $table_name
 		);
 
 		#
@@ -552,7 +536,7 @@ class Module extends Object
 
 			if (is_string($extends))
 			{
-				$extends = $models[$extends];
+				$extends = $core->models[$extends];
 			}
 
 			if (!$tags[Model::T_CLASS])
@@ -580,7 +564,7 @@ class Module extends Object
 						throw new Exception('Model %module/%model implements itself !', array('%module' => $this->id, '%model' => $which));
 					}
 
-					$module = ($i_module == $this->id) ? $this : $modules[$i_module];
+					$module = ($i_module == $this->id) ? $this : $core->modules[$i_module];
 
 					$implement['table'] = $module->model($i_which);
 				}
@@ -605,21 +589,23 @@ class Module extends Object
 		# default class, if none was defined.
 		#
 
-		if (!$tags[Model::T_CLASS])
+		if (empty($tags[Model::CLASSNAME]))
 		{
-			$tags[Model::T_CLASS] = 'ICanBoogie\ActiveRecord\Model';
+			$tags[Model::CLASSNAME] = 'ICanBoogie\ActiveRecord\Model';
 		}
 
 		#
 		# connection
 		#
 
-		$connection = $tags[Model::T_CONNECTION];
+		$connection = $tags[Model::CONNECTION];
 
 		if (is_string($connection))
 		{
-			$tags[Model::T_CONNECTION] = $core->connections[$connection];
+			$tags[Model::CONNECTION] = $core->connections[$connection];
 		}
+
+		var_dump($tags);
 
 		return $tags;
 	}
