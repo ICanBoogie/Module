@@ -66,7 +66,7 @@ class DeleteOperation extends Operation
 			$this->response->location = $this->request['redirect_to'];
 		}
 
-		$this->response->message = new FormattedString('The record %key has been delete from %module.', array('key' => $key, 'module' => $this->module->title));
+		$this->response->message = new FormattedString('The record %key has been deleted from %module.', array('key' => $key, 'module' => $this->module->title));
 
 		return $key;
 	}
