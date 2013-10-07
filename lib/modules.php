@@ -568,7 +568,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 			Module::T_CATEGORY => null,
 			Module::T_CLASS => $descriptor[Module::T_NAMESPACE] . '\Module',
 			Module::T_DESCRIPTION => null,
-			Module::T_DISABLED => empty($descriptor[Module::T_REQUIRED]),
+			Module::T_DISABLED => false,
 			Module::T_EXTENDS => null,
 			Module::T_ID => $id,
 			Module::T_MODELS => array(),
