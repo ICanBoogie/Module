@@ -542,6 +542,11 @@ class Module extends Object
 			Model::ID => $which == 'primary' ? $id : $id . '/' . $which
 		);
 
+		if (empty($tags[Model::NAME]))
+		{
+			$tags[Model::NAME] = Modules::format_model_name($id, $which);
+		}
+
 		#
 		# relations
 		#
