@@ -276,7 +276,14 @@ class Module extends Object
 	 */
 	protected function volatile_get_flat_id()
 	{
-		return strtr($this->id, '.', '_');
+		return strtr
+		(
+			$this->id, array
+			(
+				'.' => '_',
+				'-' => '_'
+			)
+		);
 	}
 
 	/**
@@ -491,14 +498,6 @@ class Module extends Object
 	{
 		global $core;
 
-		$id = $this->id;
-		$table_name = $this->flat_id;
-
-		if ($which != 'primary')
-		{
-			$table_name .= '__' . $which;
-		}
-
 		#
 		# The model may use another model, in which case the model to use is defined using a
 		# string e.g. 'contents' or 'terms/nodes'
@@ -535,11 +534,12 @@ class Module extends Object
 		# defaults
 		#
 
+		$id = $this->id;
+
 		$tags += array
 		(
 			Model::CONNECTION => 'primary',
-			Model::ID => $which == 'primary' ? $id : $id . '/' . $which,
-			Model::NAME => $table_name
+			Model::ID => $which == 'primary' ? $id : $id . '/' . $which
 		);
 
 		#

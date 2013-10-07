@@ -34,7 +34,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 */
 	static public function format_model_name($module_id, $model_id='primary')
 	{
-		return strtr($module_id, '.', '_') . ($model_id == 'primary' ? '' : '__' . $model_id);
+		return preg_replace('#[^0-9,a-z,A-Z$_]#', '_', $module_id) . ($model_id == 'primary' ? '' : '__' . $model_id);
 	}
 
 	/**
@@ -324,19 +324,17 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		$configs = array();
 		$config_constructors = array();
 
-		foreach ($descriptors as $id => &$descriptor)
+		foreach ($descriptors as $id => $descriptor)
 		{
 			$path = $descriptor[Module::T_PATH];
 
-			if (is_dir($path . '/locale'))
+			if ($descriptor['__has_locale'])
 			{
-				$descriptor['__has_locale'] = true;
 				$catalogs[] = $path;
 			}
 
-			if (is_dir($path . '/config'))
+			if ($descriptor['__has_config'])
 			{
-				$descriptor['__has_config'] = true;
 				$configs[] = $path;
 
 				$core_config_path = $path . '/config/core.php';
@@ -392,112 +390,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 */
 	protected function index_descriptors(array $paths)
 	{
-		$descriptors = array();
-
-		foreach ($paths as $root)
-		{
-			$root = rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-
-			try
-			{
-				$dir = new \DirectoryIterator($root);
-			}
-			catch (\Exception $e)
-			{
-				throw new Exception('Unable to open directory %root', array('root' => $root));
-			}
-
-			foreach ($dir as $file)
-			{
-				if ($file->isDot() || !$file->isDir())
-				{
-					continue;
-				}
-
-				$id = $file->getFilename();
-				$path = $root . $id . DIRECTORY_SEPARATOR;
-				$descriptor_path = $path . 'descriptor.php';
-				$descriptor = require $descriptor_path;
-
-				if (!is_array($descriptor))
-				{
-					throw new \InvalidArgumentException(format
-					(
-						'%var should be an array: %type given instead in %path', array
-						(
-							'var' => 'descriptor',
-							'type' => gettype($descriptor),
-							'path' => strip_root($descriptor_path)
-						)
-					));
-				}
-
-				if (empty($descriptor[Module::T_TITLE]))
-				{
-					throw new \InvalidArgumentException(format
-					(
-						'The %name value of the %id module descriptor is empty in %path.', array
-						(
-							'name' => Module::T_TITLE,
-							'id' => $id,
-							'path' => strip_root($descriptor_path)
-						)
-					));
-				}
-
-				if (empty($descriptor[Module::T_NAMESPACE]))
-				{
-					throw new \InvalidArgumentException(format
-					(
-						'%name is required. Invalid descriptor for module %id in %path.', array
-						(
-							'name' => Module::T_NAMESPACE,
-							'id' => $id,
-							'path' => strip_root($descriptor_path)
-						)
-					));
-				}
-
-				/*TODO-20120108: activate version checking
-				if (empty($descriptor[Module::T_VERSION]))
-				{
-					throw new Exception
-					(
-						'The %name value of the %id module descriptor is empty in %path.', array
-						(
-							'name' => Module::T_VERSION,
-							'id' => $id,
-							'path' => $descriptor_path
-						)
-					);
-				}
-				*/
-
-				$descriptor += array
-				(
-					Module::T_CATEGORY => null,
-					Module::T_CLASS => $descriptor[Module::T_NAMESPACE] . '\Module',
-					Module::T_DESCRIPTION => null,
-					Module::T_DISABLED => empty($descriptor[Module::T_REQUIRED]),
-					Module::T_EXTENDS => null,
-					Module::T_ID => $id,
-					Module::T_MODELS => array(),
-					Module::T_PATH => $path,
-					Module::T_PERMISSION => null,
-					Module::T_PERMISSIONS => array(),
-					Module::T_REQUIRED => false,
-					Module::T_REQUIRES => array(),
-					Module::T_VERSION => 'dev',
-					Module::T_WEIGHT => 0,
-
-					'__has_config' => false,
-					'__has_locale' => false,
-					'__parents' => array()
-				);
-
-				$descriptors[$id] = $descriptor;
-			}
-		}
+		$descriptors = $this->collect_descriptors($paths);
 
 		if (!$descriptors)
 		{
@@ -549,6 +442,148 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		}
 
 		return $descriptors;
+	}
+
+	protected function collect_descriptors(array $paths)
+	{
+		$descriptors = array();
+
+		foreach ($paths as $root)
+		{
+			$root = rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+			$descriptor_path = $root . 'descriptor.php';
+
+			if (file_exists($descriptor_path))
+			{
+				$id = basename($root);
+				$descriptor = $this->read_descriptor($id, $root);
+
+				$descriptors[$id] = $descriptor;
+			}
+			else
+			{
+				try
+				{
+					$dir = new \DirectoryIterator($root);
+				}
+				catch (\Exception $e)
+				{
+					throw new Exception('Unable to open directory %root', array('root' => $root));
+				}
+
+				foreach ($dir as $file)
+				{
+					if ($file->isDot() || !$file->isDir())
+					{
+						continue;
+					}
+
+					$id = $file->getFilename();
+					$path = $root . $id . DIRECTORY_SEPARATOR;
+					$descriptor = $this->read_descriptor($id, $path);
+
+					$descriptors[$id] = $descriptor;
+				}
+			}
+		}
+
+		return $descriptors;
+	}
+
+	/**
+	 * Reads the descriptor file.
+	 *
+	 * The descriptor file is extended with private values and default values.
+	 *
+	 * @param string $id The identifier of the module.
+	 * @param string $path The path to the directory where the descriptor is located.
+	 * @throws \InvalidArgumentException in the following situations:
+	 * - The descriptor is not an array
+	 * - The {@link T_TITLE} key is empty.
+	 * - The {@link T_NAMESPACE} key is empty.
+	 *
+	 * @return array
+	 */
+	protected function read_descriptor($id, $path)
+	{
+		$descriptor_path = $path . 'descriptor.php';
+		$descriptor = require $descriptor_path;
+
+		if (!is_array($descriptor))
+		{
+			throw new \InvalidArgumentException(format
+			(
+				'%var should be an array: %type given instead in %path', array
+				(
+					'var' => 'descriptor',
+					'type' => gettype($descriptor),
+					'path' => strip_root($descriptor_path)
+				)
+			));
+		}
+
+		if (empty($descriptor[Module::T_TITLE]))
+		{
+			throw new \InvalidArgumentException(format
+			(
+				'The %name value of the %id module descriptor is empty in %path.', array
+				(
+					'name' => Module::T_TITLE,
+					'id' => $id,
+					'path' => strip_root($descriptor_path)
+				)
+			));
+		}
+
+		if (empty($descriptor[Module::T_NAMESPACE]))
+		{
+			throw new \InvalidArgumentException(format
+			(
+				'%name is required. Invalid descriptor for module %id in %path.', array
+				(
+					'name' => Module::T_NAMESPACE,
+					'id' => $id,
+					'path' => strip_root($descriptor_path)
+				)
+			));
+		}
+
+		/*TODO-20120108: activate version checking
+		if (empty($descriptor[Module::T_VERSION]))
+		{
+			throw new Exception
+			(
+				'The %name value of the %id module descriptor is empty in %path.', array
+				(
+					'name' => Module::T_VERSION,
+					'id' => $id,
+					'path' => $descriptor_path
+				)
+			);
+		}
+		*/
+
+		return $descriptor + array
+		(
+			Module::T_CATEGORY => null,
+			Module::T_CLASS => $descriptor[Module::T_NAMESPACE] . '\Module',
+			Module::T_DESCRIPTION => null,
+			Module::T_DISABLED => empty($descriptor[Module::T_REQUIRED]),
+			Module::T_EXTENDS => null,
+			Module::T_ID => $id,
+			Module::T_MODELS => array(),
+			Module::T_PATH => $path,
+			Module::T_PERMISSION => null,
+			Module::T_PERMISSIONS => array(),
+			Module::T_REQUIRED => false,
+			Module::T_REQUIRES => array(),
+			Module::T_VERSION => 'dev',
+			Module::T_WEIGHT => 0,
+
+			'__has_config' => is_dir($path . '/config'),
+			'__has_locale' => is_dir($path . '/locale'),
+			'__parents' => array()
+		);
 	}
 
 	/**
@@ -828,6 +863,11 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		}
 
 		return false;
+	}
+
+	public function add_from_path($path)
+	{
+
 	}
 }
 
