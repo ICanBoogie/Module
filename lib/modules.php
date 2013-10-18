@@ -235,7 +235,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 
 		if (!class_exists($class, true))
 		{
-			throw new Exception('Missing class %class to instantiate module %id.', array('%class' => $class, '%id' => $id));
+			throw new ModuleConstructorMissing($id, $class);
 		}
 
 		return $this->modules[$id] = new $class($descriptor);
@@ -864,11 +864,6 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 
 		return false;
 	}
-
-	public function add_from_path($path)
-	{
-
-	}
 }
 
 /*
@@ -876,7 +871,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
  */
 
 /**
- * This exception is thrown when a disabled module is requested.
+ * Exception thrown when a disabled module is requested.
  *
  * @property-read string $module_id The identifier of the disabled module.
  */
@@ -903,12 +898,17 @@ class ModuleIsDisabled extends \RuntimeException
 }
 
 /**
- * This exception is thrown when requested module is not defined.
+ * Exception thrown when a requested module is not defined.
  *
  * @property-read string $module_id The identifier of the module that is not defined.
  */
 class ModuleNotDefined extends \RuntimeException
 {
+	/**
+	 * Identifier of the module.
+	 *
+	 * @var string
+	 */
 	private $module_id;
 
 	public function __construct($module_id, $code=500, \Exception $previous=null)
@@ -923,6 +923,51 @@ class ModuleNotDefined extends \RuntimeException
 		if ($property == 'module_id')
 		{
 			return $this->module_id;
+		}
+
+		throw new PropertyNotDefined(array($property, $this));
+	}
+}
+
+/**
+ * Exception thrown when a class is missing to instantiate a module.
+ *
+ * @property-read string $module_id The identifier of the module.
+ * @property-read string $class The name of the missing class.
+ */
+class ModuleConstructorMissing extends \RuntimeException
+{
+	/**
+	 * Identifier of the module.
+	 *
+	 * @var string
+	 */
+	private $module_id;
+
+	/**
+	 * Class name of the module.
+	 *
+	 * @var string
+	 */
+	private $class;
+
+	public function __construct($module_id, $class, $code=500, \Exception $previous=null)
+	{
+		$this->module_id = $module_id;
+		$this->class = $class;
+
+		parent::__construct(format('Missing class %class to instantiate module %id.', array('class' => $class, 'id' => $id)));
+	}
+
+	public function __get($property)
+	{
+		if ($property == 'module_id')
+		{
+			return $this->module_id;
+		}
+		else if ($property == 'class')
+		{
+			return $this->class;
 		}
 
 		throw new PropertyNotDefined(array($property, $this));
