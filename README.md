@@ -12,10 +12,10 @@ execute a desired functionality.
 
 ## Defining a module
 
-It take two files to define a module: a descriptor and another where the class used to instantiate
-the module is defined. The descriptor is a `descriptor.php` file that must be located at the root
-of the module directory. The class is usually located in the file 'lib/module.php`. The module
-directory is usually named with the identifier of the module.
+It takes at least two files to define a module: a descriptor and another where the class used to
+instantiate the module is defined. The descriptor is a `descriptor.php` file that must be located
+at the root of the module directory. The class is usually located in the file 'lib/module.php`.
+The module directory is usually named with the identifier of the module.
 
 The following directory structure demonstrates how a very basic `nodes` module could be defined:
 
@@ -56,7 +56,8 @@ The following directory structure demonstrates a more advanced module:
 ### The descriptor
 
 The descriptor is a very important file because it desribes the module and its models. At the
-very least the descriptor must define the title and the namespace of the module.
+very least the descriptor must define the title and the namespace of the module (yes namespace is
+mandatory).
 
 The following code is the descriptor of the [Nodes][] module. You'll notice that the module
 is using the namespace `Icybee\Modules\Nodes`.
@@ -115,6 +116,48 @@ return array
 	Module::T_VERSION => '1.0'
 );
 ```
+
+
+
+
+
+#### Descriptor tags
+
+Here are the tags that can be used to define the module's descriptor.
+
+- `T_CATEGORY`: Defines the category for the module.
+- `T_CLASS`: Defines the PHP class of the module. Defaults to `<namespace>\Module`.
+- `T_DESCRIPTION`: Defines a short description of the module.
+- `T_EXTENDS`: Defines the module that the module extends.
+- `T_ID`: Defines the identifier of the module. Defaults to its directory name.
+- `T_REQUIRED`: Defines that the module is required and cannot be disabled.
+- `T_REQUIRES`: Defines the modules (and the versions) that the module requires.
+- `T_MODELS`: Defines the models of the module. Take a look at the [ActiveRecord package][] for
+more informations about ActiveRecords and models.
+- `T_NAMESPACE`: Defines the namespace of the module.
+- `T_PERMISSION`: Defines the general permission required to use this module.
+- `T_PERMISSIONS`: Defines module specific permissions.
+- `T_TITLE`: Defines the title of the module.
+- `T_VERSION`: Defines the version of the module.
+
+
+
+
+
+### Operations
+
+Module operations are usually defined in the "lib/operations" directory. For example a `save`
+operation would be a class named `SaveOperation` declared within the namespace of the module,
+located in a "save.php" file.
+
+Operations are considered inherited. If the `save` operation is requested on a _News_ module,
+the framework tries to locate the best matching operation class, according to the modules it
+extends:
+
+- `..\News\SaveOperation`
+- `..\Contents\SaveOperation`
+- `..\Nodes\SaveOperation`
+
 
 
 
@@ -186,6 +229,69 @@ isset($modules['undefined_module']); // false
 
 
 
+## (Un)Installing modules
+
+Modules are installed using the `install()` method, and uninstalled using the
+`uninstall()` method. The `is_installed()` method returns the installation state of the
+module and also collects the reasons why the module is not installed.
+
+```php
+<?php
+
+use ICanBoogie\Errors;
+
+$nodes = $models['nodes'];
+$errors = new Errors;
+
+if (!$nodes->is_installed($errors))
+{
+	#
+	# $errors might contain messages about why the module is not installed
+	#
+
+	$errors->clean();
+
+	if (!$nodes->install($errors))
+	{
+		#
+		# $errors might contain the reasons why the module failed to install
+		#
+	}
+}
+
+$nodes->uninstall();
+```
+
+
+
+
+
+## An enhanced model provider
+
+The package provides an enhanced model provider, which extends the model provider that comes with
+the [ActiveRecord package] to add support for models defined by modules.
+
+For instance, using this provider you can access the primary model defined by the [Nodes][] module
+as follows:
+
+```php
+<?php
+
+$nodes_model = $core->models['nodes'];
+```
+
+And if the [Nodes][] module was defining an `attachments` model:
+
+```php
+<?php
+
+$nodes_attachments_model = $core->models['nodes/attachments'];
+```
+
+
+
+
+
 
 ## Requirement
 
@@ -209,6 +315,14 @@ Create a `composer.json` file and run `php composer.phar install` command to ins
 	}
 }
 ```
+
+The following packages are required, you might want to check them out:
+
+- [icanboogie/common](https://github.com/ICanBoogie/Common)
+- [icanboogie/inflector](https://github.com/ICanBoogie/Inflector)
+- [icanboogie/prototype](https://github.com/ICanBoogie/Prototype)
+- [icanboogie/activerecord](https://github.com/ICanBoogie/ActiveRecord)
+- [icanboogie/errors](https://github.com/ICanBoogie/Errors)
 
 
 
@@ -249,4 +363,5 @@ ICanBoogie/Module is licensed under the New BSD License - See the [LICENSE](http
 [ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.ModuleNotDefined.html
 [ModuleIsDisabled]: http://icanboogie.org/docs/class-ICanBoogie.ModuleIsDisabled.html
 [ModuleConstructorMissing]: http://icanboogie.org/docs/class-ICanBoogie.ModuleConstructorMissing.html
+[ActiveRecord package]: https://github.com/ICanBoogie/ActiveRecord
 [Nodes]: https://github.com/Icybee/module-nodes
