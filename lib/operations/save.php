@@ -41,9 +41,9 @@ class SaveOperation extends Operation
 	/**
 	 * Overrides the getter to prevent exceptions when the operation key is empty.
 	 */
-	protected function get_record()
+	protected function lazy_get_record()
 	{
-		return $this->key ? parent::get_record() : null;
+		return $this->key ? parent::lazy_get_record() : null;
 	}
 
 	/**
@@ -74,7 +74,7 @@ class SaveOperation extends Operation
 	 *
 	 * @return array The properties of the operation.
 	 */
-	protected function get_properties()
+	protected function lazy_get_properties()
 	{
 		$schema = $this->module->model->extended_schema;
 		$fields = $schema['fields'];

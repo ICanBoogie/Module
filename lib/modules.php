@@ -262,7 +262,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array
 	 */
-	protected function get_index()
+	protected function lazy_get_index()
 	{
 		if ($this->cache)
 		{
@@ -674,7 +674,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array
 	 */
-	protected function get_disabled_modules_descriptors()
+	protected function lazy_get_disabled_modules_descriptors()
 	{
 		$this->sort_modules_descriptors();
 
@@ -688,7 +688,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array
 	 */
-	protected function get_enabled_modules_descriptors()
+	protected function lazy_get_enabled_modules_descriptors()
 	{
 		$this->sort_modules_descriptors();
 
@@ -700,7 +700,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array[]string
 	 */
-	protected function get_locale_paths()
+	protected function lazy_get_locale_paths()
 	{
 		$paths = array();
 
@@ -722,7 +722,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array[]string
 	 */
-	protected function get_config_paths()
+	protected function lazy_get_config_paths()
 	{
 		$paths = array();
 

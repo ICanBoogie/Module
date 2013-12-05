@@ -72,17 +72,25 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
+	/**
+	 * @dataProvider provide_test_write_readonly_property
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function test_write_readonly_property($property)
+	{
+		self::$node_module->$property = null;
+	}
+
+	public function provide_test_write_readonly_property()
+	{
+		$properties = 'descriptor|flat_id|id|model|parent|path|title';
+
+		return array_map(function($v) { return (array) $v; }, explode('|', $properties));
+	}
+
 	public function test_get_descriptor()
 	{
 		$this->assertEquals(self::$node_descriptor, self::$node_module->descriptor);
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function test_set_descriptor()
-	{
-		self::$node_module->descriptor = null;
 	}
 
 	public function test_get_flat_id()
@@ -96,31 +104,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('name_space_to_id', $m->flat_id);
 	}
 
-	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function test_set_flat_id()
-	{
-		$m = new Module(array
-		(
-			Module::T_ID => 'name.space.to.id',
-			Module::T_TITLE => 'Nodes'
-		));
-
-		$m->flat_id = null;
-	}
-
 	public function test_get_id()
 	{
 		$this->assertEquals(self::$node_descriptor[Module::T_ID], self::$node_module->id);
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function test_set_id()
-	{
-		self::$node_module->id = null;
 	}
 
 	public function test_get_model()
@@ -128,24 +114,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('ICanBoogie\ActiveRecord\Model', self::$node_module->model);
 	}
 
-	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function test_set_model()
-	{
-		self::$node_module->model = null;
-	}
-
 	public function test_get_parent()
 	{
 		$this->assertEquals(self::$node_module, self::$content_module->parent);
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function test_set_parent()
-	{
-		self::$node_module->parent = null;
 	}
 }

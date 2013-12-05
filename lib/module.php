@@ -209,7 +209,7 @@ class Module extends Object
 	 *
 	 * @return string
 	 */
-	protected function volatile_get_id()
+	protected function get_id()
 	{
 		return $this->descriptor[self::T_ID];
 	}
@@ -221,7 +221,7 @@ class Module extends Object
 	 *
 	 * @return string
 	 */
-	protected function volatile_get_path()
+	protected function get_path()
 	{
 		return $this->descriptor[self::T_PATH];
 	}
@@ -240,7 +240,7 @@ class Module extends Object
 	 *
 	 * @return array[string]mixed
 	 */
-	protected function volatile_get_descriptor()
+	protected function get_descriptor()
 	{
 		return $this->descriptor;
 	}
@@ -274,7 +274,7 @@ class Module extends Object
 	 *
 	 * @return string
 	 */
-	protected function volatile_get_flat_id()
+	protected function get_flat_id()
 	{
 		return strtr
 		(
@@ -293,7 +293,7 @@ class Module extends Object
 	 *
 	 * @return ActiveRecord\Model
 	 */
-	protected function volatile_get_model()
+	protected function get_model()
 	{
 		return $this->model();
 	}
@@ -303,7 +303,7 @@ class Module extends Object
 	 *
 	 * @return string
 	 */
-	protected function volatile_get_title()
+	protected function get_title()
 	{
 		$default = isset($this->descriptor[self::T_TITLE]) ? $this->descriptor[self::T_TITLE] : 'Undefined';
 
@@ -315,7 +315,7 @@ class Module extends Object
 	 *
 	 * @return Module|null
 	 */
-	protected function volatile_get_parent()
+	protected function get_parent()
 	{
 		global $core;
 
