@@ -455,7 +455,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 
 			if (file_exists($descriptor_path))
 			{
-				$id = basename($root);
+				$id = basename(realpath($root));
 				$descriptor = $this->read_descriptor($id, $root);
 
 				$descriptors[$id] = $descriptor;
