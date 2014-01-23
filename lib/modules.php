@@ -956,7 +956,7 @@ class ModuleConstructorMissing extends \RuntimeException
 		$this->module_id = $module_id;
 		$this->class = $class;
 
-		parent::__construct(format('Missing class %class to instantiate module %id.', array('class' => $class, 'id' => $id)));
+		parent::__construct(format('Missing class %class to instantiate module %id.', array('class' => $class, 'id' => $module_id)));
 	}
 
 	public function __get($property)
