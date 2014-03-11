@@ -276,14 +276,12 @@ class Module extends Object
 	 */
 	protected function get_flat_id()
 	{
-		return strtr
-		(
-			$this->id, array
-			(
-				'.' => '_',
-				'-' => '_'
-			)
-		);
+		return strtr($this->id, [
+
+			'.' => '_',
+			'-' => '_'
+
+		]);
 	}
 
 	/**
@@ -307,7 +305,7 @@ class Module extends Object
 	{
 		$default = isset($this->descriptor[self::T_TITLE]) ? $this->descriptor[self::T_TITLE] : 'Undefined';
 
-		return I18n\t($this->flat_id, array(), array('scope' => 'module_title', 'default' => $default));
+		return I18n\t($this->flat_id, [], [ 'scope' => 'module_title', 'default' => $default ]);
 	}
 
 	/**
@@ -383,7 +381,7 @@ class Module extends Object
 
 			if (!$model->install())
 			{
-				$errors[$this->id] = t('Unable to install model %model', array('%model' => $name));
+				$errors[$this->id] = t('Unable to install model %model', [ '%model' => $name ]);
 
 				$rc = false;
 			}
@@ -432,7 +430,7 @@ class Module extends Object
 	 *
 	 * @var array[string]ActiveRecord\Model
 	 */
-	protected $models = array();
+	protected $models = [];
 
 	/**
 	 * Get a model from the module.
@@ -524,10 +522,7 @@ class Module extends Object
 				}
 			}
 
-			$tags = array
-			(
-				Model::T_EXTENDS => $model_name
-			);
+			$tags = [ Model::T_EXTENDS => $model_name ];
 		}
 
 		#
@@ -536,11 +531,12 @@ class Module extends Object
 
 		$id = $this->id;
 
-		$tags += array
-		(
+		$tags += [
+
 			Model::CONNECTION => 'primary',
 			Model::ID => $which == 'primary' ? $id : $id . '/' . $which
-		);
+
+		];
 
 		if (empty($tags[Model::NAME]))
 		{
@@ -578,11 +574,11 @@ class Module extends Object
 			{
 				if (isset($implement['model']))
 				{
-					list($implement_id, $implement_which) = explode('/', $implement['model']) + array(1 => 'primary');
+					list($implement_id, $implement_which) = explode('/', $implement['model']) + [ 1 => 'primary' ];
 
 					if ($id == $implement_id && $which == $implement_which)
 					{
-						throw new Exception('Model %module/%model implements itself !', array('%module' => $id, '%model' => $which));
+						throw new Exception('Model %module/%model implements itself !', [ '%module' => $id, '%model' => $which ]);
 					}
 
 					$module = ($implement_id == $id) ? $this : $core->modules[$implement_id];
@@ -591,15 +587,13 @@ class Module extends Object
 				}
 				else if (is_string($implement['table']))
 				{
-					throw new Exception
-					(
-						'Model %model of module %module implements a table: %table', array
-						(
-							'%model' => $which,
-							'%module' => $id,
-							'%table' => $implement['table']
-						)
-					);
+					throw new Exception('Model %model of module %module implements a table: %table', [
+
+						'%model' => $which,
+						'%module' => $id,
+						'%table' => $implement['table']
+
+					]);
 
 					$implement['table'] = $models[$implement['table']];
 				}
@@ -650,24 +644,22 @@ class Module extends Object
 		{
 			array_shift($args);
 
-			return call_user_func_array(array($this, $method_name), $args);
+			return call_user_func_array([ $this, $method_name ], $args);
 		}
 
 		$callback = 'block_' . $name;
 
 		if (!method_exists($this, $callback))
 		{
-			throw new Exception
-			(
-				'The %method method is missing from the %module module to create block %type.', array
-				(
-					'%method' => $callback,
-					'%module' => $this->id,
-					'%type' => $name
-				)
-			);
+			throw new Exception('The %method method is missing from the %module module to create block %type.', [
+
+				'%method' => $callback,
+				'%module' => $this->id,
+				'%type' => $name
+
+			]);
 		}
 
-		return call_user_func_array(array($this, $callback), $args);
+		return call_user_func_array([ $this, $callback ], $args);
 	}
 }

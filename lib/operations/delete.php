@@ -27,14 +27,13 @@ class DeleteOperation extends Operation
 	 */
 	protected function get_controls()
 	{
-		return array
-		(
+		return [
+
 			self::CONTROL_PERMISSION => Module::PERMISSION_MANAGE,
 			self::CONTROL_RECORD => true,
 			self::CONTROL_OWNERSHIP => true
-		)
 
-		+ parent::get_controls();
+		] + parent::get_controls();
 	}
 
 	protected function validate(Errors $errors)
@@ -51,14 +50,12 @@ class DeleteOperation extends Operation
 
 		if (!$this->module->model->delete($key))
 		{
-			throw new Exception
-			(
-				'Unable to delete the record %key from %module.', array
-				(
-					'key' => $key,
-					'module' => $this->module->title
-				)
-			);
+			throw new Exception('Unable to delete the record %key from %module.', [
+
+				'key' => $key,
+				'module' => $this->module->title
+
+			]);
 		}
 
 		if ($this->request['redirect_to'])
@@ -66,7 +63,12 @@ class DeleteOperation extends Operation
 			$this->response->location = $this->request['redirect_to'];
 		}
 
-		$this->response->message = new FormattedString('The record %key has been deleted from %module.', array('key' => $key, 'module' => $this->module->title));
+		$this->response->message = new FormattedString('The record %key has been deleted from %module.', [
+
+			'key' => $key,
+			'module' => $this->module->title
+
+		]);
 
 		return $key;
 	}

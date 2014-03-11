@@ -51,7 +51,7 @@ class Models extends \ICanBoogie\ActiveRecord\Models
 	 */
 	public function offsetExists($id)
 	{
-		list($module_id, $model_id) = explode('/', $id) + array(1 => 'primary');
+		list($module_id, $model_id) = explode('/', $id) + [ 1 => 'primary' ];
 
 		if (!isset($this->modules[$module_id]))
 		{
@@ -81,7 +81,7 @@ class Models extends \ICanBoogie\ActiveRecord\Models
 			return $this->instances[$id];
 		}
 
-		list($module_id, $model_id) = explode('/', $id) + array(1 => 'primary');
+		list($module_id, $model_id) = explode('/', $id) + [ 1 => 'primary' ];
 
 		if (!isset($this->modules[$module_id]))
 		{

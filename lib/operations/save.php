@@ -27,15 +27,14 @@ class SaveOperation extends Operation
 	 */
 	protected function get_controls()
 	{
-		return array
-		(
+		return [
+
 			self::CONTROL_PERMISSION => Module::PERMISSION_CREATE,
 			self::CONTROL_RECORD => true,
 			self::CONTROL_OWNERSHIP => true,
 			self::CONTROL_FORM => true
-		)
 
-		+ parent::get_controls();
+		] + parent::get_controls();
 	}
 
 	/**
@@ -142,7 +141,7 @@ class SaveOperation extends Operation
 	{
 		$key = $this->key;
 		$record_key = $this->module->model->save($this->properties, $key);
-		$log_params = array('key' => $key, 'module' => $this->module->title);
+		$log_params = [ 'key' => $key, 'module' => $this->module->title ];
 
 		if (!$record_key)
 		{
@@ -153,6 +152,6 @@ class SaveOperation extends Operation
 		$this->response->location = $this->request->uri;
 		$this->response->message = new I18n\FormattedString($key ? 'The record %key in %module has been saved.' : 'A new record has been saved in %module.', $log_params);
 
-		return array('mode' => $key ? 'update' : 'new', 'key' => $record_key);
+		return [ 'mode' => $key ? 'update' : 'new', 'key' => $record_key ];
 	}
 }

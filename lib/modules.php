@@ -42,14 +42,14 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var array
 	 */
-	public $descriptors = array();
+	public $descriptors = [];
 
 	/**
 	 * The paths where modules can be found.
 	 *
 	 * @var array
 	 */
-	protected $paths = array();
+	protected $paths = [];
 
 	/**
 	 * A cache for the modules index.
@@ -63,7 +63,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var array
 	 */
-	protected $modules = array();
+	protected $modules = [];
 
 	/**
 	 * The index for the available modules is created with the accessor object.
@@ -317,10 +317,10 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 			return require $__file__;
 		};
 
-		$descriptors = $this->paths ? $this->index_descriptors($this->paths) : array();
-		$catalogs = array();
-		$configs = array();
-		$config_constructors = array();
+		$descriptors = $this->paths ? $this->index_descriptors($this->paths) : [];
+		$catalogs = [];
+		$configs = [];
+		$config_constructors = [];
 
 		foreach ($descriptors as $id => $descriptor)
 		{
@@ -337,12 +337,13 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 			}
 		}
 
-		return array
-		(
+		return [
+
 			'descriptors' => $descriptors,
 			'catalogs' => $catalogs,
 			'configs' => $configs
-		);
+
+		];
 	}
 
 	/**
@@ -379,7 +380,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 
 		if (!$descriptors)
 		{
-			return array();
+			return [];
 		}
 
 		#
@@ -431,7 +432,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 
 	protected function collect_descriptors(array $paths)
 	{
-		$descriptors = array();
+		$descriptors = [];
 
 		foreach ($paths as $root)
 		{
@@ -453,7 +454,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 				}
 				catch (\Exception $e)
 				{
-					throw new Exception('Unable to open directory %root', array('root' => $root));
+					throw new Exception('Unable to open directory %root', [ 'root' => $root ]);
 				}
 
 				foreach ($dir as $file)
@@ -498,12 +499,13 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		{
 			throw new \InvalidArgumentException(format
 			(
-				'%var should be an array: %type given instead in %path', array
-				(
+				'%var should be an array: %type given instead in %path', [
+
 					'var' => 'descriptor',
 					'type' => gettype($descriptor),
 					'path' => strip_root($descriptor_path)
-				)
+
+				]
 			));
 		}
 
@@ -511,12 +513,13 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		{
 			throw new \InvalidArgumentException(format
 			(
-				'The %name value of the %id module descriptor is empty in %path.', array
-				(
+				'The %name value of the %id module descriptor is empty in %path.', [
+
 					'name' => Module::T_TITLE,
 					'id' => $id,
 					'path' => strip_root($descriptor_path)
-				)
+
+				]
 			));
 		}
 
@@ -524,12 +527,13 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		{
 			throw new \InvalidArgumentException(format
 			(
-				'%name is required. Invalid descriptor for module %id in %path.', array
-				(
+				'%name is required. Invalid descriptor for module %id in %path.', [
+
 					'name' => Module::T_NAMESPACE,
 					'id' => $id,
 					'path' => strip_root($descriptor_path)
-				)
+
+				]
 			));
 		}
 
@@ -538,37 +542,39 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		{
 			throw new Exception
 			(
-				'The %name value of the %id module descriptor is empty in %path.', array
-				(
+				'The %name value of the %id module descriptor is empty in %path.', [
+
 					'name' => Module::T_VERSION,
 					'id' => $id,
 					'path' => $descriptor_path
-				)
+
+				]
 			);
 		}
 		*/
 
-		return $descriptor + array
-		(
+		return $descriptor + [
+
 			Module::T_CATEGORY => null,
 			Module::T_CLASS => $descriptor[Module::T_NAMESPACE] . '\Module',
 			Module::T_DESCRIPTION => null,
 			Module::T_DISABLED => false,
 			Module::T_EXTENDS => null,
 			Module::T_ID => $id,
-			Module::T_MODELS => array(),
+			Module::T_MODELS => [],
 			Module::T_PATH => $path,
 			Module::T_PERMISSION => null,
-			Module::T_PERMISSIONS => array(),
+			Module::T_PERMISSIONS => [],
 			Module::T_REQUIRED => false,
-			Module::T_REQUIRES => array(),
+			Module::T_REQUIRES => [],
 			Module::T_VERSION => 'dev',
 			Module::T_WEIGHT => 0,
 
 			'__has_config' => is_dir($path . 'config'),
 			'__has_locale' => is_dir($path . 'locale'),
-			'__parents' => array()
-		);
+			'__parents' => []
+
+		];
 	}
 
 	/**
@@ -592,7 +598,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 			{
 				throw new \InvalidArgumentException(format
 				(
-					'Model definition must be array, given: %value.', array('value' => $definition)
+					'Model definition must be array, given: %value.', [ 'value' => $definition ]
 				));
 			}
 
@@ -631,8 +637,8 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 */
 	private function sort_modules_descriptors()
 	{
-		$enabled = array();
-		$disabled = array();
+		$enabled = [];
+		$disabled = [];
 
 		$this->index; // we make sure that the modules were indexed
 
@@ -687,7 +693,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 */
 	protected function lazy_get_locale_paths()
 	{
-		$paths = array();
+		$paths = [];
 
 		foreach ($this->enabled_modules_descriptors as $module_id => $descriptor)
 		{
@@ -696,7 +702,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 				continue;
 			}
 
-			$paths[] = $descriptor[Module::T_PATH];
+			$paths[] = $descriptor[Module::T_PATH] . 'locale';
 		}
 
 		return $paths;
@@ -709,7 +715,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 */
 	protected function lazy_get_config_paths()
 	{
-		$paths = array();
+		$paths = [];
 
 		foreach ($this->enabled_modules_descriptors as $module_id => $descriptor)
 		{
@@ -734,8 +740,8 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function order_ids(array $ids, array $descriptors=null)
 	{
-		$ordered = array();
-		$extends_weight = array();
+		$ordered = [];
+		$extends_weight = [];
 
 		if ($descriptors === null)
 		{
@@ -868,7 +874,7 @@ class ModuleIsDisabled extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(format('Module is disabled: %module_id', array('module_id' => $module_id)), $code, $previous);
+		parent::__construct(format('Module is disabled: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
 	}
 
 	public function __get($property)
@@ -878,7 +884,7 @@ class ModuleIsDisabled extends \RuntimeException
 			return $this->module_id;
 		}
 
-		throw new PropertyNotDefined(array($property, $this));
+		throw new PropertyNotDefined([ $property, $this ]);
 	}
 }
 
@@ -900,7 +906,7 @@ class ModuleNotDefined extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(format('Module is not defined: %module_id', array('module_id' => $module_id)), $code, $previous);
+		parent::__construct(format('Module is not defined: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
 	}
 
 	public function __get($property)
@@ -910,7 +916,7 @@ class ModuleNotDefined extends \RuntimeException
 			return $this->module_id;
 		}
 
-		throw new PropertyNotDefined(array($property, $this));
+		throw new PropertyNotDefined([ $property, $this ]);
 	}
 }
 
@@ -941,7 +947,7 @@ class ModuleConstructorMissing extends \RuntimeException
 		$this->module_id = $module_id;
 		$this->class = $class;
 
-		parent::__construct(format('Missing class %class to instantiate module %id.', array('class' => $class, 'id' => $module_id)));
+		parent::__construct(format('Missing class %class to instantiate module %id.', [ 'class' => $class, 'id' => $module_id ]));
 	}
 
 	public function __get($property)
@@ -955,6 +961,6 @@ class ModuleConstructorMissing extends \RuntimeException
 			return $this->class;
 		}
 
-		throw new PropertyNotDefined(array($property, $this));
+		throw new PropertyNotDefined([ $property, $this ]);
 	}
 }

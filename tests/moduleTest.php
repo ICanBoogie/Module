@@ -25,25 +25,26 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 	{
 		self::$connection = new Connection('sqlite::memory:');
 
-		self::$node_descriptor = array
-		(
+		self::$node_descriptor = [
+
 			Module::T_ID => 'nodes',
-			Module::T_MODELS => array
-			(
-				'primary' => array
-				(
+			Module::T_MODELS => [
+
+				'primary' => [
+
 					Model::ACTIVERECORD_CLASS => __CLASS__ . '\Modules\Nodes\Node',
 					Model::CONNECTION => self::$connection,
-					Model::SCHEMA => array
-					(
-						'fields' => array
-						(
+					Model::SCHEMA => [
+
+						'fields' => [
+
 							'nid' => 'serial',
-							'title' => array('varchar', 80)
-						)
-					)
-				)
-			),
+							'title' => [ 'varchar', 80 ]
+
+						]
+					]
+				]
+			],
 
 			Module::T_NAMESPACE => __CLASS__ . '\Modules\Nodes',
 			Module::T_TITLE => 'Nodes'
@@ -52,24 +53,21 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 		self::$node_module = new Module(self::$node_descriptor);
 
 		self::$content_module = new Module
-		(
-			array
-			(
-				Module::T_ID => 'contents',
-				Module::T_EXTENDS => self::$node_module,
-				Module::T_MODELS => array
-				(
-					'primary' => array
-					(
-						Model::EXTENDING => 'nodes',
-						Model::SCHEMA => array
-						(
-							'date' => 'datetime'
-						)
-					)
-				)
-			)
-		);
+		([
+			Module::T_ID => 'contents',
+			Module::T_EXTENDS => self::$node_module,
+			Module::T_MODELS => [
+
+				'primary' => [
+
+					Model::EXTENDING => 'nodes',
+					Model::SCHEMA => [
+
+						'date' => 'datetime'
+					]
+				]
+			]
+		]);
 	}
 
 	/**
@@ -95,11 +93,11 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_flat_id()
 	{
-		$m = new Module(array
-		(
+		$m = new Module([
+
 			Module::T_ID => 'name.space.to.id',
 			Module::T_TITLE => 'Nodes'
-		));
+		]);
 
 		$this->assertEquals('name_space_to_id', $m->flat_id);
 	}
