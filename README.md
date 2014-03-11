@@ -292,10 +292,16 @@ $nodes_attachments_model = $core->models['nodes/attachments'];
 
 
 
+----------
+
+
+
+
+
 
 ## Requirement
 
-The package requires PHP 5.3 or later.
+The package requires PHP 5.4 or later.
 
 
 
@@ -311,7 +317,7 @@ Create a `composer.json` file and run `php composer.phar install` command to ins
 	"minimum-stability": "dev",
 	"require":
 	{
-		"icanboogie/module": "*"
+		"icanboogie/module": "2.x"
 	}
 }
 ```
@@ -353,7 +359,7 @@ cleaned with the `make clean` command.
 
 ## License
 
-ICanBoogie/Module is licensed under the New BSD License - See the [LICENSE](https://raw.github.com/ICanBoogie/Module/master/LICENSE) file for details.
+This package is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
 
 
 

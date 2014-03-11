@@ -305,8 +305,6 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 	 * - (array) configs: Absolute paths to config directories.
 	 * - (array) classes aliases: An array of _key/value_ pairs where _key_ is the alias of a class
 	 * and _value_ if the real class.
-	 * - (array) config constructors: An array of _key/value_ pairs where _key_ if the name of a
-	 * config and _value_ is its constructor definition.
 	 *
 	 * @return array
 	 */
@@ -330,24 +328,12 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 
 			if ($descriptor['__has_locale'])
 			{
-				$catalogs[] = $path;
+				$catalogs[] = $path . 'locale';
 			}
 
 			if ($descriptor['__has_config'])
 			{
-				$configs[] = $path;
-
-				$core_config_path = $path . '/config/core.php';
-
-				if (is_file($core_config_path))
-				{
-					$core_config = $isolated_require($core_config_path, array('path' => $path));
-
-					if (isset($core_config['config constructors']))
-					{
-						$config_constructors += $core_config['config constructors'];
-					}
-				}
+				$configs[] = $path . 'config';
 			}
 		}
 
@@ -355,8 +341,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		(
 			'descriptors' => $descriptors,
 			'catalogs' => $catalogs,
-			'configs' => $configs,
-			'config constructors' => $config_constructors
+			'configs' => $configs
 		);
 	}
 
@@ -401,7 +386,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		# Compute inheritance.
 		#
 
-		$find_parents = function($id, &$parents=array()) use (&$find_parents, &$descriptors)
+		$find_parents = function($id, &$parents=[]) use (&$find_parents, &$descriptors)
 		{
 			$parent = $descriptors[$id][Module::T_EXTENDS];
 
@@ -580,8 +565,8 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 			Module::T_VERSION => 'dev',
 			Module::T_WEIGHT => 0,
 
-			'__has_config' => is_dir($path . '/config'),
-			'__has_locale' => is_dir($path . '/locale'),
+			'__has_config' => is_dir($path . 'config'),
+			'__has_locale' => is_dir($path . 'locale'),
 			'__parents' => array()
 		);
 	}
@@ -733,7 +718,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 				continue;
 			}
 
-			$paths[] = $descriptor[Module::T_PATH];
+			$paths[] = $descriptor[Module::T_PATH] . 'config';
 		}
 
 		return $paths;
