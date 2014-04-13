@@ -320,7 +320,6 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 		$descriptors = $this->paths ? $this->index_descriptors($this->paths) : [];
 		$catalogs = [];
 		$configs = [];
-		$config_constructors = [];
 
 		foreach ($descriptors as $id => $descriptor)
 		{
@@ -444,7 +443,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 				$id = basename(realpath($root));
 				$descriptor = $this->read_descriptor($id, $root);
 
-				$descriptors[$id] = $descriptor;
+				$descriptors[$descriptor[Module::T_ID]] = $descriptor;
 			}
 			else
 			{
@@ -468,7 +467,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 					$path = $root . $id . DIRECTORY_SEPARATOR;
 					$descriptor = $this->read_descriptor($id, $path);
 
-					$descriptors[$id] = $descriptor;
+					$descriptors[$descriptor[Module::T_ID]] = $descriptor;
 				}
 			}
 		}
