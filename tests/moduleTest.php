@@ -48,7 +48,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 			Module::T_NAMESPACE => __CLASS__ . '\Modules\Nodes',
 			Module::T_TITLE => 'Nodes'
-		);
+		];
 
 		self::$node_module = new Module(self::$node_descriptor);
 
