@@ -1,4 +1,4 @@
-# Module
+# Module [![Build Status](https://travis-ci.org/ICanBoogie/Module.svg?branch=2.0)](http://travis-ci.org/ICanBoogie/Module)
 
 This package provides support for modules to the [ICanBoogie](http://icanboogie.org) framework.
 
@@ -364,6 +364,20 @@ The package is documented as part of the [ICanBoogie](http://icanboogie.org/) fr
 dependencies can be generated with the `make doc` command. The documentation is generated in
 the `docs` directory using [ApiGen](http://apigen.org/). The package directory can later by
 cleaned with the `make clean` command.
+
+
+
+
+
+## Testing
+
+The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
+automatically installed as well as all dependencies required to run the suite. You can later
+clean the directory with the `make clean` command.
+
+The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
+
+[![Build Status](https://travis-ci.org/ICanBoogie/Module.svg?branch=2.0)](http://travis-ci.org/ICanBoogie/Module)
 
 
 
