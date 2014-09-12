@@ -292,6 +292,18 @@ $nodes_attachments_model = $core->models['nodes/attachments'];
 
 
 
+## Event hooks
+
+### `routing.collect_routes:before`
+
+Alter routes defined by modules by adding a `module` key that holds the identifier of the 
+module that defines the route.
+
+
+
+
+
+
 ----------
 
 
