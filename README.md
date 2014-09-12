@@ -70,51 +70,55 @@ namespace Icybee\Modules\Nodes;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Module;
 
-return array
-(
+return [
+
 	Module::T_CATEGORY => 'contents',
 	Module::T_DESCRIPTION => 'Centralized node system base',
-	Module::T_MODELS => array
-	(
-		'primary' => array
-		(
-			Model::SCHEMA => array
-			(
-				'fields' => array
-				(
+	Module::T_MODELS => [
+
+		'primary' => [
+
+			Model::SCHEMA => [
+
+				'fields' => [
+
 					'nid' => 'serial',
 					'uid' => 'foreign',
 					'siteid' => 'foreign',
 					'nativeid' => 'foreign',
-					'constructor' => array('varchar', 64, 'indexed' => true),
+					'constructor' => [ 'varchar', 64, 'indexed' => true ],
 					'title' => 'varchar',
-					'slug' => array('varchar', 80, 'indexed' => true),
-					'language' => array('varchar', 8, 'indexed' => true),
-					'created' => array('timestamp', 'default' => 'CURRENT_TIMESTAMP()'),
+					'slug' => [ 'varchar', 80, 'indexed' => true ],
+					'language' => [ 'varchar', 8, 'indexed' => true ],
+					'created' => [ 'timestamp', 'default' => 'CURRENT_TIMESTAMP()' ],
 					'modified' => 'timestamp',
-					'is_online' => array('boolean', 'indexed' => true)
-				)
-			)
-		)
-	),
+					'is_online' => [ 'boolean', 'indexed' => true ]
+
+				]
+			]
+		]
+	],
 
 	Module::T_NAMESPACE => __NAMESPACE__,
 	Module::T_PERMISSION => false,
-	Module::T_PERMISSIONS => array
-	(
+	Module::T_PERMISSIONS => [
+
 		'modify belonging site'
-	),
+
+	],
 
 	Module::T_REQUIRED => true,
-	Module::T_REQUIRES => array
-	(
+	Module::T_REQUIRES => [
+
 		'sites' => '*',
 		'users' => '*'
-	),
+
+	],
 
 	Module::T_TITLE => 'Nodes',
 	Module::T_VERSION => '1.0'
-);
+
+];
 ```
 
 
@@ -183,13 +187,13 @@ use ICanBoogie\Vars;
 
 $vars = new Vars(__DIR__ . '/repository/vars');
 
-$modules = new Modules(array(
+$modules = new Modules([
 
 	__DIR__ . '/vendor/icanboogie-modules',
 	__DIR__ . '/protected/modules',
 	__DIR__ . '/path/to/my/module'
 
-), $vars);
+], $vars);
 ```
 
 
@@ -296,7 +300,7 @@ $nodes_attachments_model = $core->models['nodes/attachments'];
 
 ### `routing.collect_routes:before`
 
-Alter routes defined by modules by adding a `module` key that holds the identifier of the 
+Alter routes defined by modules by adding a `module` key that holds the identifier of the
 module that defines the route.
 
 
