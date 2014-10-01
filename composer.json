@@ -28,5 +28,14 @@
 	},
 	"autoload": {
 		"classmap": [ "lib/" ]
+	},
+
+	"extra": {
+
+		"icanboogie": {
+
+			"config-path": "config"
+
+		}
 	}
 }
