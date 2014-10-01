@@ -13,7 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Module;
-use ICanBoogie\Vars;
+use ICanBoogie\StorageInterface;
 
 /**
  * Modules manager.
@@ -56,7 +56,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	/**
 	 * A cache for the modules index.
 	 *
-	 * @var Vars
+	 * @var StorageInterface
 	 */
 	protected $cache;
 
@@ -71,9 +71,9 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 * The index for the available modules is created with the accessor object.
 	 *
 	 * @param array $paths The paths to look for modules.
-	 * @param Vars $cache The cache to use for the module indexes.
+	 * @param StorageInterface $cache The cache to use for the module indexes.
 	 */
-	public function __construct($paths, Vars $cache=null)
+	public function __construct($paths, StorageInterface $cache=null)
 	{
 		$this->paths = $paths;
 		$this->cache = $cache;
@@ -266,14 +266,17 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 */
 	protected function lazy_get_index()
 	{
-		if ($this->cache)
+		$cache = $this->cache;
+
+		if ($cache)
 		{
-			$key = 'cached_modules_' . md5(implode('#', $this->paths));
-			$index = $this->cache[$key];
+			$key = 'cached_modules_' . substr(sha1(implode('#', $this->paths)), 0, 8);
+			$index = $cache->retrieve($key);
 
 			if (!$index)
 			{
-				$this->cache[$key] = $index = $this->index_construct();
+				$index = $this->index_construct();
+				$cache->store($key, $index);
 			}
 		}
 		else
