@@ -15,6 +15,7 @@ use ICanBoogie\ActiveRecord\Connection;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\ModelNotDefined;
 use ICanBoogie\I18n;
+use ICanBoogie\Module\Modules;
 
 /**
  * A module of the framework.

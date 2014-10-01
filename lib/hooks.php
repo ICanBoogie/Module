@@ -13,10 +13,55 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\Core;
 use ICanBoogie\HTTP\Request;
+use ICanBoogie\I18n;
 use ICanBoogie\Module;
+use ICanBoogie\Prototype;
 
 class Hooks
 {
+	/*
+	 * Events
+	 */
+
+	/**
+	 * Boot enabled modules.
+	 *
+	 * Before the modules are actually booted up, their index is used to alter the I18n load
+	 * paths and the config paths.
+	 *
+	 * @param Core\BootEvent $event
+	 * @param Core $core
+	 */
+	static public function on_core_boot(Core\BootEvent $event, Core $core)
+	{
+		$modules = $core->modules;
+		$index = $modules->index;
+
+		if (class_exists('ICanBoogie\I18n', true))
+		{
+			I18n::$load_paths = array_merge(I18n::$load_paths, $modules->locale_paths);
+		}
+
+		#
+		# Add modules config paths to the configs path.
+		#
+
+		$modules_config_paths = $modules->config_paths;
+
+		if ($modules_config_paths)
+		{
+			$core->configs->add($modules->config_paths, -10);
+		}
+
+		#
+		# Revoke prototypes and events.
+		#
+
+		Prototype::configure($core->configs['prototypes']);
+
+		unset($core->events);
+	}
+
 	/**
 	 * Alter routes defined by modules by adding a `module` key that holds the identifier of the
 	 * module that defines the route.
@@ -53,5 +98,33 @@ class Hooks
 				];
 			}
 		}
+	}
+
+	/*
+	 * Prototypes
+	 */
+
+	/**
+	 * Return the {@link Modules} instance used to manage the modules attached to the _core_.
+	 *
+	 * @param Core $core
+	 *
+	 * @return Modules The modules provider.
+	 */
+	static public function get_modules(Core $core)
+	{
+		$config = $core->config;
+
+		return new Modules($config['module-path'], $config['cache modules'] ? $core->vars : null);
+	}
+
+	/**
+	 * Returns the {@link Models} instance used to obtain the models defined by the modules.
+	 *
+	 * @return Models The models accessor.
+	 */
+	static public function get_models(Core $core)
+	{
+		return new Models($core->connections, [], $core->modules);
 	}
 }

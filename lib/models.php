@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\Connections;
+use ICanBoogie\Module;
 
 /**
  * Models manager.

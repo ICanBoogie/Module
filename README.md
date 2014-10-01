@@ -296,7 +296,35 @@ $nodes_attachments_model = $core->models['nodes/attachments'];
 
 
 
+## Auto-config
+
+The package supports the _auto-config_ feature of the framework [ICanBoogie][] and provides the
+following:
+
+- A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [Modules][] instance
+configured to provide the modules of the application.
+- A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [Models][] instance
+configured to provide the models defined by the modules.
+
+
+
+
+
 ## Event hooks
+
+
+
+
+
+### `ICanBoogie\Core::boot`
+
+Boot enabled modules. Before the modules are actually booted up, their index is used to alter
+the I18n load paths (if the [icanboogie/i18n][] package is available) and the config paths.
+Note that prototypes are reseted and the [Events][] instance associated with the core revoked.
+
+
+
+
 
 ### `routing.collect_routes:before`
 
@@ -395,9 +423,13 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 
 
 
+[ActiveRecord package]: https://github.com/ICanBoogie/ActiveRecord
+[Events]: http://icanboogie.org/docs/class-ICanBoogie.Events.html
+[ICanBoogie]: http://icanboogie.org/
+[icanboogie/i18n]: https://github.com/ICanBoogie/I18n
+[Models]: http://icanboogie.org/docs/class-ICanBoogie.Models.html
 [Modules]: http://icanboogie.org/docs/class-ICanBoogie.Modules.html
 [ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.ModuleNotDefined.html
 [ModuleIsDisabled]: http://icanboogie.org/docs/class-ICanBoogie.ModuleIsDisabled.html
 [ModuleConstructorMissing]: http://icanboogie.org/docs/class-ICanBoogie.ModuleConstructorMissing.html
-[ActiveRecord package]: https://github.com/ICanBoogie/ActiveRecord
 [Nodes]: https://github.com/Icybee/module-nodes

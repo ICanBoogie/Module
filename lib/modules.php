@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\Model;
+use ICanBoogie\Module;
+use ICanBoogie\Vars;
 
 /**
  * Modules manager.
@@ -22,7 +24,7 @@ use ICanBoogie\ActiveRecord\Model;
  * @property-read array $enabled_modules_descriptors Descriptors of the enabled modules.
  * @property-read array $index Index for the modules.
  */
-class Modules extends Object implements \ArrayAccess, \IteratorAggregate
+class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggregate
 {
 	/**
 	 * Formats a SQL table name given the module id and the model id.
@@ -616,12 +618,12 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 
 			if (empty($definition[Model::CLASSNAME]))
 			{
-				$definition[Model::CLASSNAME] = $namespace . '\\' . ($model_id == 'primary' ? 'Model' : camelize(singularize($model_id)) . 'Model');
+				$definition[Model::CLASSNAME] = $namespace . '\\' . ($model_id == 'primary' ? 'Model' : \ICanBoogie\camelize(\ICanBoogie\singularize($model_id)) . 'Model');
 			}
 
 			if (empty($definition[Model::ACTIVERECORD_CLASS]))
 			{
-				$definition[Model::ACTIVERECORD_CLASS] = $namespace . '\\' . camelize(singularize($model_id == 'primary' ? $basename : $model_id));
+				$definition[Model::ACTIVERECORD_CLASS] = $namespace . '\\' . \ICanBoogie\camelize(\ICanBoogie\singularize($model_id == 'primary' ? $basename : $model_id));
 			}
 		}
 
@@ -723,7 +725,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
 				continue;
 			}
 
-			$paths[] = $descriptor[Module::T_PATH] . 'config';
+			$paths[$descriptor[Module::T_PATH] . 'config'] = 0;
 		}
 
 		return $paths;
@@ -791,7 +793,7 @@ class Modules extends Object implements \ArrayAccess, \IteratorAggregate
  			$ordered[$id] = -$extends_weight[$id] -$count_required($id) + $descriptors[$id][Module::T_WEIGHT];
 		}
 
-		stable_sort($ordered);
+		\ICanBoogie\stable_sort($ordered);
 
 		return array_keys($ordered);
 	}
@@ -873,7 +875,7 @@ class ModuleIsDisabled extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(format('Module is disabled: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
+		parent::__construct(\ICanBoogie\format('Module is disabled: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
 	}
 
 	public function __get($property)
@@ -905,7 +907,7 @@ class ModuleNotDefined extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(format('Module is not defined: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
+		parent::__construct(\ICanBoogie\format('Module is not defined: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
 	}
 
 	public function __get($property)
@@ -946,7 +948,7 @@ class ModuleConstructorMissing extends \RuntimeException
 		$this->module_id = $module_id;
 		$this->class = $class;
 
-		parent::__construct(format('Missing class %class to instantiate module %id.', [ 'class' => $class, 'id' => $module_id ]));
+		parent::__construct(\ICanBoogie\format('Missing class %class to instantiate module %id.', [ 'class' => $class, 'id' => $module_id ]));
 	}
 
 	public function __get($property)
