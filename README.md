@@ -244,7 +244,7 @@ module and also collects the reasons why the module is not installed.
 
 use ICanBoogie\Errors;
 
-$nodes = $models['nodes'];
+$nodes = $modules['nodes'];
 $errors = new Errors;
 
 if (!$nodes->is_installed($errors))
@@ -264,6 +264,17 @@ if (!$nodes->is_installed($errors))
 }
 
 $nodes->uninstall();
+```
+
+Enabled modules can be installed at once using a [Modules][] instance. Errors are exceptions are
+collected in the provided [Errors][] instance.
+
+```php
+<?php
+
+use ICanBoogie\Errors;
+
+$errors = $modules->install(new Errors);
 ```
 
 
@@ -425,6 +436,7 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 
 [ActiveRecord package]: https://github.com/ICanBoogie/ActiveRecord
 [Events]: http://icanboogie.org/docs/class-ICanBoogie.Events.html
+[Errors]: http://icanboogie.org/docs/class-ICanBoogie.Errors.html
 [ICanBoogie]: http://icanboogie.org/
 [icanboogie/i18n]: https://github.com/ICanBoogie/I18n
 [Models]: http://icanboogie.org/docs/class-ICanBoogie.Models.html

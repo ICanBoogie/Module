@@ -12,6 +12,7 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\Model;
+use ICanBoogie\Errors;
 use ICanBoogie\Module;
 use ICanBoogie\StorageInterface;
 
@@ -858,6 +859,39 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 		}
 
 		return false;
+	}
+
+	/**
+	 * Install all the enabled modules.
+	 *
+	 * @param Errors $errors
+	 *
+	 * @return Errors
+	 */
+	public function install(Errors $errors)
+	{
+		foreach (array_keys($this->enabled_modules_descriptors) as $id)
+		{
+			try
+			{
+				$module = $this[$id];
+
+				$is_installed_errors = new Errors;
+
+				if ($module->is_installed($is_installed_errors))
+				{
+					continue;
+				}
+
+				$module->install($errors);
+			}
+			catch (\Exception $e)
+			{
+				$errors[$id] = $e;
+			}
+		}
+
+		return $errors;
 	}
 }
 

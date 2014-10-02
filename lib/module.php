@@ -483,6 +483,16 @@ class Module extends Object
 
 			$class = $attributes[Model::T_CLASS];
 
+			if (!class_exists($class))
+			{
+				throw new \RuntimeException(\ICanBoogie\format("Unable to instanciate model %model, the class %class does not exists.", [
+
+					'model' => "$this->id/$which",
+					'class' => $class
+
+				]));
+			}
+
 			$this->models[$which] = new $class($attributes);
 		}
 
