@@ -15,6 +15,7 @@ use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Errors;
 use ICanBoogie\Module;
 use ICanBoogie\StorageInterface;
+use ICanBoogie\ModuleConstructorMissing;
 
 /**
  * Modules manager.
@@ -209,7 +210,8 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 *
 	 * @throws ModuleIsDisabled when the module is disabled.
 	 *
-	 * @throws Exception when the class that should be used to create its instance is not defined.
+	 * @throws ModuleConstructorMissing when the class that should be used to create its instance
+	 * is not defined.
 	 *
 	 * @return Module
 	 */
@@ -375,8 +377,6 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 *
 	 * @param array $paths
 	 *
-	 * @throws Exception when a directory fails to open.
-	 *
 	 * @return array[string]array
 	 */
 	protected function index_descriptors(array $paths)
@@ -459,7 +459,11 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 				}
 				catch (\Exception $e)
 				{
-					throw new Exception('Unable to open directory %root', [ 'root' => $root ]);
+					throw new \RuntimeException(\ICanBoogie\format('Unable to open directory %root', [
+
+						'root' => $root
+
+					]));
 				}
 
 				foreach ($dir as $file)
@@ -502,7 +506,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		if (!is_array($descriptor))
 		{
-			throw new \InvalidArgumentException(format
+			throw new \InvalidArgumentException(\ICanBoogie\format
 			(
 				'%var should be an array: %type given instead in %path', [
 
@@ -516,7 +520,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		if (empty($descriptor[Module::T_TITLE]))
 		{
-			throw new \InvalidArgumentException(format
+			throw new \InvalidArgumentException(\ICanBoogie\format
 			(
 				'The %name value of the %id module descriptor is empty in %path.', [
 
@@ -530,7 +534,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		if (empty($descriptor[Module::T_NAMESPACE]))
 		{
-			throw new \InvalidArgumentException(format
+			throw new \InvalidArgumentException(\ICanBoogie\format
 			(
 				'%name is required. Invalid descriptor for module %id in %path.', [
 
@@ -545,16 +549,13 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 		/*TODO-20120108: activate version checking
 		if (empty($descriptor[Module::T_VERSION]))
 		{
-			throw new Exception
-			(
-				'The %name value of the %id module descriptor is empty in %path.', [
+			throw new \RuntimeException(\ICanBoogie\format('The %name value of the %id module descriptor is empty in %path.', [
 
-					'name' => Module::T_VERSION,
-					'id' => $id,
-					'path' => $descriptor_path
+				'name' => Module::T_VERSION,
+				'id' => $id,
+				'path' => $descriptor_path
 
-				]
-			);
+			]);
 		}
 		*/
 
@@ -601,7 +602,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 		{
 			if (!is_array($definition))
 			{
-				throw new \InvalidArgumentException(format
+				throw new \InvalidArgumentException(\ICanBoogie\format
 				(
 					'Model definition must be array, given: %value.', [ 'value' => $definition ]
 				));

@@ -31,6 +31,10 @@ class ModuleIsDisabled extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(\ICanBoogie\format('Module is disabled: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
+		parent::__construct(\ICanBoogie\format('Module is disabled: %module_id', [
+
+			'module_id' => $module_id
+
+		]), $code, $previous);
 	}
 }

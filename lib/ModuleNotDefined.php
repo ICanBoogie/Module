@@ -36,6 +36,10 @@ class ModuleNotDefined extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(\ICanBoogie\format('Module is not defined: %module_id', [ 'module_id' => $module_id ]), $code, $previous);
+		parent::__construct(\ICanBoogie\format('Module is not defined: %module_id', [
+
+			'module_id' => $module_id
+
+		]), $code, $previous);
 	}
 }

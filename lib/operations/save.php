@@ -135,7 +135,7 @@ class SaveOperation extends Operation
 	 *
 	 * @return array An array composed of the save mode ('update' or 'new') and the record's
 	 * key.
-	 * @throws Exception when saving the record fails.
+	 * @throws \RuntimeException when saving the record fails.
 	 */
 	protected function process()
 	{
@@ -145,7 +145,7 @@ class SaveOperation extends Operation
 
 		if (!$record_key)
 		{
-			throw new Exception($key ? 'Unable to update record %key in %module.' : 'Unable to create record in %module.', $log_params);
+			throw new \RuntimeException(\ICanBoogie\format($key ? 'Unable to update record %key in %module.' : 'Unable to create record in %module.', $log_params));
 		}
 
 		$this->record = $this->module->model[$record_key];

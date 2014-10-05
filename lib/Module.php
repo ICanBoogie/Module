@@ -442,7 +442,7 @@ class Module extends Object
 	 *
 	 * @return Model The requested model.
 	 *
-	 * @throws Exception if the model does not exists.
+	 * @throws \RuntimeException if the model does not exists.
 	 */
 	public function model($which='primary')
 	{
@@ -589,7 +589,12 @@ class Module extends Object
 
 					if ($id == $implement_id && $which == $implement_which)
 					{
-						throw new Exception('Model %module/%model implements itself !', [ '%module' => $id, '%model' => $which ]);
+						throw new \RuntimeException(\ICanBoogie\format('Model %module/%model implements itself !', [
+
+							'%module' => $id,
+							'%model' => $which
+
+						]));
 					}
 
 					$module = ($implement_id == $id) ? $this : $core->modules[$implement_id];
@@ -598,13 +603,13 @@ class Module extends Object
 				}
 				else if (is_string($implement['table']))
 				{
-					throw new Exception('Model %model of module %module implements a table: %table', [
+					throw new \RuntimeException(\ICanBoogie\format('Model %model of module %module implements a table: %table', [
 
 						'%model' => $which,
 						'%module' => $id,
 						'%table' => $implement['table']
 
-					]);
+					]));
 
 					$implement['table'] = $models[$implement['table']];
 				}
@@ -641,7 +646,7 @@ class Module extends Object
 	 *
 	 * @return mixed Depends on the implementation. Should return a string or object that can be stringified.
 	 *
-	 * @throws Exception if the block is not defined.
+	 * @throws \RuntimeException if the block is not defined.
 	 */
 	public function getBlock($name)
 	{
@@ -662,13 +667,13 @@ class Module extends Object
 
 		if (!method_exists($this, $callback))
 		{
-			throw new Exception('The %method method is missing from the %module module to create block %type.', [
+			throw new \RuntimeException(\ICanBoogie\format('The %method method is missing from the %module module to create block %type.', [
 
 				'%method' => $callback,
 				'%module' => $this->id,
 				'%type' => $name
 
-			]);
+			]));
 		}
 
 		return call_user_func_array([ $this, $callback ], $args);

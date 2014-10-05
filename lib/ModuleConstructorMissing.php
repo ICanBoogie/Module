@@ -17,7 +17,7 @@ namespace ICanBoogie\Module;
  * @property-read string $module_id The identifier of the module.
  * @property-read string $class The name of the missing class.
  */
-class ModuleConstructorMissing extends \RuntimeException implements Exception
+class ModuleConstructorMissing extends \RuntimeException
 {
 	use \ICanBoogie\GetterTrait;
 

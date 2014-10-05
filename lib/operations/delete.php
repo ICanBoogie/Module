@@ -50,12 +50,12 @@ class DeleteOperation extends Operation
 
 		if (!$this->module->model->delete($key))
 		{
-			throw new Exception('Unable to delete the record %key from %module.', [
+			throw new \RuntimeException(\ICanBoogie\format('Unable to delete the record %key from %module.', [
 
 				'key' => $key,
 				'module' => $this->module->title
 
-			]);
+			]));
 		}
 
 		if ($this->request['redirect_to'])
