@@ -26,8 +26,22 @@
 		"icanboogie/activerecord": "2.x",
 		"icanboogie/errors": "*"
 	},
+
+	"suggest": {
+
+		"icanboogie/operation": "Required use the 'delete' and 'save' operations."
+
+	},
+
 	"autoload": {
-		"classmap": [ "lib/" ]
+
+		"psr-4": {
+
+			"ICanBoogie\\Module\\": "lib"
+
+		},
+
+		"classmap": [ "lib/Module.php", "lib/operations" ]
 	},
 
 	"extra": {
