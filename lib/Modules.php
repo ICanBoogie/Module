@@ -15,7 +15,6 @@ use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Errors;
 use ICanBoogie\Module;
 use ICanBoogie\StorageInterface;
-use ICanBoogie\ModuleConstructorMissing;
 
 /**
  * Modules manager.
@@ -540,7 +539,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 					'name' => Module::T_NAMESPACE,
 					'id' => $id,
-					'path' => strip_root($descriptor_path)
+					'path' => \ICanboogie\strip_root($descriptor_path)
 
 				]
 			));
