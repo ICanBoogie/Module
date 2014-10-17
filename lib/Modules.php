@@ -115,7 +115,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			return;
 		}
 
-		$this->descriptors[$id][Module::T_DISABLED] = false;
+		$this->descriptors[$id][Descriptor::DISABLED] = false;
 		$this->revoke_constructions();
 	}
 
@@ -133,14 +133,14 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			return;
 		}
 
-		$this->descriptors[$id][Module::T_DISABLED] = true;
+		$this->descriptors[$id][Descriptor::DISABLED] = true;
 		$this->revoke_constructions();
 	}
 
 	/**
 	 * Used to enable or disable a module using the specified offset as the module's id.
 	 *
-	 * The module is enabled or disabled by modifying the value of the {@link Module::T_DISABLED}
+	 * The module is enabled or disabled by modifying the value of the {@link Descriptor::DISABLED}
 	 * key of the module's descriptor.
 	 *
 	 * @param mixed $id Identifier of the module.
@@ -153,7 +153,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			return;
 		}
 
-		$this->descriptors[$id][Module::T_DISABLED] = empty($enable);
+		$this->descriptors[$id][Descriptor::DISABLED] = empty($enable);
 		$this->revoke_constructions();
 	}
 
@@ -161,7 +161,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 * Checks the availability of a module.
 	 *
 	 * A module is considered available when its descriptor is defined, and the
-	 * {@link Module::T_DISABLED} key of its descriptor is empty.
+	 * {@link Descriptor::DISABLED} key of its descriptor is empty.
 	 *
 	 * Note: `empty()` will call {@link offsetGet()} to check if the value is not empty. So, unless
 	 * you want to use the module you check, better check using `!isset()`, otherwise the module
@@ -175,11 +175,11 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	{
 		$descriptors = $this->descriptors;
 
-		return (isset($descriptors[$id]) && empty($descriptors[$id][Module::T_DISABLED]));
+		return (isset($descriptors[$id]) && empty($descriptors[$id][Descriptor::DISABLED]));
 	}
 
 	/**
-	 * Disables a module by setting the {@link Module::T_DISABLED} key of its descriptor to `true`.
+	 * Disables a module by setting the {@link Descriptor::DISABLED} key of its descriptor to `true`.
 	 *
 	 * The method also dismisses the {@link enabled_modules_descriptors} and
 	 * {@link disabled_modules_descriptors} properties.
@@ -193,7 +193,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			return;
 		}
 
-		$this->descriptors[$id][Module::T_DISABLED] = true;
+		$this->descriptors[$id][Descriptor::DISABLED] = true;
 		$this->revoke_constructions();
 	}
 
@@ -230,12 +230,12 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		$descriptor = $descriptors[$id];
 
-		if (!empty($descriptor[Module::T_DISABLED]))
+		if (!empty($descriptor[Descriptor::DISABLED]))
 		{
 			throw new ModuleIsDisabled($id);
 		}
 
-		$class = $descriptor[Module::T_CLASS];
+		$class = $descriptor[Descriptor::CLASSNAME];
 
 		if (!class_exists($class, true))
 		{
@@ -290,12 +290,12 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		foreach ($this->descriptors as $descriptor)
 		{
-			$namespace = $descriptor[Module::T_NAMESPACE];
+			$namespace = $descriptor[Descriptor::NS];
 			$constant = $namespace . '\DIR';
 
 			if (!defined($constant))
 			{
-				define($constant, $descriptor[Module::T_PATH]);
+				define($constant, $descriptor[Descriptor::PATH]);
 			}
 		}
 
@@ -330,7 +330,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		foreach ($descriptors as $id => $descriptor)
 		{
-			$path = $descriptor[Module::T_PATH];
+			$path = $descriptor[Descriptor::PATH];
 
 			if ($descriptor['__has_locale'])
 			{
@@ -393,7 +393,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		$find_parents = function($id, &$parents=[]) use (&$find_parents, &$descriptors)
 		{
-			$parent = $descriptors[$id][Module::T_EXTENDS];
+			$parent = $descriptors[$id][Descriptor::INHERITS];
 
 			if ($parent)
 			{
@@ -419,12 +419,12 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		foreach ($descriptors as $id => &$descriptor)
 		{
-			foreach ($descriptor[Module::T_MODELS] as $model_id => &$model_descriptor)
+			foreach ($descriptor[Descriptor::MODELS] as $model_id => &$model_descriptor)
 			{
 				if ($model_descriptor == 'inherit')
 				{
-					$parent_descriptor = $descriptors[$descriptor[Module::T_EXTENDS]];
-					$model_descriptor = $parent_descriptor[Module::T_MODELS][$model_id];
+					$parent_descriptor = $descriptors[$descriptor[Descriptor::INHERITS]];
+					$model_descriptor = $parent_descriptor[Descriptor::MODELS][$model_id];
 				}
 			}
 
@@ -448,7 +448,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 				$id = basename(realpath($root));
 				$descriptor = $this->read_descriptor($id, $root);
 
-				$descriptors[$descriptor[Module::T_ID]] = $descriptor;
+				$descriptors[$descriptor[Descriptor::ID]] = $descriptor;
 			}
 			else
 			{
@@ -476,7 +476,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 					$path = $root . $id . DIRECTORY_SEPARATOR;
 					$descriptor = $this->read_descriptor($id, $path);
 
-					$descriptors[$descriptor[Module::T_ID]] = $descriptor;
+					$descriptors[$descriptor[Descriptor::ID]] = $descriptor;
 				}
 			}
 		}
@@ -493,8 +493,8 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 * @param string $path The path to the directory where the descriptor is located.
 	 * @throws \InvalidArgumentException in the following situations:
 	 * - The descriptor is not an array
-	 * - The {@link T_TITLE} key is empty.
-	 * - The {@link T_NAMESPACE} key is empty.
+	 * - The {@link Descriptor::TITLE} key is empty.
+	 * - The {@link Descriptor::NS} key is empty.
 	 *
 	 * @return array
 	 */
@@ -517,13 +517,13 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			));
 		}
 
-		if (empty($descriptor[Module::T_TITLE]))
+		if (empty($descriptor[Descriptor::TITLE]))
 		{
 			throw new \InvalidArgumentException(\ICanBoogie\format
 			(
 				'The %name value of the %id module descriptor is empty in %path.', [
 
-					'name' => Module::T_TITLE,
+					'name' => Descriptor::TITLE,
 					'id' => $id,
 					'path' => strip_root($descriptor_path)
 
@@ -531,13 +531,13 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			));
 		}
 
-		if (empty($descriptor[Module::T_NAMESPACE]))
+		if (empty($descriptor[Descriptor::NS]))
 		{
 			throw new \InvalidArgumentException(\ICanBoogie\format
 			(
 				'%name is required. Invalid descriptor for module %id in %path.', [
 
-					'name' => Module::T_NAMESPACE,
+					'name' => Descriptor::NS,
 					'id' => $id,
 					'path' => \ICanboogie\strip_root($descriptor_path)
 
@@ -546,11 +546,11 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 		}
 
 		/*TODO-20120108: activate version checking
-		if (empty($descriptor[Module::T_VERSION]))
+		if (empty($descriptor[Descriptor::VERSION]))
 		{
 			throw new \RuntimeException(\ICanBoogie\format('The %name value of the %id module descriptor is empty in %path.', [
 
-				'name' => Module::T_VERSION,
+				'name' => Descriptor::VERSION,
 				'id' => $id,
 				'path' => $descriptor_path
 
@@ -558,28 +558,16 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 		}
 		*/
 
-		return $descriptor + [
+		return array_merge(Descriptor::normalize($descriptor), [
 
-			Module::T_CATEGORY => null,
-			Module::T_CLASS => $descriptor[Module::T_NAMESPACE] . '\Module',
-			Module::T_DESCRIPTION => null,
-			Module::T_DISABLED => false,
-			Module::T_EXTENDS => null,
-			Module::T_ID => $id,
-			Module::T_MODELS => [],
-			Module::T_PATH => $path,
-			Module::T_PERMISSION => null,
-			Module::T_PERMISSIONS => [],
-			Module::T_REQUIRED => false,
-			Module::T_REQUIRES => [],
-			Module::T_VERSION => 'dev',
-			Module::T_WEIGHT => 0,
+			Descriptor::ID => $id,
+			Descriptor::PATH => $path,
 
 			'__has_config' => is_dir($path . 'config'),
 			'__has_locale' => is_dir($path . 'locale'),
 			'__parents' => []
 
-		];
+		]);
 	}
 
 	/**
@@ -591,13 +579,13 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 */
 	protected function alter_descriptor(array $descriptor)
 	{
-		$id = $descriptor[Module::T_ID];
-		$path = $descriptor[Module::T_PATH];
-		$namespace = $descriptor[Module::T_NAMESPACE];
+		$id = $descriptor[Descriptor::ID];
+		$path = $descriptor[Descriptor::PATH];
+		$namespace = $descriptor[Descriptor::NS];
 
 		# models and active records
 
-		foreach ($descriptor[Module::T_MODELS] as $model_id => &$definition)
+		foreach ($descriptor[Descriptor::MODELS] as $model_id => &$definition)
 		{
 			if (!is_array($definition))
 			{
@@ -707,7 +695,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 				continue;
 			}
 
-			$paths[] = $descriptor[Module::T_PATH] . 'locale';
+			$paths[] = $descriptor[Descriptor::PATH] . 'locale';
 		}
 
 		return $paths;
@@ -729,7 +717,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 				continue;
 			}
 
-			$paths[$descriptor[Module::T_PATH] . 'config'] = 0;
+			$paths[$descriptor[Descriptor::PATH] . 'config'] = 0;
 		}
 
 		return $paths;
@@ -759,7 +747,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 			foreach ($descriptors as $id => $descriptor)
 			{
-				if ($descriptor[Module::T_EXTENDS] !== $super_id)
+				if ($descriptor[Descriptor::INHERITS] !== $super_id)
 				{
 					continue;
 				}
@@ -776,7 +764,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 			foreach ($descriptors as $id => $descriptor)
 			{
-				if (empty($descriptor[Module::T_REQUIRES][$required_id]))
+				if (empty($descriptor[Descriptor::REQUIRES][$required_id]))
 				{
 					continue;
 				}
@@ -794,7 +782,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		foreach ($ids as $id)
 		{
- 			$ordered[$id] = -$extends_weight[$id] -$count_required($id) + $descriptors[$id][Module::T_WEIGHT];
+ 			$ordered[$id] = -$extends_weight[$id] -$count_required($id) + $descriptors[$id][Descriptor::WEIGHT];
 		}
 
 		\ICanBoogie\stable_sort($ordered);
@@ -822,12 +810,12 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 				continue;
 			}
 
-			if ($descriptor[Module::T_EXTENDS] == $module_id)
+			if ($descriptor[Descriptor::INHERITS] == $module_id)
 			{
 				$n++;
 			}
 
-			if (!empty($descriptor[Module::T_REQUIRES][$module_id]))
+			if (!empty($descriptor[Descriptor::REQUIRES][$module_id]))
 			{
 				$n++;
 			}
@@ -837,28 +825,38 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	}
 
 	/**
-	 * Checks if a module extends another.
+	 * Checks if a module inherits from another.
 	 *
 	 * @param string $module_id Module identifier.
-	 * @param string $extending_id Identifier of the extended module.
+	 * @param string $parent_id Identifier of the parent module.
 	 *
-	 * @return boolean `true` if the module extends the other.
+	 * @return boolean `true` if the module inherits from the other.
 	 */
-	public function is_extending($module_id, $extending_id)
+	public function is_inheriting($module_id, $parent_id)
 	{
 		while ($module_id)
 		{
-			if ($module_id == $extending_id)
+			if ($module_id == $parent_id)
 			{
 				return true;
 			}
 
 			$descriptor = $this->descriptors[$module_id];
 
-			$module_id = isset($descriptor[Module::T_EXTENDS]) ? $descriptor[Module::T_EXTENDS] : null;
+			$module_id = empty($descriptor[Descriptor::INHERITS]) ? null : $descriptor[Descriptor::INHERITS];
 		}
 
 		return false;
+	}
+
+	/**
+	 * @see is_inheriting
+	 *
+	 * @deprecated
+	 */
+	public function is_extending($module_id, $extending_id)
+	{
+		return $this->is_inheriting($module_id, $extending_id);
 	}
 
 	/**
@@ -906,7 +904,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 * @return string
 	 *
 	 * @throws ModuleNotDefined if the specified module, or the module specified by
-	 * {@link T_EXTENDS} is not defined.
+	 * {@link Descriptor::INHERITS} is not defined.
 	 */
 	public function resolve_classname($unqualified_classname, $module)
 	{
@@ -923,14 +921,14 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			}
 
 			$descriptor = $this->descriptors[$module];
-			$fully_qualified_classname = $descriptor[Module::T_NAMESPACE] . '\\' . $unqualified_classname;
+			$fully_qualified_classname = $descriptor[Descriptor::NS] . '\\' . $unqualified_classname;
 
 			if (class_exists($fully_qualified_classname, true))
 			{
 				return $fully_qualified_classname;
 			}
 
-			$module = $descriptor[Module::T_EXTENDS];
+			$module = $descriptor[Descriptor::INHERITS];
 		}
 	}
 }

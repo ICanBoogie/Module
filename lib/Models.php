@@ -61,7 +61,7 @@ class Models extends \ICanBoogie\ActiveRecord\Models
 
 		$descriptor = $this->modules->descriptors[$module_id];
 
-		return isset($descriptor[Module::T_MODELS][$model_id]);
+		return isset($descriptor[Descriptor::MODELS][$model_id]);
 	}
 
 	/**

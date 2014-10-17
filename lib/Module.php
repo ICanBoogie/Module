@@ -15,17 +15,18 @@ use ICanBoogie\ActiveRecord\Connection;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\ModelNotDefined;
 use ICanBoogie\I18n;
+use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\Modules;
 
 /**
  * A module of the framework.
  *
- * @property-read array $description The description of the module.
+ * @property-read array $descriptor The descriptor of the module.
  * @property-read string $flat_id Underscored identifier.
- * @property-read string $id The identifier of the module, defined by {@link T_ID}.
+ * @property-read string $id The identifier of the module, defined by {@link Descriptor::ID}.
  * @property-read Model $model The primary model of the module.
- * @property-read Module $parent The parent module, defined by {@link T_EXTENDS}.
- * @property-read string $path The path to the module, defined by {@link T_PATH}.
+ * @property-read Module $parent The parent module, defined by {@link Descriptor::INHERITS}.
+ * @property-read string $path The path to the module, defined by {@link Descriptor::PATH}.
  * @property-read string $title The localized title of the module.
  */
 class Module extends Object
@@ -39,6 +40,8 @@ class Module extends Object
 	 * The category of the module is translated within the `module_category` scope.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_CATEGORY = 'category';
 
@@ -49,6 +52,8 @@ class Module extends Object
 	 * tag and the following pattern : `<namespace>\Module`.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_CLASS = 'class';
 
@@ -56,6 +61,8 @@ class Module extends Object
 	 * Defines a short description of what the module do.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_DESCRIPTION = 'description';
 
@@ -63,6 +70,8 @@ class Module extends Object
 	 * Defines the state of the module.
 	 *
 	 * @var bool
+	 *
+	 * @deprecated
 	 */
 	const T_DISABLED = 'disabled';
 
@@ -70,6 +79,8 @@ class Module extends Object
 	 * Defines the module that the module extends.
 	 *
 	 * @var string|\ICanBoogie\Module
+	 *
+	 * @deprecated
 	 */
 	const T_EXTENDS = 'extends';
 
@@ -79,6 +90,8 @@ class Module extends Object
 	 * If the identifier is not defined the name of the module directory is used instead.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_ID = 'id';
 
@@ -88,6 +101,8 @@ class Module extends Object
 	 * Required modules are always enabled.
 	 *
 	 * @var bool
+	 *
+	 * @deprecated
 	 */
 	const T_REQUIRED = 'required';
 
@@ -98,6 +113,8 @@ class Module extends Object
 	 * of the module and the minimum version required.
 	 *
 	 * @var array[string]string
+	 *
+	 * @deprecated
 	 */
 	const T_REQUIRES = 'requires';
 
@@ -105,6 +122,8 @@ class Module extends Object
 	 * Defines the models of the module.
 	 *
 	 * @var array[string]array|string
+	 *
+	 * @deprecated
 	 */
 	const T_MODELS = 'models';
 
@@ -114,6 +133,8 @@ class Module extends Object
 	 * This attribute must be defined at construct time.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_NAMESPACE = 'namespace';
 
@@ -123,6 +144,8 @@ class Module extends Object
 	 * This tag is resolved when the module is indexed.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_PATH = 'path';
 
@@ -130,6 +153,8 @@ class Module extends Object
 	 * General permission of the module.
 	 *
 	 * @var string|int
+	 *
+	 * @deprecated
 	 */
 	const T_PERMISSION = 'permission';
 
@@ -137,6 +162,8 @@ class Module extends Object
 	 * Defines the permissions added by the module.
 	 *
 	 * @var array[]string
+	 *
+	 * @deprecated
 	 */
 	const T_PERMISSIONS = 'permissions';
 
@@ -146,6 +173,8 @@ class Module extends Object
 	 * The title of the module is translated within the `module_title` scope.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_TITLE = 'title';
 
@@ -153,6 +182,8 @@ class Module extends Object
 	 * Defines the version (and revision) of the module.
 	 *
 	 * @var string
+	 *
+	 * @deprecated
 	 */
 	const T_VERSION = 'version';
 
@@ -163,6 +194,8 @@ class Module extends Object
 	 * {@link T_EXTENDS} and {@link T_REQUIRES} tags.
 	 *
 	 * @var int
+	 *
+	 * @deprecated
 	 */
 	const T_WEIGHT = 'weight';
 
@@ -212,7 +245,7 @@ class Module extends Object
 	 */
 	protected function get_id()
 	{
-		return $this->descriptor[self::T_ID];
+		return $this->descriptor[Descriptor::ID];
 	}
 
 	/**
@@ -224,7 +257,7 @@ class Module extends Object
 	 */
 	protected function get_path()
 	{
-		return $this->descriptor[self::T_PATH];
+		return $this->descriptor[Descriptor::PATH];
 	}
 
 	/**
@@ -304,7 +337,7 @@ class Module extends Object
 	 */
 	protected function get_title()
 	{
-		$default = isset($this->descriptor[self::T_TITLE]) ? $this->descriptor[self::T_TITLE] : 'Undefined';
+		$default = isset($this->descriptor[Descriptor::TITLE]) ? $this->descriptor[Descriptor::TITLE] : 'Undefined';
 
 		return I18n\t($this->flat_id, [], [ 'scope' => 'module_title', 'default' => $default ]);
 	}
@@ -318,7 +351,7 @@ class Module extends Object
 	{
 		global $core;
 
-		$extends = $this->descriptor[self::T_EXTENDS];
+		$extends = $this->descriptor[Descriptor::INHERITS];
 
 		return $extends ? ($extends instanceof self ? $extends : $core->modules[$extends]) : null;
 	}
@@ -333,14 +366,14 @@ class Module extends Object
 	 */
 	public function is_installed(Errors $errors)
 	{
-		if (empty($this->descriptor[self::T_MODELS]))
+		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
 			return null;
 		}
 
 		$rc = true;
 
-		foreach ($this->descriptor[self::T_MODELS] as $name => $tags)
+		foreach ($this->descriptor[Descriptor::MODELS] as $name => $tags)
 		{
 			if (!$this->model($name)->is_installed())
 			{
@@ -364,14 +397,14 @@ class Module extends Object
 	 */
 	public function install(Errors $errors)
 	{
-		if (empty($this->descriptor[self::T_MODELS]))
+		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
 			return null;
 		}
 
 		$rc = true;
 
-		foreach ($this->descriptor[self::T_MODELS] as $name => $tags)
+		foreach ($this->descriptor[Descriptor::MODELS] as $name => $tags)
 		{
 			$model = $this->model($name);
 
@@ -401,14 +434,14 @@ class Module extends Object
 	 */
 	public function uninstall()
 	{
-		if (empty($this->descriptor[self::T_MODELS]))
+		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
 			return;
 		}
 
 		$rc = true;
 
-		foreach ($this->descriptor[self::T_MODELS] as $name => $tags)
+		foreach ($this->descriptor[Descriptor::MODELS] as $name => $tags)
 		{
 			$model = $this->model($name);
 
@@ -448,7 +481,7 @@ class Module extends Object
 	{
 		if (empty($this->models[$which]))
 		{
-			if (empty($this->descriptor[self::T_MODELS][$which]))
+			if (empty($this->descriptor[Descriptor::MODELS][$which]))
 			{
 				throw new ModelNotDefined($which);
 			}
@@ -464,7 +497,7 @@ class Module extends Object
 				$callback = 'resolve_model_tags';
 			}
 
-			$attributes = $this->$callback($this->descriptor[self::T_MODELS][$which], $which);
+			$attributes = $this->$callback($this->descriptor[Descriptor::MODELS][$which], $which);
 
 			#
 			# COMPAT WITH 'inherit'

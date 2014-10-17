@@ -74,7 +74,7 @@ class Hooks
 
 		foreach (Core::get()->modules->descriptors as $module_id => $descriptor)
 		{
-			$module_roots[$descriptor[Module::T_PATH]] = $module_id;
+			$module_roots[$descriptor[Descriptor::PATH]] = $module_id;
 		}
 
 		foreach ($event->fragments as $module_root => &$fragment)

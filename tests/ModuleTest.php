@@ -13,6 +13,7 @@ namespace ICanBoogie;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\Connection;
+use ICanBoogie\Module\Descriptor;
 
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,8 +28,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 		self::$node_descriptor = [
 
-			Module::T_ID => 'nodes',
-			Module::T_MODELS => [
+			Descriptor::ID => 'nodes',
+			Descriptor::MODELS => [
 
 				'primary' => [
 
@@ -46,17 +47,17 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 				]
 			],
 
-			Module::T_NAMESPACE => __CLASS__ . '\Modules\Nodes',
-			Module::T_TITLE => 'Nodes'
+			Descriptor::NS => __CLASS__ . '\Modules\Nodes',
+			Descriptor::TITLE => 'Nodes'
 		];
 
 		self::$node_module = new Module(self::$node_descriptor);
 
 		self::$content_module = new Module
 		([
-			Module::T_ID => 'contents',
-			Module::T_EXTENDS => self::$node_module,
-			Module::T_MODELS => [
+			Descriptor::ID => 'contents',
+			Descriptor::INHERITS => self::$node_module,
+			Descriptor::MODELS => [
 
 				'primary' => [
 
@@ -95,8 +96,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 	{
 		$m = new Module([
 
-			Module::T_ID => 'name.space.to.id',
-			Module::T_TITLE => 'Nodes'
+			Descriptor::ID => 'name.space.to.id',
+			Descriptor::TITLE => 'Nodes'
 		]);
 
 		$this->assertEquals('name_space_to_id', $m->flat_id);
@@ -104,7 +105,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_id()
 	{
-		$this->assertEquals(self::$node_descriptor[Module::T_ID], self::$node_module->id);
+		$this->assertEquals(self::$node_descriptor[Descriptor::ID], self::$node_module->id);
 	}
 
 	public function test_get_model()

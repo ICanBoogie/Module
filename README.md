@@ -68,13 +68,13 @@ is using the namespace `Icybee\Modules\Nodes`.
 namespace Icybee\Modules\Nodes;
 
 use ICanBoogie\ActiveRecord\Model;
-use ICanBoogie\Module;
+use ICanBoogie\Module\Descriptor;
 
 return [
 
-	Module::T_CATEGORY => 'contents',
-	Module::T_DESCRIPTION => 'Centralized node system base',
-	Module::T_MODELS => [
+	Descriptor::CATEGORY => 'contents',
+	Descriptor::DESCRIPTION => 'Centralized node system base',
+	Descriptor::MODELS => [
 
 		'primary' => [
 
@@ -99,24 +99,24 @@ return [
 		]
 	],
 
-	Module::T_NAMESPACE => __NAMESPACE__,
-	Module::T_PERMISSION => false,
-	Module::T_PERMISSIONS => [
+	Descriptor::NS => __NAMESPACE__,
+	Descriptor::PERMISSION => false,
+	Descriptor::PERMISSIONS => [
 
 		'modify belonging site'
 
 	],
 
-	Module::T_REQUIRED => true,
-	Module::T_REQUIRES => [
+	Descriptor::REQUIRED => true,
+	Descriptor::REQUIRES => [
 
 		'sites' => '*',
 		'users' => '*'
 
 	],
 
-	Module::T_TITLE => 'Nodes',
-	Module::T_VERSION => '1.0'
+	Descriptor::TITLE => 'Nodes',
+	Descriptor::VERSION => '1.0'
 
 ];
 ```
