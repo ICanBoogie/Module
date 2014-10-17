@@ -904,6 +904,9 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 * @param string|Module $module
 	 *
 	 * @return string
+	 *
+	 * @throws ModuleNotDefined if the specified module, or the module specified by
+	 * {@link T_EXTENDS} is not defined.
 	 */
 	public function resolve_classname($unqualified_classname, $module)
 	{
@@ -914,6 +917,11 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		while ($module)
 		{
+			if (empty($this->descriptors[$module]))
+			{
+				throw new ModuleNotDefined($module);
+			}
+
 			$descriptor = $this->descriptors[$module];
 			$fully_qualified_classname = $descriptor[Module::T_NAMESPACE] . '\\' . $unqualified_classname;
 
