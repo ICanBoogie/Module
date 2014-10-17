@@ -127,22 +127,22 @@ return [
 
 #### Descriptor tags
 
-Here are the tags that can be used to define the module's descriptor.
+Here are the tags (`Descriptor::<tab>`) that can be used to define the module's descriptor.
 
-- `T_CATEGORY`: Defines the category for the module.
-- `T_CLASS`: Defines the PHP class of the module. Defaults to `<namespace>\Module`.
-- `T_DESCRIPTION`: Defines a short description of the module.
-- `T_EXTENDS`: Defines the module that the module extends.
-- `T_ID`: Defines the identifier of the module. Defaults to its directory name.
-- `T_REQUIRED`: Defines that the module is required and cannot be disabled.
-- `T_REQUIRES`: Defines the modules (and the versions) that the module requires.
-- `T_MODELS`: Defines the models of the module. Take a look at the [ActiveRecord package][] for
+- `CATEGORY`: Defines the category for the module.
+- `CLASSNAME`: Defines the PHP class of the module. Defaults to `<namespace>\Module`.
+- `DESCRIPTION`: Defines a short description of the module.
+- `INHERITS`: Defines the module that the module extends.
+- `ID`: Defines the identifier of the module. Defaults to its directory name.
+- `REQUIRED`: Defines that the module is required and cannot be disabled.
+- `REQUIRES`: Defines the modules (and the versions) that the module requires.
+- `MODELS`: Defines the models of the module. Take a look at the [ActiveRecord package][] for
 more informations about ActiveRecords and models.
-- `T_NAMESPACE`: Defines the namespace of the module.
-- `T_PERMISSION`: Defines the general permission required to use this module.
-- `T_PERMISSIONS`: Defines module specific permissions.
-- `T_TITLE`: Defines the title of the module.
-- `T_VERSION`: Defines the version of the module.
+- `NS`: Defines the namespace of the module.
+- `PERMISSION`: Defines the general permission required to use this module.
+- `PERMISSIONS`: Defines module specific permissions.
+- `TITLE`: Defines the title of the module.
+- `VERSION`: Defines the version of the module.
 
 
 
