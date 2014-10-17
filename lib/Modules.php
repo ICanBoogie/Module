@@ -558,7 +558,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 		}
 		*/
 
-		return array_merge(Descriptor::normalize($descriptor), [
+		return Descriptor::normalize($descriptor + [
 
 			Descriptor::ID => $id,
 			Descriptor::PATH => $path,
