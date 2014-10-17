@@ -893,4 +893,36 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 		return $errors;
 	}
+
+	/**
+	 * Resolves a class name using module inheritance.
+	 *
+	 * To resolve a given class name, the method checks in each module namespace—starting from the
+	 * specified module—if the class exists. If it does, it returns its fully qualified name.
+	 *
+	 * @param string $unqualified_classname
+	 * @param string|Module $module
+	 *
+	 * @return string
+	 */
+	public function resolve_classname($unqualified_classname, $module)
+	{
+		if ($module instanceof Module)
+		{
+			$module = $module->id;
+		}
+
+		while ($module)
+		{
+			$descriptor = $this->descriptors[$module];
+			$fully_qualified_classname = $descriptor[Module::T_NAMESPACE] . '\\' . $unqualified_classname;
+
+			if (class_exists($fully_qualified_classname, true))
+			{
+				return $fully_qualified_classname;
+			}
+
+			$module = $descriptor[Module::T_EXTENDS];
+		}
+	}
 }
