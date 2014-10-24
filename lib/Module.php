@@ -643,8 +643,6 @@ class Module extends Object
 						'%table' => $implement['table']
 
 					]));
-
-					$implement['table'] = $models[$implement['table']];
 				}
 			}
 		}

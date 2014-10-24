@@ -317,13 +317,6 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 */
 	protected function index_construct()
 	{
-		$isolated_require = function ($__file__, $__exposed__)
-		{
-			extract($__exposed__);
-
-			return require $__file__;
-		};
-
 		$descriptors = $this->paths ? $this->index_descriptors($this->paths) : [];
 		$catalogs = [];
 		$configs = [];
@@ -580,7 +573,6 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	protected function alter_descriptor(array $descriptor)
 	{
 		$id = $descriptor[Descriptor::ID];
-		$path = $descriptor[Descriptor::PATH];
 		$namespace = $descriptor[Descriptor::NS];
 
 		# models and active records
