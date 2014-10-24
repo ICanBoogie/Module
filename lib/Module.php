@@ -534,7 +534,7 @@ class Module extends Object
 
 	protected function resolve_model_tags($tags, $which)
 	{
-		global $core;
+		$core = \ICanBoogie\app();
 
 		#
 		# The model may use another model, in which case the model to use is defined using a
