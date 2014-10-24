@@ -534,8 +534,6 @@ class Module extends Object
 
 	protected function resolve_model_tags($tags, $which)
 	{
-		$core = \ICanBoogie\app();
-
 		#
 		# The model may use another model, in which case the model to use is defined using a
 		# string e.g. 'contents' or 'terms/nodes'
@@ -548,6 +546,8 @@ class Module extends Object
 			if ($model_name == 'inherit')
 			{
 				$class = get_parent_class($this);
+
+				$core = \ICanBoogie\app();
 
 				foreach ($core->modules->descriptors as $module_id => $descriptor)
 				{
@@ -593,7 +593,7 @@ class Module extends Object
 
 			if (is_string($extends))
 			{
-				$extends = $core->models[$extends];
+				$extends = \ICanBoogie\app()->models[$extends];
 			}
 
 			if (!$tags[Model::T_CLASS])
@@ -626,7 +626,7 @@ class Module extends Object
 						]));
 					}
 
-					$module = ($implement_id == $id) ? $this : $core->modules[$implement_id];
+					$module = ($implement_id == $id) ? $this : \ICanBoogie\app()->modules[$implement_id];
 
 					$implement['table'] = $module->model($implement_which);
 				}
@@ -660,7 +660,7 @@ class Module extends Object
 
 		if (!($connection instanceof Connection))
 		{
-			$tags[Model::CONNECTION] = $core->connections[$connection];
+			$tags[Model::CONNECTION] = \ICanBoogie\app()->connections[$connection];
 		}
 
 		return $tags;
