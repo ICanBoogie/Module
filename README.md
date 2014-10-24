@@ -2,9 +2,9 @@
 
 This package provides support for modules to the [ICanBoogie](http://icanboogie.org) framework.
 
-A module is like a tiny application inside a your application, like the application it provides
-its own configurations, routes, operations, views, templates… it contains everything it needs to
-execute a desired functionality.
+A module is like a tiny application inside your application. It provides its own configurations,
+routes, operations, views, templates… it contains everything it needs to execute a desired
+functionality.
 
 
 
@@ -45,7 +45,7 @@ The following directory structure demonstrates a more advanced module:
 	|  |_ <public assets>
 	|_ tests
 	|  |_ <tests>
-	|_ views
+	|_ templates
 	|  |_ <view templates>
 	|_ descriptor.php
 
@@ -55,7 +55,7 @@ The following directory structure demonstrates a more advanced module:
 
 ### The descriptor
 
-The descriptor is a very important file because it desribes the module and its models. At the
+The descriptor is a very important file because it describes the module and its models. At the
 very least the descriptor must define the title and the namespace of the module (yes namespace is
 mandatory).
 
@@ -173,7 +173,7 @@ the resources they provide. It is used to enabled/disable and load modules. The 
 takes care of the dependencies between the modules and sorts them accordingly.
 
 A module collection is represented by a [Modules][] instance, constructed from an array of paths
-and an optionnal cache. The paths array defined where the modules are located, while
+and an optional cache. The paths array defined where the modules are located, while
 the cache is used to store and retrieve the collection index.
 
 The following example demonstrates how a module collection can be created from two separate
@@ -212,7 +212,7 @@ $node_module = $modules['nodes'];
 ```
 
 The [ModuleNotDefined][] exception is thrown if the module is not defined. The [ModuleIsDisabled][]
-exception is thrown if the module is disabled. Finaly, the [ModuleConstructorMissing][] is thrown
+exception is thrown if the module is disabled. Finally, the [ModuleConstructorMissing][] is thrown
 when the class used to instantiate the module is missing.
 
 Modules are considered _accessible_ when their descriptor is registered and they are not
@@ -346,9 +346,7 @@ module that defines the route.
 
 
 
-
 ----------
-
 
 
 
@@ -364,24 +362,14 @@ The package requires PHP 5.4 or later.
 
 ## Installation
 
-The recommended way to install this package is through [Composer](http://getcomposer.org/).
-Create a `composer.json` file and run `php composer.phar install` command to install it:
+The recommended way to install this package is through [Composer](http://getcomposer.org/):
 
-```json
-{
-	"minimum-stability": "dev",
-	"require":
-	{
-		"icanboogie/module": "2.x"
-	}
-}
+```
+$ composer require icanboogie/module
 ```
 
 The following packages are required, you might want to check them out:
 
-- [icanboogie/common](https://github.com/ICanBoogie/Common)
-- [icanboogie/inflector](https://github.com/ICanBoogie/Inflector)
-- [icanboogie/prototype](https://github.com/ICanBoogie/Prototype)
 - [icanboogie/activerecord](https://github.com/ICanBoogie/ActiveRecord)
 - [icanboogie/errors](https://github.com/ICanBoogie/Errors)
 
@@ -394,7 +382,7 @@ The following packages are required, you might want to check them out:
 The package is [available on GitHub](https://github.com/ICanBoogie/Module), its repository can be
 cloned with the following command line:
 
-	$ git clone git://github.com/ICanBoogie/Module.git
+	$ git clone https://github.com/ICanBoogie/Module.git
 
 
 
@@ -415,8 +403,8 @@ cleaned with the `make clean` command.
 ## Testing
 
 The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
-automatically installed as well as all dependencies required to run the suite. You can later
-clean the directory with the `make clean` command.
+automatically installed as well as all dependencies required to run the suite. The directory can
+later by cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 

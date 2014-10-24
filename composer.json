@@ -17,14 +17,11 @@
 		"issues": "https://github.com/ICanBoogie/Module/issues",
 		"source": "https://github.com/ICanBoogie/Module"
 	},
-	"minimum-stability": "dev",
+
 	"require": {
 		"php": ">=5.4.0",
-		"icanboogie/common": "*",
-		"icanboogie/inflector": "*",
-		"icanboogie/prototype": "2.x",
-		"icanboogie/activerecord": "2.x",
-		"icanboogie/errors": "*"
+		"icanboogie/activerecord": ">=2.1.0",
+		"icanboogie/errors": ">=1.0.0"
 	},
 
 	"suggest": {
