@@ -63,4 +63,17 @@ class ModulesTest extends \PHPUnit_Framework_TestCase
 
 		];
 	}
+
+	public function test_get_module()
+	{
+		$modules = new Modules([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$modules->index;
+
+		$c = $modules['c'];
+		$b = $modules['b'];
+
+		$this->assertInstanceOf('ICanBoogie\Module', $c);
+		$this->assertInstanceOf('ICanBoogie\Module', $b);
+		$this->assertSame($b, $c->parent);
+	}
 }

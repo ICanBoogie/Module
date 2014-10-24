@@ -242,6 +242,13 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 			throw new ModuleConstructorMissing($id, $class);
 		}
 
+		$parent = &$descriptor[Descriptor::INHERITS];
+
+		if ($parent)
+		{
+			$parent = $this[$parent];
+		}
+
 		return $this->modules[$id] = new $class($descriptor);
 	}
 

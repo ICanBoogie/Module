@@ -349,11 +349,7 @@ class Module extends Object
 	 */
 	protected function get_parent()
 	{
-		global $core;
-
-		$extends = $this->descriptor[Descriptor::INHERITS];
-
-		return $extends ? ($extends instanceof self ? $extends : $core->modules[$extends]) : null;
+		return $this->descriptor[Descriptor::INHERITS];
 	}
 
 	/**

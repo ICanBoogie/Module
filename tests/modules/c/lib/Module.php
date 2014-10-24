@@ -2,7 +2,7 @@
 
 namespace ICanBoogie\Module\ModulesTest\ModuleC;
 
-class Module extends \ICanBoogie\Module\ModulesTest\ModuleB
+class Module extends \ICanBoogie\Module\ModulesTest\ModuleB\Module
 {
 
 }
