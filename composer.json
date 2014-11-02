@@ -45,8 +45,8 @@
 
 		"icanboogie": {
 
-			"config-path": "config"
-
+			"config-path": "config",
+			"autoconfig-filters": [ "ICanBoogie\\Module\\Hooks::filter_autoconfig" ]
 		}
 	}
 }

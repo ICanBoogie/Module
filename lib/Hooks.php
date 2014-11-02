@@ -20,6 +20,28 @@ use ICanBoogie\Prototype;
 class Hooks
 {
 	/*
+	 * Config
+	 */
+
+	/**
+	 * Adds "modules" directories found in the app directories to `module-path`.
+	 *
+	 * @param array $autoconfig
+	 */
+	static public function filter_autoconfig(array &$autoconfig, $root)
+	{
+		$directories = \ICanBoogie\resolve_app_paths($root);
+
+		foreach ($directories as $directory)
+		{
+			if (file_exists($directory . 'modules'))
+			{
+				$autoconfig['module-path'][] = $directory . 'modules';
+			}
+		}
+	}
+
+	/*
 	 * Events
 	 */
 
