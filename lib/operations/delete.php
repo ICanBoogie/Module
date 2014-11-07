@@ -11,8 +11,6 @@
 
 namespace ICanBoogie;
 
-use ICanBoogie\I18n\FormattedString;
-
 /**
  * Deletes a record.
  */
@@ -50,7 +48,7 @@ class DeleteOperation extends Operation
 
 		if (!$this->module->model->delete($key))
 		{
-			throw new \RuntimeException(\ICanBoogie\format('Unable to delete the record %key from %module.', [
+			throw new \RuntimeException($this->format('Unable to delete the record %key from %module.', [
 
 				'key' => $key,
 				'module' => $this->module->title
@@ -63,7 +61,7 @@ class DeleteOperation extends Operation
 			$this->response->location = $this->request['redirect_to'];
 		}
 
-		$this->response->message = new FormattedString('The record %key has been deleted from %module.', [
+		$this->response->message = $this->format('The record %key has been deleted from %module.', [
 
 			'key' => $key,
 			'module' => $this->module->title
