@@ -525,7 +525,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 					'name' => Descriptor::TITLE,
 					'id' => $id,
-					'path' => strip_root($descriptor_path)
+					'path' => \ICanBoogie\strip_root($descriptor_path)
 
 				]
 			));
