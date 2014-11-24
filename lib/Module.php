@@ -373,6 +373,13 @@ class Module extends Object
 		{
 			if (!$this->model($name)->is_installed())
 			{
+				$errors[$this->id] = $errors->format("The model %name is not installed.", [
+
+
+					'name' => $name
+
+				]);
+
 				$rc = false;
 			}
 		}
