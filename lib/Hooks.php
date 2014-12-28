@@ -17,6 +17,7 @@ use ICanBoogie\I18n;
 use ICanBoogie\Module;
 use ICanBoogie\Prototype;
 use ICanBoogie\Routing\Controller;
+use ICanBoogie\View;
 
 class Hooks
 {
@@ -121,6 +122,27 @@ class Hooks
 				];
 			}
 		}
+	}
+
+	/**
+	 * If the view renders a module's route, the "template" directory of that module is added
+	 * to the list of templates locations.
+	 *
+	 * @param View\AlterEvent $event
+	 * @param View $target
+	 */
+	static public function on_view_alter(View\AlterEvent $event, View $target)
+	{
+		try
+		{
+			$module = $target->controller->module;
+		}
+		catch (PropertyNotDefined $e)
+		{
+			return;
+		}
+
+		$target->add_path($module->descriptor[Descriptor::PATH] . 'templates');
 	}
 
 	/*

@@ -385,6 +385,15 @@ Note that prototypes are reseted and the [Events][] instance associated with the
 
 
 
+### `ICanBoogie\View\View::alter`
+
+If the view renders a module's route, the "template" directory of that module is added to the list
+of templates locations.
+
+
+
+
+
 ### `routing.collect_routes:before`
 
 Alter routes defined by modules by adding a `module` key that holds the identifier of the

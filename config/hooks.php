@@ -9,6 +9,7 @@ return [
 	'events' => [
 
 		'ICanBoogie\Core::boot' => $hooks . 'on_core_boot',
+		'ICanBoogie\View\View::alter' => $hooks . 'on_view_alter',
 
 		'routing.collect_routes:before' => $hooks . 'before_routing_collect_routes'
 
