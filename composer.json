@@ -23,6 +23,10 @@
 		"icanboogie/activerecord": ">=2.1.0",
 		"icanboogie/errors": ">=1.0.0"
 	},
+  	"require-dev": {
+		"icanboogie/routing": "~2.1",
+	  	"icanboogie/view": "dev-master"
+	},
 
 	"suggest": {
 

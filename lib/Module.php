@@ -263,7 +263,7 @@ class Module extends Object
 	/**
 	 * The descriptor of the module.
 	 *
-	 * @var array[string]mixed
+	 * @var array
 	 */
 	protected $descriptor;
 
@@ -272,7 +272,7 @@ class Module extends Object
 	 *
 	 * This method is the getter for the {@link $descriptor} magic property.
 	 *
-	 * @return array[string]mixed
+	 * @return array
 	 */
 	protected function get_descriptor()
 	{
@@ -375,7 +375,6 @@ class Module extends Object
 			{
 				$errors[$this->id] = $errors->format("The model %name is not installed.", [
 
-
 					'name' => $name
 
 				]);
@@ -418,7 +417,7 @@ class Module extends Object
 
 			if (!$model->install())
 			{
-				$errors[$this->id] = t('Unable to install model %model', [ '%model' => $name ]);
+				$errors[$this->id] = $errors->format('Unable to install model %model', [ '%model' => $name ]);
 
 				$rc = false;
 			}
@@ -465,7 +464,7 @@ class Module extends Object
 	/**
 	 * Cache for loaded models.
 	 *
-	 * @var array[string]ActiveRecord\Model
+	 * @var ActiveRecord\Model[]
 	 */
 	protected $models = [];
 
@@ -478,7 +477,8 @@ class Module extends Object
 	 *
 	 * @return Model The requested model.
 	 *
-	 * @throws \RuntimeException if the model does not exists.
+	 * @throws ModelNotDefined when the model is not defined by the module.
+	 * @throws \RuntimeException when the class of the model does not exists.
 	 */
 	public function model($which='primary')
 	{
@@ -521,7 +521,7 @@ class Module extends Object
 
 			if (!class_exists($class))
 			{
-				throw new \RuntimeException(\ICanBoogie\format("Unable to instanciate model %model, the class %class does not exists.", [
+				throw new \RuntimeException(\ICanBoogie\format("Unable to instantiate model %model, the class %class does not exists.", [
 
 					'model' => "$this->id/$which",
 					'class' => $class
@@ -687,15 +687,6 @@ class Module extends Object
 		$args = func_get_args();
 
 		array_shift($args);
-
-		$method_name = 'handle_block_' . $name;
-
-		if (method_exists($this, $method_name))
-		{
-			array_shift($args);
-
-			return call_user_func_array([ $this, $method_name ], $args);
-		}
 
 		$callback = 'block_' . $name;
 

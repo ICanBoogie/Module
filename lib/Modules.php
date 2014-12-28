@@ -62,7 +62,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	protected $cache;
 
 	/**
-	 * Instanciated modules.
+	 * Instantiated modules.
 	 *
 	 * @var array
 	 */
@@ -511,7 +511,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 					'var' => 'descriptor',
 					'type' => gettype($descriptor),
-					'path' => strip_root($descriptor_path)
+					'path' => \ICanBoogie\strip_root($descriptor_path)
 
 				]
 			));
@@ -539,24 +539,11 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 
 					'name' => Descriptor::NS,
 					'id' => $id,
-					'path' => \ICanboogie\strip_root($descriptor_path)
+					'path' => \ICanBoogie\strip_root($descriptor_path)
 
 				]
 			));
 		}
-
-		/*TODO-20120108: activate version checking
-		if (empty($descriptor[Descriptor::VERSION]))
-		{
-			throw new \RuntimeException(\ICanBoogie\format('The %name value of the %id module descriptor is empty in %path.', [
-
-				'name' => Descriptor::VERSION,
-				'id' => $id,
-				'path' => $descriptor_path
-
-			]);
-		}
-		*/
 
 		return Descriptor::normalize($descriptor + [
 
@@ -588,10 +575,11 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 		{
 			if (!is_array($definition))
 			{
-				throw new \InvalidArgumentException(\ICanBoogie\format
-				(
-					'Model definition must be array, given: %value.', [ 'value' => $definition ]
-				));
+				throw new \InvalidArgumentException(\ICanBoogie\format('Model definition must be array, given: %value.', [
+
+					'value' => $definition
+
+				]));
 			}
 
 			$basename = $id;

@@ -45,21 +45,21 @@ final class Descriptor
 	/**
 	 * Defines the state of the module.
 	 *
-	 * @var bool
+	 * @var string
 	 */
 	const DISABLED = 'disabled';
 
 	/**
 	 * Defines extra values.
 	 *
-	 * @var array
+	 * @var string
 	 */
 	const EXTRA = 'extra';
 
 	/**
 	 * Defines the parent module the module inherits from.
 	 *
-	 * @var string|\ICanBoogie\Module
+	 * @var string
 	 */
 	const INHERITS = 'extends'; // TODO-20101017: change to 'inherits' once the transition is over
 
@@ -77,7 +77,7 @@ final class Descriptor
 	 *
 	 * Required modules are always enabled.
 	 *
-	 * @var bool
+	 * @var string
 	 */
 	const REQUIRED = 'required';
 
@@ -87,14 +87,14 @@ final class Descriptor
 	 * The required modules are defined using an array where each key/value pair is the identifier
 	 * of the module and the minimum version required.
 	 *
-	 * @var array[string]string
+	 * @var string
 	 */
 	const REQUIRES = 'requires';
 
 	/**
 	 * Defines the models of the module.
 	 *
-	 * @var array[string]array|string
+	 * @var string
 	 */
 	const MODELS = 'models';
 
@@ -119,14 +119,14 @@ final class Descriptor
 	/**
 	 * General permission of the module.
 	 *
-	 * @var string|int
+	 * @var string
 	 */
 	const PERMISSION = 'permission';
 
 	/**
 	 * Defines the permissions added by the module.
 	 *
-	 * @var array[]string
+	 * @var string
 	 */
 	const PERMISSIONS = 'permissions';
 
@@ -152,7 +152,7 @@ final class Descriptor
 	 * The weight of the module is resolved during modules indexing according to the
 	 * {@link EXTENDS} and {@link REQUIRES} tags.
 	 *
-	 * @var int
+	 * @var string
 	 */
 	const WEIGHT = 'weight';
 

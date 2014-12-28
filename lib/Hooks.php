@@ -96,7 +96,7 @@ class Hooks
 	{
 		$module_roots = [];
 
-		foreach (Core::get()->modules->descriptors as $module_id => $descriptor)
+		foreach (\ICanBoogie\app()->modules->descriptors as $module_id => $descriptor)
 		{
 			$module_roots[$descriptor[Descriptor::PATH]] = $module_id;
 		}
