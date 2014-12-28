@@ -17,7 +17,7 @@ use ICanBoogie\I18n;
 use ICanBoogie\Module;
 use ICanBoogie\Prototype;
 use ICanBoogie\Routing\Controller;
-use ICanBoogie\View;
+use ICanBoogie\View\View;
 
 class Hooks
 {
