@@ -16,6 +16,7 @@ use ICanBoogie\HTTP\Request;
 use ICanBoogie\I18n;
 use ICanBoogie\Module;
 use ICanBoogie\Prototype;
+use ICanBoogie\Routing\Controller;
 
 class Hooks
 {
@@ -148,5 +149,33 @@ class Hooks
 	static public function get_models(Core $core)
 	{
 		return new Models($core->connections, [], $core->modules);
+	}
+
+	/**
+	 * Return the {@link Module} instance associated with the route handled by the controller.
+	 *
+	 * @param Controller $controller
+	 *
+	 * @return Module
+	 */
+	static public function controller_get_module(Controller $controller)
+	{
+		$module_id = $controller->route->module;
+
+		return $controller->app->modules[$module_id];
+	}
+
+	/**
+	 * Return the primary model of the module associated with the route handled by the controller.
+	 *
+	 * @param Controller $controller
+	 *
+	 * @return \ICanBoogie\ActiveRecord\Model
+	 *
+	 * @see controller_get_module()
+	 */
+	static public function controller_get_model(Controller $controller)
+	{
+		return $controller->module->model;
 	}
 }

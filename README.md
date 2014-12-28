@@ -281,6 +281,20 @@ $errors = $modules->install(new Errors);
 
 
 
+## Auto-config
+
+The package supports the _auto-config_ feature of the framework [ICanBoogie][] and provides the
+following:
+
+- A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [Modules][] instance
+configured to provide the modules of the application.
+- A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [Models][] instance
+configured to provide the models defined by the modules.
+
+
+
+
+
 ## An enhanced model provider
 
 The package provides an enhanced model provider, which extends the model provider that comes with
@@ -307,15 +321,49 @@ $nodes_attachments_model = $core->models['nodes/attachments'];
 
 
 
-## Auto-config
+## Enhanced routing
 
-The package supports the _auto-config_ feature of the framework [ICanBoogie][] and provides the
-following:
+The package adds two getters to [Controller][] instances. `module` returns the [Module][] instance
+of the module associated with a route, and `model` returns the primary model of that module. The
+route needs to define a `module` property in order for this to work, which the package does
+automatically for routes defined in the "config" directory of modules.
 
-- A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [Modules][] instance
-configured to provide the modules of the application.
-- A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [Models][] instance
-configured to provide the models defined by the modules.
+The following example demonstrates how a module can define a route, remember that the `module`
+options is automatically added, so it doesn't need to be defined:
+
+```php
+<?php
+
+// modules/articles/config/routes.php
+
+return [
+
+	'articles/show' => [
+	
+		'pattern' => '/<year:\d{4}>-<month:\d{2}>-:slug.html',
+		'controller' => "ArticlesController#show"
+	
+	]
+
+];
+```
+
+The following example demonstrates how the `model` property can be used to obtain the primary
+model of the module associated with the route:
+
+```php
+<?php
+
+use ICanBoogie\Routing\ActionController;
+
+class ArticlesController extends ActionController
+{
+	protected function any_index($year, $month, $slug)
+	{
+		$this->view->content = $this->model->filter_by_year_and_month_and_slug($year, $month, $slug)->one;
+	}
+}
+```
 
 
 
@@ -423,11 +471,13 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 
 
 [ActiveRecord package]: https://github.com/ICanBoogie/ActiveRecord
+[Controller]: http://icanboogie.org/docs/class-ICanBoogie.Routing.Controller.html
 [Events]: http://icanboogie.org/docs/class-ICanBoogie.Events.html
 [Errors]: http://icanboogie.org/docs/class-ICanBoogie.Errors.html
 [ICanBoogie]: http://icanboogie.org/
 [icanboogie/i18n]: https://github.com/ICanBoogie/I18n
 [Models]: http://icanboogie.org/docs/class-ICanBoogie.Models.html
+[Module]: http://icanboogie.org/docs/class-ICanBoogie.Module.html
 [Modules]: http://icanboogie.org/docs/class-ICanBoogie.Modules.html
 [ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.ModuleNotDefined.html
 [ModuleIsDisabled]: http://icanboogie.org/docs/class-ICanBoogie.ModuleIsDisabled.html
