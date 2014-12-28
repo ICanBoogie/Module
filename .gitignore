@@ -1,7 +1,8 @@
 .buildpath
+.idea/
 .project
-.settings
+.settings/
 .README.md.html
 composer.lock
-/docs
-/vendor
+docs/
+vendor/
