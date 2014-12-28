@@ -54,11 +54,11 @@ class Hooks
 	 * paths and the config paths.
 	 *
 	 * @param Core\BootEvent $event
-	 * @param Core $core
+	 * @param Core $app
 	 */
-	static public function on_core_boot(Core\BootEvent $event, Core $core)
+	static public function on_core_boot(Core\BootEvent $event, Core $app)
 	{
-		$modules = $core->modules;
+		$modules = $app->modules;
 		$index = $modules->index;
 
 		if (class_exists('ICanBoogie\I18n', true))
@@ -74,16 +74,16 @@ class Hooks
 
 		if ($modules_config_paths)
 		{
-			$core->configs->add($modules->config_paths, -10);
+			$app->configs->add($modules->config_paths, -10);
 		}
 
 		#
 		# Revoke prototypes and events.
 		#
 
-		Prototype::configure($core->configs['prototypes']);
+		Prototype::configure($app->configs['prototypes']);
 
-		unset($core->events);
+		unset($app->events);
 	}
 
 	/**
@@ -152,15 +152,15 @@ class Hooks
 	/**
 	 * Return the {@link Modules} instance used to manage the modules attached to the _core_.
 	 *
-	 * @param Core $core
+	 * @param Core $app
 	 *
 	 * @return Modules The modules provider.
 	 */
-	static public function get_modules(Core $core)
+	static public function get_modules(Core $app)
 	{
-		$config = $core->config;
+		$config = $app->config;
 
-		return new Modules($config['module-path'], $config['cache modules'] ? $core->vars : null);
+		return new Modules($config['module-path'], $config['cache modules'] ? $app->vars : null);
 	}
 
 	/**
@@ -168,9 +168,9 @@ class Hooks
 	 *
 	 * @return Models The models accessor.
 	 */
-	static public function get_models(Core $core)
+	static public function get_models(Core $app)
 	{
-		return new Models($core->connections, [], $core->modules);
+		return new Models($app->connections, [], $app->modules);
 	}
 
 	/**

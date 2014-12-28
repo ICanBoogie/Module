@@ -306,7 +306,7 @@ as follows:
 ```php
 <?php
 
-$nodes_model = $core->models['nodes'];
+$nodes_model = $app->models['nodes'];
 ```
 
 And if the [Nodes][] module was defining an `attachments` model:
@@ -314,7 +314,7 @@ And if the [Nodes][] module was defining an `attachments` model:
 ```php
 <?php
 
-$nodes_attachments_model = $core->models['nodes/attachments'];
+$nodes_attachments_model = $app->models['nodes/attachments'];
 ```
 
 

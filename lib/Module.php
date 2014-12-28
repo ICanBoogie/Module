@@ -554,16 +554,16 @@ class Module extends Object
 			{
 				$class = get_parent_class($this);
 
-				$core = \ICanBoogie\app();
+				$app = \ICanBoogie\app();
 
-				foreach ($core->modules->descriptors as $module_id => $descriptor)
+				foreach ($app->modules->descriptors as $module_id => $descriptor)
 				{
 					if ($class != $descriptor['class'])
 					{
 						continue;
 					}
 
-					$model_name = $core->models[$module_id];
+					$model_name = $app->models[$module_id];
 
 					break;
 				}
