@@ -20,7 +20,9 @@ return [
 		'ICanBoogie\Core::lazy_get_modules' => $hooks . 'get_modules',
 		'ICanBoogie\Core::lazy_get_models' => $hooks . 'get_models',
 		'ICanBoogie\Routing\Controller::get_module' => $hooks . 'controller_get_module',
-		'ICanBoogie\Routing\Controller::get_model' => $hooks . 'controller_get_model'
+		'ICanBoogie\Routing\Controller::get_model' => $hooks . 'controller_get_model',
+		'ICanBoogie\Routing\Controller::lazy_get_records_fetcher' => $hooks . 'controller_lazy_get_records_fetcher',
+		'ICanBoogie\Routing\Controller::fetch_records' => $hooks . 'controller_fetch_records'
 
 	]
 

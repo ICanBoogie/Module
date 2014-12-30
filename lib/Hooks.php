@@ -11,6 +11,7 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\ActiveRecord\Fetcher;
 use ICanBoogie\Core;
 use ICanBoogie\HTTP\Request;
 use ICanBoogie\I18n;
@@ -199,5 +200,35 @@ class Hooks
 	static public function controller_get_model(Controller $controller)
 	{
 		return $controller->module->model;
+	}
+
+	/**
+	 * Return a record fetcher for the controller `model`.
+	 *
+	 * **Note:** The "icanboogie/facets" package is required.
+	 *
+	 * @param Controller $controller
+	 *
+	 * @return Fetcher
+	 */
+	static public function controller_lazy_get_records_fetcher(Controller $controller)
+	{
+		return new Fetcher($controller->model);
+	}
+
+	/**
+	 * Fetch records using the controller `records_fetcher`.
+	 *
+	 * @param Controller $controller
+	 * @param array $modifiers
+	 *
+	 * @return array
+	 */
+	static public function controller_fetch_records(Controller $controller, array $modifiers)
+	{
+		/* @var $fetcher \ICanBoogie\ActiveRecord\Fetcher */
+		$fetcher = $controller->records_fetcher;
+
+		return $fetcher($modifiers);
 	}
 }

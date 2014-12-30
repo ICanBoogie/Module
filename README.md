@@ -323,10 +323,18 @@ $nodes_attachments_model = $app->models['nodes/attachments'];
 
 ## Enhanced routing
 
-The package adds two getters to [Controller][] instances. `module` returns the [Module][] instance
-of the module associated with a route, and `model` returns the primary model of that module. The
-route needs to define a `module` property in order for this to work, which the package does
-automatically for routes defined in the "config" directory of modules.
+The package adds the following getters to [Controller][] instances:
+
+- `module`: Returns the [Module][] instance of the module associated with a route.
+- `model`: Returns the primary model of `module`.
+- `records_fetcher`: Returns a [Fetcher][] instance associated with `model`.
+
+The following method is also added:
+
+- `fetch_records`: Fetches records matching specified conditions using `fetcher`.
+
+The route needs to define a `module` property in order for these getters to work, which the
+package does automatically for routes defined in the "config" directory of modules.
 
 The following example demonstrates how a module can define a route, remember that the `module`
 options is automatically added, so it doesn't need to be defined:
@@ -348,8 +356,9 @@ return [
 ];
 ```
 
-The following example demonstrates how the `model` property can be used to obtain the primary
-model of the module associated with the route:
+The following example demonstrates how the `fetch_records` method can be used to fetch records
+matching some conditions, and how the `model` property can be used to obtain the primary model of
+the module associated with a route:
 
 ```php
 <?php
@@ -358,12 +367,19 @@ use ICanBoogie\Routing\ActionController;
 
 class ArticlesController extends ActionController
 {
-	protected function any_index($year, $month, $slug)
+	protected function any_index()
+	{
+		$this->view->content = $this->fetch_records([ 'limit' => 10 ] + $this->request->params);
+	}
+
+	protected function any_show($year, $month, $slug)
 	{
 		$this->view->content = $this->model->filter_by_year_and_month_and_slug($year, $month, $slug)->one;
 	}
 }
 ```
+
+**Note:** `records_fetcher` and `fetch_records` require the [icanboogie\facets] package.
 
 
 
@@ -479,12 +495,14 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 
 
 
+[icanboogie/facets]: https://github.com/ICanBoogie/Facets
+[icanboogie/i18n]: https://github.com/ICanBoogie/I18n
 [ActiveRecord package]: https://github.com/ICanBoogie/ActiveRecord
 [Controller]: http://icanboogie.org/docs/class-ICanBoogie.Routing.Controller.html
 [Events]: http://icanboogie.org/docs/class-ICanBoogie.Events.html
 [Errors]: http://icanboogie.org/docs/class-ICanBoogie.Errors.html
+[Fetcher]: http://icanboogie.org/docs/class-ICanBoogie.ActiveRecord.Fetcher.html
 [ICanBoogie]: http://icanboogie.org/
-[icanboogie/i18n]: https://github.com/ICanBoogie/I18n
 [Models]: http://icanboogie.org/docs/class-ICanBoogie.Models.html
 [Module]: http://icanboogie.org/docs/class-ICanBoogie.Module.html
 [Modules]: http://icanboogie.org/docs/class-ICanBoogie.Modules.html

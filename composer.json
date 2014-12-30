@@ -23,14 +23,15 @@
 		"icanboogie/activerecord": ">=2.1.0",
 		"icanboogie/errors": ">=1.0.0"
 	},
-  	"require-dev": {
+	"require-dev": {
 		"icanboogie/routing": "~2.1",
-	  	"icanboogie/view": "dev-master"
+		"icanboogie/view": "dev-master"
 	},
 
 	"suggest": {
 
-		"icanboogie/operation": "Required to use the 'delete' and 'save' operations."
+		"icanboogie/operation": "Required to use the 'delete' and 'save' operations.",
+		"icanboogie/facets": "In order to provide records fetchers to controllers."
 
 	},
 
