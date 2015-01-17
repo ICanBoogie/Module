@@ -14,7 +14,7 @@ namespace ICanBoogie\Module;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Errors;
 use ICanBoogie\Module;
-use ICanBoogie\StorageInterface;
+use ICanBoogie\Storage\StorageInterface;
 
 /**
  * Modules manager.

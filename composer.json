@@ -25,6 +25,8 @@
 	},
 	"require-dev": {
 		"icanboogie/routing": "~2.1",
+		"icanboogie/storage": "~1.0",
+		"icanboogie/render": "dev-master",
 		"icanboogie/view": "dev-master"
 	},
 
