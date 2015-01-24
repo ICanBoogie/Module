@@ -24,7 +24,7 @@ class Models extends \ICanBoogie\ActiveRecord\Models
 	/**
 	 * The modules accessor.
 	 *
-	 * @var Modules
+	 * @var ModuleCollection
 	 */
 	protected $modules;
 
@@ -33,9 +33,9 @@ class Models extends \ICanBoogie\ActiveRecord\Models
 	 *
 	 * @param Connections $connections Connections manager.
 	 * @param array $definitions Model definitions.
-	 * @param Modules $modules Modules manager.
+	 * @param ModuleCollection $modules ModuleCollection manager.
 	 */
-	public function __construct(Connections $connections, array $definitions, Modules $modules)
+	public function __construct(Connections $connections, array $definitions, ModuleCollection $modules)
 	{
 		$this->modules = $modules;
 

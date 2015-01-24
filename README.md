@@ -172,7 +172,7 @@ Modules are accessed and managed through a module collection. The collection ind
 the resources they provide. It is used to enabled/disable and load modules. The collection also
 takes care of the dependencies between the modules and sorts them accordingly.
 
-A module collection is represented by a [Modules][] instance, constructed from an array of paths
+A module collection is represented by a [ModuleCollection][] instance, constructed from an array of paths
 and an optional cache. The paths array defined where the modules are located, while
 the cache is used to store and retrieve the collection index.
 
@@ -182,12 +182,12 @@ module locations and the single location of a module, a cache is also provided:
 ```php
 <?php
 
-use ICanBoogie\Modules;
+use ICanBoogie\ModuleCollection;
 use ICanBoogie\Vars;
 
 $vars = new Vars(__DIR__ . '/repository/vars');
 
-$modules = new Modules([
+$modules = new ModuleCollection([
 
 	__DIR__ . '/vendor/icanboogie-modules',
 	__DIR__ . '/protected/modules',
@@ -266,7 +266,7 @@ if (!$nodes->is_installed($errors))
 $nodes->uninstall();
 ```
 
-Enabled modules can be installed at once using a [Modules][] instance. Errors are exceptions are
+Enabled modules can be installed at once using a [ModuleCollection][] instance. Errors are exceptions are
 collected in the provided [Errors][] instance.
 
 ```php
@@ -285,7 +285,7 @@ $errors = $modules->install(new Errors);
 
 The package supports the _autoconfig_ feature of [ICanBoogie][] and provides the following:
 
-- A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [Modules][] instance
+- A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [ModuleCollection][] instance
 configured to provide the modules of the application.
 - A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [Models][] instance
 configured to provide the models defined by the modules.
@@ -511,7 +511,7 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 [ICanBoogie]: http://icanboogie.org/
 [Models]: http://icanboogie.org/docs/class-ICanBoogie.Models.html
 [Module]: http://icanboogie.org/docs/class-ICanBoogie.Module.html
-[Modules]: http://icanboogie.org/docs/class-ICanBoogie.Modules.html
+[ModuleCollection]: http://icanboogie.org/docs/class-ICanBoogie.ModuleCollection.html
 [ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.ModuleNotDefined.html
 [ModuleIsDisabled]: http://icanboogie.org/docs/class-ICanBoogie.ModuleIsDisabled.html
 [ModuleConstructorMissing]: http://icanboogie.org/docs/class-ICanBoogie.ModuleConstructorMissing.html

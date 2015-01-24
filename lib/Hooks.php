@@ -149,17 +149,17 @@ class Hooks
 	 */
 
 	/**
-	 * Return the {@link Modules} instance used to manage the modules attached to the _core_.
+	 * Return the {@link ModuleCollection} instance used to manage the modules attached to the _core_.
 	 *
 	 * @param Core $app
 	 *
-	 * @return Modules The modules provider.
+	 * @return ModuleCollection The modules provider.
 	 */
 	static public function get_modules(Core $app)
 	{
 		$config = $app->config;
 
-		return new Modules($config['module-path'], $config['cache modules'] ? $app->vars : null);
+		return new ModuleCollection($config['module-path'], $config['cache modules'] ? $app->vars : null);
 	}
 
 	/**

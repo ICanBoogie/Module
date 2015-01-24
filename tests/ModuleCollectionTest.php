@@ -13,12 +13,12 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\Module;
 
-class ModulesTest extends \PHPUnit_Framework_TestCase
+class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @dataProvider provide_test_resolve_classname
 	 */
-	public function test_resolve_classname(Modules $modules, $classname, $module_id, $expected)
+	public function test_resolve_classname(ModuleCollection $modules, $classname, $module_id, $expected)
 	{
 		if ($expected === null)
 		{
@@ -32,7 +32,7 @@ class ModulesTest extends \PHPUnit_Framework_TestCase
 
 	public function provide_test_resolve_classname()
 	{
-		$modules = new Modules([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$modules = new ModuleCollection([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
 		$modules->index;
 
 		return [
@@ -66,7 +66,7 @@ class ModulesTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_module()
 	{
-		$modules = new Modules([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$modules = new ModuleCollection([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
 		$modules->index;
 
 		$c = $modules['c'];

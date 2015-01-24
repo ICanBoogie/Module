@@ -17,7 +17,7 @@ use ICanBoogie\Module;
 use ICanBoogie\Storage\StorageInterface;
 
 /**
- * Modules manager.
+ * A module collection.
  *
  * @property-read array $config_paths Paths of the enabled modules having a `config` directory.
  * @property-read array $locale_paths Paths of the enabled modules having a `locale` directory.
@@ -25,7 +25,7 @@ use ICanBoogie\Storage\StorageInterface;
  * @property-read array $enabled_modules_descriptors Descriptors of the enabled modules.
  * @property-read array $index Index for the modules.
  */
-class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggregate
+class ModuleCollection extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggregate
 {
 	/**
 	 * Formats a SQL table name given the module id and the model id.
@@ -269,7 +269,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 * configs path, and finally an array of configs constructors.
 	 *
 	 * The method also creates a `DIR` constant for each module. The constant is defined in the
-	 * namespace of the module e.g. `Icybee\Modules\Nodes\DIR`.
+	 * namespace of the module e.g. `Icybee\ModuleCollection\Nodes\DIR`.
 	 *
 	 * @return array
 	 */
@@ -358,7 +358,7 @@ class Modules extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggre
 	 * The descriptors are extended with the following default values:
 	 *
 	 * - (string) category: null.
-	 * - (string) class: Modules\<normalized_module_part>
+	 * - (string) class: ModuleCollection\<normalized_module_part>
 	 * - (string) description: null.
 	 * - (bool) disabled: false if required, true otherwise.
 	 * - (string) extends: null.

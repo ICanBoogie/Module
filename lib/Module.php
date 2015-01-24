@@ -16,7 +16,7 @@ use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\ModelNotDefined;
 use ICanBoogie\I18n;
 use ICanBoogie\Module\Descriptor;
-use ICanBoogie\Module\Modules;
+use ICanBoogie\Module\ModuleCollection;
 
 /**
  * A module of the framework.
@@ -587,7 +587,7 @@ class Module extends Object
 
 		if (empty($tags[Model::NAME]))
 		{
-			$tags[Model::NAME] = Modules::format_model_name($id, $which);
+			$tags[Model::NAME] = ModuleCollection::format_model_name($id, $which);
 		}
 
 		#
