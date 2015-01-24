@@ -13,6 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Errors;
+use ICanBoogie\GetterTrait;
 use ICanBoogie\Module;
 use ICanBoogie\Storage\StorageInterface;
 
@@ -25,8 +26,10 @@ use ICanBoogie\Storage\StorageInterface;
  * @property-read array $enabled_modules_descriptors Descriptors of the enabled modules.
  * @property-read array $index Index for the modules.
  */
-class ModuleCollection extends \ICanBoogie\Object implements \ArrayAccess, \IteratorAggregate
+class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 {
+	use GetterTrait;
+
 	/**
 	 * Formats a SQL table name given the module id and the model id.
 	 *
