@@ -15,11 +15,11 @@ use ICanBoogie\ActiveRecord\Connections;
 use ICanBoogie\Module;
 
 /**
- * Models manager.
+ * Model collection.
  *
  * Extends the ActiveRecord manager to handle module defined models.
  */
-class Models extends \ICanBoogie\ActiveRecord\Models
+class ModelCollection extends \ICanBoogie\ActiveRecord\Models
 {
 	/**
 	 * The modules accessor.

@@ -287,7 +287,7 @@ The package supports the _autoconfig_ feature of [ICanBoogie][] and provides the
 
 - A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [ModuleCollection][] instance
 configured to provide the modules of the application.
-- A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [Models][] instance
+- A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [ModelCollection][] instance
 configured to provide the models defined by the modules.
 
 ```php
@@ -509,7 +509,7 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 [Errors]: http://icanboogie.org/docs/class-ICanBoogie.Errors.html
 [Fetcher]: http://icanboogie.org/docs/class-ICanBoogie.ActiveRecord.Fetcher.html
 [ICanBoogie]: http://icanboogie.org/
-[Models]: http://icanboogie.org/docs/class-ICanBoogie.Models.html
+[ModelCollection]: http://icanboogie.org/docs/class-ICanBoogie.ModelCollection.html
 [Module]: http://icanboogie.org/docs/class-ICanBoogie.Module.html
 [ModuleCollection]: http://icanboogie.org/docs/class-ICanBoogie.ModuleCollection.html
 [ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.ModuleNotDefined.html

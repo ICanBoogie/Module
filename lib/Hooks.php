@@ -163,13 +163,13 @@ class Hooks
 	}
 
 	/**
-	 * Returns the {@link Models} instance used to obtain the models defined by the modules.
+	 * Returns the {@link ModelCollection} instance used to obtain the models defined by the modules.
 	 *
-	 * @return Models The models accessor.
+	 * @return ModelCollection The models accessor.
 	 */
 	static public function get_models(Core $app)
 	{
-		return new Models($app->connections, [], $app->modules);
+		return new ModelCollection($app->connections, [], $app->modules);
 	}
 
 	/**
