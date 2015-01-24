@@ -438,7 +438,7 @@ class Module extends Object
 	{
 		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
-			return;
+			return null;
 		}
 
 		$rc = true;
@@ -503,7 +503,7 @@ class Module extends Object
 			$attributes = $this->$callback($this->descriptor[Descriptor::MODELS][$which], $which);
 
 			#
-			# COMPAT WITH 'inherit'
+			# COMPATIBILITY WITH 'inherit'
 			#
 
 			if ($attributes instanceof Model)
@@ -678,7 +678,8 @@ class Module extends Object
 	 *
 	 * @param string $name The name of the block to get.
 	 *
-	 * @return mixed Depends on the implementation. Should return a string or object that can be stringified.
+	 * @return mixed Depends on the implementation. Should return a string or an object
+	 * implementing `__toString`.
 	 *
 	 * @throws \RuntimeException if the block is not defined.
 	 */

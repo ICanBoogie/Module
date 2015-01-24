@@ -156,6 +156,13 @@ final class Descriptor
 	 */
 	const WEIGHT = 'weight';
 
+	/**
+	 * Normalizes a descriptor array.
+	 *
+	 * @param array $descriptor
+	 *
+	 * @return array
+	 */
 	static public function normalize(array $descriptor)
 	{
 		return $descriptor + [

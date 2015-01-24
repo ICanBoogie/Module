@@ -11,6 +11,8 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\GetterTrait;
+
 /**
  * Exception thrown when a disabled module is requested.
  *
@@ -18,7 +20,7 @@ namespace ICanBoogie\Module;
  */
 class ModuleIsDisabled extends \RuntimeException
 {
-	use \ICanBoogie\GetterTrait;
+	use GetterTrait;
 
 	private $module_id;
 

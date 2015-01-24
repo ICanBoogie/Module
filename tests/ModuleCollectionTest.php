@@ -17,6 +17,11 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @dataProvider provide_test_resolve_classname
+	 *
+	 * @param ModuleCollection $modules
+	 * @param $classname
+	 * @param $module_id
+	 * @param $expected
 	 */
 	public function test_resolve_classname(ModuleCollection $modules, $classname, $module_id, $expected)
 	{
@@ -41,17 +46,17 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 			[ $modules, 'AAAOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleA\AAAOperation' ],
 			[ $modules, 'AAAOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleA\AAAOperation' ],
 
-			[ $modules, 'BBBOperation', 'a', null ],
+			[ $modules, 'BBBOperation', 'a', false ],
 			[ $modules, 'BBBOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\BBBOperation' ],
 			[ $modules, 'BBBOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleB\BBBOperation' ],
 
-			[ $modules, 'CCCOperation', 'a', null ],
-			[ $modules, 'CCCOperation', 'b', null ],
+			[ $modules, 'CCCOperation', 'a', false ],
+			[ $modules, 'CCCOperation', 'b', false ],
 			[ $modules, 'CCCOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\CCCOperation' ],
 
-			[ $modules, 'DDDOperation', 'a', null ],
-			[ $modules, 'DDDOperation', 'b', null ],
-			[ $modules, 'DDDOperation', 'c', null ],
+			[ $modules, 'DDDOperation', 'a', false ],
+			[ $modules, 'DDDOperation', 'b', false ],
+			[ $modules, 'DDDOperation', 'c', false ],
 
 			[ $modules, 'ABCOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\ABCOperation' ],
 			[ $modules, 'ABCOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\ABCOperation' ],

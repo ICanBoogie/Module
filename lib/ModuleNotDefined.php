@@ -11,6 +11,8 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\GetterTrait;
+
 /**
  * Exception thrown when a requested module is not defined.
  *
@@ -18,7 +20,7 @@ namespace ICanBoogie\Module;
  */
 class ModuleNotDefined extends \RuntimeException
 {
-	use \ICanBoogie\GetterTrait;
+	use GetterTrait;
 
 	/**
 	 * Identifier of the module.

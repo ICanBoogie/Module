@@ -24,9 +24,12 @@
 		"icanboogie/errors": ">=1.0.0"
 	},
 	"require-dev": {
+		"icanboogie/icanboogie": "~2.0",
 		"icanboogie/routing": "~2.1",
 		"icanboogie/storage": "~1.0",
-		"icanboogie/view": "~0.1"
+		"icanboogie/view": "~0.1",
+		"icanboogie/facets": "dev-master",
+		"icanboogie/i18n": "~2.0"
 	},
 
 	"suggest": {

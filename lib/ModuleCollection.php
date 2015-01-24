@@ -514,7 +514,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 					'var' => 'descriptor',
 					'type' => gettype($descriptor),
-					'path' => \ICanBoogie\strip_root($descriptor_path)
+					'path' => $descriptor_path
 
 				]
 			));
@@ -528,7 +528,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 					'name' => Descriptor::TITLE,
 					'id' => $id,
-					'path' => \ICanBoogie\strip_root($descriptor_path)
+					'path' => $descriptor_path
 
 				]
 			));
@@ -542,7 +542,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 					'name' => Descriptor::NS,
 					'id' => $id,
-					'path' => \ICanBoogie\strip_root($descriptor_path)
+					'path' => $descriptor_path
 
 				]
 			));
@@ -843,6 +843,11 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @see is_inheriting
 	 *
 	 * @deprecated
+	 *
+	 * @param string $module_id
+	 * @param string $extending_id
+	 *
+	 * @return bool
 	 */
 	public function is_extending($module_id, $extending_id)
 	{
@@ -891,7 +896,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @param string $unqualified_classname
 	 * @param string|Module $module
 	 *
-	 * @return string
+	 * @return string|false The resolved file name, or `false` if it could not be resolved.
 	 *
 	 * @throws ModuleNotDefined if the specified module, or the module specified by
 	 * {@link Descriptor::INHERITS} is not defined.
@@ -920,5 +925,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 			$module = $descriptor[Descriptor::INHERITS];
 		}
+
+		return false;
 	}
 }

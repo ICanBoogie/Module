@@ -74,6 +74,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider provide_test_write_readonly_property
 	 * @expectedException \ICanBoogie\PropertyNotWritable
+	 *
+	 * @param $property
 	 */
 	public function test_write_readonly_property($property)
 	{

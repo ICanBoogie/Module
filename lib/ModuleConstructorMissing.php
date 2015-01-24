@@ -11,6 +11,8 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\GetterTrait;
+
 /**
  * Exception thrown when a class is missing to instantiate a module.
  *
@@ -19,7 +21,7 @@ namespace ICanBoogie\Module;
  */
 class ModuleConstructorMissing extends \RuntimeException
 {
-	use \ICanBoogie\GetterTrait;
+	use GetterTrait;
 
 	/**
 	 * Identifier of the module.

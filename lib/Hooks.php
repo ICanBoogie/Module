@@ -16,7 +16,9 @@ use ICanBoogie\Core;
 use ICanBoogie\HTTP\Request;
 use ICanBoogie\I18n;
 use ICanBoogie\Module;
+use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\Prototype;
+use ICanBoogie\Routing;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\View\View;
 
@@ -58,7 +60,7 @@ class Hooks
 	static public function on_core_boot(Core\BootEvent $event, Core $app)
 	{
 		$modules = $app->modules;
-		$index = $modules->index;
+		$modules->index;
 
 		if (class_exists('ICanBoogie\I18n', true))
 		{
@@ -89,9 +91,9 @@ class Hooks
 	 * Alter routes defined by modules by adding a `module` key that holds the identifier of the
 	 * module that defines the route.
 	 *
-	 * @param \ICanBoogie\Routing\BeforeCollectRoutesEvent $event
+	 * @param Routing\BeforeCollectRoutesEvent $event
 	 */
-	static public function before_routing_collect_routes(\ICanBoogie\Routing\BeforeCollectRoutesEvent $event)
+	static public function before_routing_collect_routes(Routing\BeforeCollectRoutesEvent $event)
 	{
 		$module_roots = [];
 
@@ -164,6 +166,8 @@ class Hooks
 
 	/**
 	 * Returns the {@link ModelCollection} instance used to obtain the models defined by the modules.
+	 *
+	 * @param Core $app
 	 *
 	 * @return ModelCollection The models accessor.
 	 */

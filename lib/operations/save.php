@@ -68,7 +68,7 @@ class SaveOperation extends Operation
 	 * Fields defined as 'varchar'
 	 * ---------------------------
 	 *
-	 * If the property is not empty in the operation params, the property value is trimed using the
+	 * If the property is not empty in the operation params, the property value is trimmed using the
 	 * trim() function, ensuring that there is no leading or trailing white spaces.
 	 *
 	 * @return array The properties of the operation.
@@ -118,6 +118,10 @@ class SaveOperation extends Operation
 
 	/**
 	 * The method simply returns true.
+	 *
+	 * @param Errors $errors
+	 *
+	 * @return bool
 	 */
 	protected function validate(Errors $errors)
 	{

@@ -11,6 +11,7 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\ActiveRecord;
 use ICanBoogie\ActiveRecord\Connections;
 use ICanBoogie\Module;
 
@@ -19,7 +20,7 @@ use ICanBoogie\Module;
  *
  * Extends the ActiveRecord manager to handle module defined models.
  */
-class ModelCollection extends \ICanBoogie\ActiveRecord\Models
+class ModelCollection extends ActiveRecord\Models
 {
 	/**
 	 * The modules accessor.
