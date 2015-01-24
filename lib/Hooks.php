@@ -173,7 +173,7 @@ class Hooks
 	 */
 	static public function get_models(Core $app)
 	{
-		return new ModelCollection($app->connections, [], $app->modules);
+		return new ModelCollection($app->connections, $app->modules);
 	}
 
 	/**

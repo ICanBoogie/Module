@@ -33,10 +33,10 @@ class ModelCollection extends ActiveRecord\Models
 	 * Initializes the {@link $modules} property.
 	 *
 	 * @param Connections $connections Connections manager.
-	 * @param array $definitions Model definitions.
 	 * @param ModuleCollection $modules ModuleCollection manager.
+	 * @param array $definitions Model definitions.
 	 */
-	public function __construct(Connections $connections, array $definitions, ModuleCollection $modules)
+	public function __construct(Connections $connections, ModuleCollection $modules, array $definitions = [])
 	{
 		$this->modules = $modules;
 
