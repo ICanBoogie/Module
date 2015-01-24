@@ -281,15 +281,21 @@ $errors = $modules->install(new Errors);
 
 
 
-## Auto-config
+## Autoconfig
 
-The package supports the _auto-config_ feature of the framework [ICanBoogie][] and provides the
-following:
+The package supports the _autoconfig_ feature of [ICanBoogie][] and provides the following:
 
 - A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [Modules][] instance
 configured to provide the modules of the application.
 - A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [Models][] instance
 configured to provide the models defined by the modules.
+
+```php
+<?php
+
+$app->modules['nodes'];
+$app->models['nodes'];
+```
 
 
 
