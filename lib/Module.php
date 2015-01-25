@@ -29,11 +29,10 @@ use ICanBoogie\Module\ModuleCollection;
  * @property-read string $path The path to the module, defined by {@link Descriptor::PATH}.
  * @property-read string $title The localized title of the module.
  * @property-read ModuleCollection $collection
+ * @property-read Core $app
  */
-class Module
+class Module extends Object
 {
-	use PrototypeTrait;
-
 	/**
 	 * Defines the category for the module.
 	 *
