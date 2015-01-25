@@ -18,20 +18,16 @@ use ICanBoogie\Module;
 /**
  * Model collection.
  *
- * Extends the ActiveRecord manager to handle module defined models.
+ * Extends the ActiveRecord model collection with the models defined by the modules.
  */
 class ModelCollection extends ActiveRecord\Models
 {
 	/**
-	 * The modules accessor.
-	 *
 	 * @var ModuleCollection
 	 */
 	protected $modules;
 
 	/**
-	 * Initializes the {@link $modules} property.
-	 *
 	 * @param Connections $connections Connections manager.
 	 * @param ModuleCollection $modules ModuleCollection manager.
 	 * @param array $definitions Model definitions.
@@ -47,7 +43,7 @@ class ModelCollection extends ActiveRecord\Models
 	 * Checks if a model exists by first checking if the module it belongs to is enabled and that
 	 * it actually defines the model.
 	 *
-	 * @param mixed $id
+	 * @param string $id
 	 *
 	 * @return bool
 	 */
@@ -72,7 +68,7 @@ class ModelCollection extends ActiveRecord\Models
 	 * the identifier of the module and `<model_id>` is the identifier of the module's model. The
 	 * `<model_id>` part is optional and defaults to `primary`.
 	 *
-	 * @param mixed $id Identifier of the model.
+	 * @param string $id Identifier of the model.
 	 *
 	 * @return ActiveRecord\Model
 	 */
