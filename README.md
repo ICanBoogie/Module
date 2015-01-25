@@ -127,7 +127,7 @@ return [
 
 #### Descriptor tags
 
-Here are the tags (`Descriptor::<tab>`) that can be used to define the module's descriptor.
+Here are the tags (`Descriptor::<tag>`) that can be used to define the module's descriptor.
 
 - `CATEGORY`: Defines the category for the module.
 - `CLASSNAME`: Defines the PHP class of the module. Defaults to `<namespace>\Module`.
