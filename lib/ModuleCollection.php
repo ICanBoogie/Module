@@ -252,7 +252,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			$parent = $this[$parent];
 		}
 
-		return $this->modules[$id] = new $class($descriptor);
+		return $this->modules[$id] = new $class($this, $descriptor);
 	}
 
 	/**

@@ -19,8 +19,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 {
 	static private $connection;
 	static private $node_descriptor;
-	static private $node_module;
-	static private $content_module;
+	private $node_module;
+	private $content_module;
 
 	static public function setupBeforeClass()
 	{
@@ -50,13 +50,23 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 			Descriptor::NS => __CLASS__ . '\Modules\Nodes',
 			Descriptor::TITLE => 'Nodes'
 		];
+	}
 
-		self::$node_module = new Module(self::$node_descriptor);
+	public function setUp()
+	{
+		/* @var $collection_stub \ICanBoogie\Module\ModuleCollection */
+		$collection_stub = $this
+			->getMockBuilder('ICanBoogie\Module\ModuleCollection')
+			->disableOriginalConstructor()
+			->getMock();
 
-		self::$content_module = new Module
-		([
+		$this->node_module = new Module($collection_stub, self::$node_descriptor);
+
+		$this->content_module = new Module
+		(
+			$collection_stub, [
 			Descriptor::ID => 'contents',
-			Descriptor::INHERITS => self::$node_module,
+			Descriptor::INHERITS => $this->node_module,
 			Descriptor::MODELS => [
 
 				'primary' => [
@@ -79,7 +89,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test_write_readonly_property($property)
 	{
-		self::$node_module->$property = null;
+		$this->node_module->$property = null;
 	}
 
 	public function provide_test_write_readonly_property()
@@ -91,15 +101,22 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_descriptor()
 	{
-		$this->assertEquals(self::$node_descriptor, self::$node_module->descriptor);
+		$this->assertEquals(self::$node_descriptor, $this->node_module->descriptor);
 	}
 
 	public function test_get_flat_id()
 	{
-		$m = new Module([
+		/* @var $collection_stub \ICanBoogie\Module\ModuleCollection */
+		$collection_stub = $this
+			->getMockBuilder('ICanBoogie\Module\ModuleCollection')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$m = new Module($collection_stub, [
 
 			Descriptor::ID => 'name.space.to.id',
 			Descriptor::TITLE => 'Nodes'
+
 		]);
 
 		$this->assertEquals('name_space_to_id', $m->flat_id);
@@ -107,16 +124,16 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_id()
 	{
-		$this->assertEquals(self::$node_descriptor[Descriptor::ID], self::$node_module->id);
+		$this->assertEquals(self::$node_descriptor[Descriptor::ID], $this->node_module->id);
 	}
 
 	public function test_get_model()
 	{
-		$this->assertInstanceOf('ICanBoogie\ActiveRecord\Model', self::$node_module->model);
+		$this->assertInstanceOf('ICanBoogie\ActiveRecord\Model', $this->node_module->model);
 	}
 
 	public function test_get_parent()
 	{
-		$this->assertEquals(self::$node_module, self::$content_module->parent);
+		$this->assertEquals($this->node_module, $this->content_module->parent);
 	}
 }

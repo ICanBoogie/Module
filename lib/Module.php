@@ -28,6 +28,7 @@ use ICanBoogie\Module\ModuleCollection;
  * @property-read Module $parent The parent module, defined by {@link Descriptor::INHERITS}.
  * @property-read string $path The path to the module, defined by {@link Descriptor::PATH}.
  * @property-read string $title The localized title of the module.
+ * @property-read ModuleCollection $collection
  */
 class Module
 {
@@ -262,6 +263,16 @@ class Module
 		return $this->descriptor[Descriptor::PATH];
 	}
 
+	private $collection;
+
+	/**
+	 * @return ModuleCollection
+	 */
+	protected function get_collection()
+	{
+		return $this->collection;
+	}
+
 	/**
 	 * The descriptor of the module.
 	 *
@@ -286,10 +297,12 @@ class Module
 	 *
 	 * Initializes the {@link $descriptor} property.
 	 *
+	 * @param ModuleCollection $collection
 	 * @param array $descriptor
 	 */
-	public function __construct(array $descriptor)
+	public function __construct(ModuleCollection $collection, array $descriptor)
 	{
+		$this->collection = $collection;
 		$this->descriptor = $descriptor;
 	}
 
