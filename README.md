@@ -1,6 +1,6 @@
 # Module [![Build Status](https://travis-ci.org/ICanBoogie/Module.svg?branch=2.0)](http://travis-ci.org/ICanBoogie/Module)
 
-This package provides support for modules to the [ICanBoogie](http://icanboogie.org) framework.
+This package provides support for modules to the framework [ICanBoogie](http://icanboogie.org).
 
 A module is like a tiny application inside your application. It provides its own configurations,
 routes, operations, views, templates… it contains everything it needs to execute a desired
@@ -84,8 +84,8 @@ return [
 
 					'nid' => 'serial',
 					'uid' => 'foreign',
-					'siteid' => 'foreign',
-					'nativeid' => 'foreign',
+					'site_id' => 'foreign',
+					'native_id' => 'foreign',
 					'constructor' => [ 'varchar', 64, 'indexed' => true ],
 					'title' => 'varchar',
 					'slug' => [ 'varchar', 80, 'indexed' => true ],
@@ -183,9 +183,9 @@ module locations and the single location of a module, a cache is also provided:
 <?php
 
 use ICanBoogie\ModuleCollection;
-use ICanBoogie\Vars;
+use ICanBoogie\Storage\FileStorage;
 
-$vars = new Vars(__DIR__ . '/repository/vars');
+$vars = new FileStorage(__DIR__ . '/repository/vars');
 
 $modules = new ModuleCollection([
 
@@ -266,8 +266,8 @@ if (!$nodes->is_installed($errors))
 $nodes->uninstall();
 ```
 
-Enabled modules can be installed at once using a [ModuleCollection][] instance. Errors are exceptions are
-collected in the provided [Errors][] instance.
+Enabled modules can be installed at once using a [ModuleCollection][] instance. Errors and
+exceptions are collected in the specified [Errors][] instance.
 
 ```php
 <?php
@@ -285,10 +285,10 @@ $errors = $modules->install(new Errors);
 
 The package supports the _autoconfig_ feature of [ICanBoogie][] and provides the following:
 
-- A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [ModuleCollection][] instance
-configured to provide the modules of the application.
-- A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [ModelCollection][] instance
-configured to provide the models defined by the modules.
+- A lazy getter for the `ICanBoogie\Core::$modules` property, that returns a [ModuleCollection][]
+instance configured to provide the modules of the application.
+- A lazy getter for the `ICanBoogie\Core::$models` property, that returns a [ModelCollection][]
+instance configured to provide the models defined by the modules.
 
 ```php
 <?php
@@ -393,33 +393,16 @@ class ArticlesController extends ActionController
 
 ## Event hooks
 
+- `ICanBoogie\Core::boot`: Boot enabled modules. Before the modules are actually booted up,
+their index is used to alter the I18n load paths (if the [icanboogie/i18n][] package is available)
+and the config paths. Note that prototypes are reset and the [Events][] instance associated
+with the core revoked.
 
+- `ICanBoogie\View\View::alter`: If the view renders a module's route, the "template" directory
+of that module is added to the list of template locations.
 
-
-
-### `ICanBoogie\Core::boot`
-
-Boot enabled modules. Before the modules are actually booted up, their index is used to alter
-the I18n load paths (if the [icanboogie/i18n][] package is available) and the config paths.
-Note that prototypes are reseted and the [Events][] instance associated with the core revoked.
-
-
-
-
-
-### `ICanBoogie\View\View::alter`
-
-If the view renders a module's route, the "template" directory of that module is added to the list
-of templates locations.
-
-
-
-
-
-### `routing.collect_routes:before`
-
-Alter routes defined by modules by adding a `module` key that holds the identifier of the
-module that defines the route.
+- `routing.collect_routes:before`: Alter routes defined by modules by adding a `module` key that
+holds the identifier of the module that defines the route.
 
 
 
