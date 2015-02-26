@@ -531,7 +531,7 @@ class Module extends Object
 			# create model
 			#
 
-			$class = $attributes[Model::T_CLASS];
+			$class = $attributes[Model::CLASSNAME];
 
 			if (!class_exists($class))
 			{
@@ -543,7 +543,7 @@ class Module extends Object
 				]));
 			}
 
-			$this->models[$which] = new $class($attributes);
+			$this->models[$which] = new $class($this->app->models, $attributes);
 		}
 
 		#
@@ -583,7 +583,7 @@ class Module extends Object
 				}
 			}
 
-			$tags = [ Model::T_EXTENDS => $model_name ];
+			$tags = [ Model::EXTENDING => $model_name ];
 		}
 
 		#
@@ -608,18 +608,18 @@ class Module extends Object
 		# relations
 		#
 
-		if (isset($tags[Model::T_EXTENDS]))
+		if (isset($tags[Model::EXTENDING]))
 		{
-			$extends = &$tags[Model::T_EXTENDS];
+			$extends = &$tags[Model::EXTENDING];
 
 			if (is_string($extends))
 			{
 				$extends = \ICanBoogie\app()->models[$extends];
 			}
 
-			if (!$tags[Model::T_CLASS])
+			if (!$tags[Model::CLASSNAME])
 			{
-				$tags[Model::T_CLASS] = get_class($extends);
+				$tags[Model::CLASSNAME] = get_class($extends);
 			}
 		}
 
@@ -627,9 +627,9 @@ class Module extends Object
 		#
 		#
 
-		if (isset($tags[Model::T_IMPLEMENTS]))
+		if (isset($tags[Model::IMPLEMENTING]))
 		{
-			$implements =& $tags[Model::T_IMPLEMENTS];
+			$implements =& $tags[Model::IMPLEMENTING];
 
 			foreach ($implements as &$implement)
 			{

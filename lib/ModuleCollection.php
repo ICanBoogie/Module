@@ -11,9 +11,9 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Errors;
-use ICanBoogie\GetterTrait;
 use ICanBoogie\Module;
 use ICanBoogie\Storage\StorageInterface;
 
@@ -28,7 +28,7 @@ use ICanBoogie\Storage\StorageInterface;
  */
 class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 {
-	use GetterTrait;
+	use AccessorTrait;
 
 	/**
 	 * Formats a SQL table name given the module id and the model id.

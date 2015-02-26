@@ -12,7 +12,7 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
-use ICanBoogie\ActiveRecord\Connections;
+use ICanBoogie\ActiveRecord\ConnectionCollection;
 use ICanBoogie\Module;
 
 /**
@@ -20,7 +20,7 @@ use ICanBoogie\Module;
  *
  * Extends the ActiveRecord model collection with the models defined by the modules.
  */
-class ModelCollection extends ActiveRecord\Models
+class ModelCollection extends ActiveRecord\ModelCollection
 {
 	/**
 	 * @var ModuleCollection
@@ -28,11 +28,11 @@ class ModelCollection extends ActiveRecord\Models
 	protected $modules;
 
 	/**
-	 * @param Connections $connections Connections manager.
+	 * @param ConnectionCollection $connections Connections manager.
 	 * @param ModuleCollection $modules ModuleCollection manager.
 	 * @param array $definitions Model definitions.
 	 */
-	public function __construct(Connections $connections, ModuleCollection $modules, array $definitions = [])
+	public function __construct(ConnectionCollection $connections, ModuleCollection $modules, array $definitions = [])
 	{
 		$this->modules = $modules;
 

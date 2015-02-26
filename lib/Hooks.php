@@ -12,6 +12,7 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\Fetcher;
+use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Core;
 use ICanBoogie\HTTP\Request;
 use ICanBoogie\I18n;
@@ -75,7 +76,7 @@ class Hooks
 
 		if ($modules_config_paths)
 		{
-			$app->configs->add($modules->config_paths, -10);
+			$app->configs->add($modules->config_paths, \ICanBoogie\Autoconfig\Config::CONFIG_WEIGHT_MODULE);
 		}
 
 		#
@@ -84,16 +85,16 @@ class Hooks
 
 		Prototype::configure($app->configs['prototypes']);
 
-		unset($app->events);
+		$app->events->configure($app->configs['events']);
 	}
 
 	/**
 	 * Alter routes defined by modules by adding a `module` key that holds the identifier of the
 	 * module that defines the route.
 	 *
-	 * @param Routing\BeforeCollectRoutesEvent $event
+	 * @param BeforeSynthesizeRoutesEvent $event
 	 */
-	static public function before_routing_collect_routes(Routing\BeforeCollectRoutesEvent $event)
+	static public function before_synthesize_routes(BeforeSynthesizeRoutesEvent $event)
 	{
 		$module_roots = [];
 

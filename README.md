@@ -1,4 +1,11 @@
-# Module [![Build Status](https://travis-ci.org/ICanBoogie/Module.svg?branch=2.0)](http://travis-ci.org/ICanBoogie/Module)
+# Module
+
+[![Release](https://img.shields.io/packagist/v/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Module.svg)](http://travis-ci.org/ICanBoogie/Module)
+[![HHVM](https://img.shields.io/hhvm/icanboogie/module.svg)](http://hhvm.h4cc.de/package/icanboogie/module)
+[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Module.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Module)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Module.svg)](https://coveralls.io/r/ICanBoogie/Module)
+[![Packagist](https://img.shields.io/packagist/dt/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
 
 This package provides support for modules to the framework [ICanBoogie](http://icanboogie.org).
 
@@ -430,11 +437,6 @@ The recommended way to install this package is through [Composer](http://getcomp
 $ composer require icanboogie/module
 ```
 
-The following packages are required, you might want to check them out:
-
-- [icanboogie/activerecord](https://github.com/ICanBoogie/ActiveRecord)
-- [icanboogie/errors](https://github.com/ICanBoogie/Errors)
-
 
 
 
@@ -470,7 +472,8 @@ later by cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://travis-ci.org/ICanBoogie/Module.svg?branch=2.0)](http://travis-ci.org/ICanBoogie/Module)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Module.svg)](https://travis-ci.org/ICanBoogie/Module)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Module.svg)](https://coveralls.io/r/ICanBoogie/Module)
 
 
 
