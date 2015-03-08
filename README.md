@@ -398,6 +398,14 @@ class ArticlesController extends ActionController
 
 
 
+## Template resolver decorator
+
+A [ModuleTemplateResolver][] instance is used to decorate the template resolver instance defined when the `ICanBoogie\Render\BasicTemplateResolver::alter` event of class [TemplateResolver\AlterEvent][] is fired, adding support for module defined templates. When the _path part_ of the template name matches an activated module identifier, the template pathname is resolved using the module and its parents.
+
+
+
+
+
 ## Event hooks
 
 - `ICanBoogie\Core::boot`: Boot enabled modules. Before the modules are actually booted up,
@@ -423,7 +431,7 @@ holds the identifier of the module that defines the route.
 
 ## Requirement
 
-The package requires PHP 5.4 or later.
+The package requires PHP 5.5 or later.
 
 
 
@@ -454,11 +462,8 @@ cloned with the following command line:
 
 ## Documentation
 
-The package is documented as part of the [ICanBoogie](http://icanboogie.org/) framework
-[documentation](http://icanboogie.org/docs/). The documentation for the package and its
-dependencies can be generated with the `make doc` command. The documentation is generated in
-the `docs` directory using [ApiGen](http://apigen.org/). The package directory can later by
-cleaned with the `make clean` command.
+The package is documented as part of the [ICanBoogie][] framework
+[documentation](http://icanboogie.org/docs/). You can generate the documentation for the package and its dependencies with the `make doc` command. The documentation is generated in the `build/docs` directory. [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with the `make clean` command.
 
 
 
@@ -466,9 +471,7 @@ cleaned with the `make clean` command.
 
 ## Testing
 
-The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
-automatically installed as well as all dependencies required to run the suite. The directory can
-later by cleaned with the `make clean` command.
+The test suite is ran with the `make test` command. [PHPUnit](https://phpunit.de/) and [Composer](http://getcomposer.org/) need to be globally available to run the suite. The command installs dependencies as required. The `make test-coverage` command runs test suite and also creates an HTML coverage report in "build/coverage". The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
@@ -481,7 +484,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 ## License
 
-This package is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
+**icanboogie/module** is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
 
 
 
@@ -497,8 +500,10 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 [ICanBoogie]: http://icanboogie.org/
 [ModelCollection]: http://icanboogie.org/docs/class-ICanBoogie.ModelCollection.html
 [Module]: http://icanboogie.org/docs/class-ICanBoogie.Module.html
-[ModuleCollection]: http://icanboogie.org/docs/class-ICanBoogie.ModuleCollection.html
-[ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.ModuleNotDefined.html
-[ModuleIsDisabled]: http://icanboogie.org/docs/class-ICanBoogie.ModuleIsDisabled.html
-[ModuleConstructorMissing]: http://icanboogie.org/docs/class-ICanBoogie.ModuleConstructorMissing.html
+[ModuleCollection]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleCollection.html
+[ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleNotDefined.html
+[ModuleIsDisabled]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleIsDisabled.html
+[ModuleConstructorMissing]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleConstructorMissing.html
+[ModuleTemplateResolver]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleTemplateResolver.html
 [Nodes]: https://github.com/Icybee/module-nodes
+[TemplateResolver\AlterEvent]: http://icanboogie.org/docs/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html

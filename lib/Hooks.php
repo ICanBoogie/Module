@@ -19,6 +19,7 @@ use ICanBoogie\I18n;
 use ICanBoogie\Module;
 use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\Prototype;
+use ICanBoogie\Render\TemplateResolver;
 use ICanBoogie\Routing;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\View\View;
@@ -124,6 +125,16 @@ class Hooks
 				];
 			}
 		}
+	}
+
+	/**
+	 * Decorates the template resolver with a {@link ModuleTemplateResolver} instance.
+	 *
+	 * @param TemplateResolver\AlterEvent $event
+	 */
+	static public function on_template_resolver_alter(TemplateResolver\AlterEvent $event)
+	{
+		$event->instance = new ModuleTemplateResolver($event->instance, \ICanBoogie\app()->modules);
 	}
 
 	/**

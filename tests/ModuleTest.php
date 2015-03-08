@@ -14,6 +14,7 @@ namespace ICanBoogie;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\Connection;
 use ICanBoogie\Module\Descriptor;
+use ICanBoogie\Module\ModuleCollection;
 
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,7 +34,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 				'primary' => [
 
-					Model::ACTIVERECORD_CLASS => __CLASS__ . '\Modules\Nodes\Node',
 					Model::CONNECTION => self::$connection,
 					Model::SCHEMA => [
 
@@ -54,9 +54,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		/* @var $collection_stub \ICanBoogie\Module\ModuleCollection */
+		/* @var $collection_stub ModuleCollection */
 		$collection_stub = $this
-			->getMockBuilder('ICanBoogie\Module\ModuleCollection')
+			->getMockBuilder(ModuleCollection::class)
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -106,9 +106,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_flat_id()
 	{
-		/* @var $collection_stub \ICanBoogie\Module\ModuleCollection */
+		/* @var $collection_stub ModuleCollection */
 		$collection_stub = $this
-			->getMockBuilder('ICanBoogie\Module\ModuleCollection')
+			->getMockBuilder(ModuleCollection::class)
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -129,7 +129,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_model()
 	{
-		$this->assertInstanceOf('ICanBoogie\ActiveRecord\Model', $this->node_module->model);
+		$this->assertInstanceOf(Model::class, $this->node_module->model);
 	}
 
 	public function test_get_parent()

@@ -77,8 +77,8 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 		$c = $modules['c'];
 		$b = $modules['b'];
 
-		$this->assertInstanceOf('ICanBoogie\Module', $c);
-		$this->assertInstanceOf('ICanBoogie\Module', $b);
+		$this->assertInstanceOf(Module::class, $c);
+		$this->assertInstanceOf(Module::class, $b);
 		$this->assertSame($b, $c->parent);
 	}
 }

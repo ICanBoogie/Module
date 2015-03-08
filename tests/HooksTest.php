@@ -2,6 +2,13 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\Config;
+use ICanBoogie\Core;
+use ICanBoogie\Events;
+use ICanBoogie\Module;
+use ICanBoogie\Routing\Controller;
+use ICanBoogie\View\View;
+
 class HooksTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_filter_autoconfig()
@@ -29,12 +36,12 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$event = $this
-			->getMockBuilder('ICanBoogie\Core\BootEvent')
+			->getMockBuilder(Core\BootEvent::class)
 			->disableOriginalConstructor()
 			->getMock();
 
 		$config = $this
-			->getMockBuilder('ICanBoogie\Config')
+			->getMockBuilder(Config::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'offsetGet', 'add' ])
 			->getMock();
@@ -68,7 +75,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->with($modules_config_paths, \ICanBoogie\Autoconfig\Config::CONFIG_WEIGHT_MODULE);
 
 		$modules = $this
-			->getMockBuilder('ICanBoogie\Module\ModuleCollection')
+			->getMockBuilder(ModuleCollection::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'lazy_get_index', 'lazy_get_config_paths' ])
 			->getMock();
@@ -82,7 +89,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->willReturn($modules_config_paths);
 
 		$events = $this
-			->getMockBuilder('ICanBoogie\Event\Events')
+			->getMockBuilder(Events::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'configure' ])
 			->getMock();
@@ -92,7 +99,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->with($events_config);
 
 		$app = $this
-			->getMockBuilder('ICanBoogie\Core')
+			->getMockBuilder(Core::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'lazy_get_configs', 'lazy_get_modules', 'lazy_get_events' ])
 			->getMock();
@@ -109,8 +116,8 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->method('lazy_get_events')
 			->willReturn($events);
 
-		/* @var $event \ICanBoogie\Core\BootEvent */
-		/* @var $app \ICanBoogie\Core */
+		/* @var $event Core\BootEvent */
+		/* @var $app Core */
 
 		Hooks::on_core_boot($event, $app);
 	}
@@ -118,17 +125,17 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 	public function test_on_alter_view_no_module()
 	{
 		$controller = $this
-			->getMockBuilder('ICanBoogie\Routing\Controller')
+			->getMockBuilder(Controller::class)
 			->disableOriginalConstructor()
 			->getMockForAbstractClass();
 
 		$event = $this
-			->getMockBuilder('ICanBoogie\View\View\AlterEvent')
+			->getMockBuilder(View\AlterEvent::class)
 			->disableOriginalConstructor()
 			->getMock();
 
 		$view = $this
-			->getMockBuilder('ICanBoogie\View\View')
+			->getMockBuilder(View::class)
 			->setConstructorArgs([ $controller ])
 			->setMethods([ 'add_path' ])
 			->getMock();
@@ -136,8 +143,8 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->expects($this->never())
 			->method('add_path');
 
-		/* @var $event \ICanBoogie\View\View\AlterEvent */
-		/* @var $view \ICanBoogie\View\View */
+		/* @var $event View\AlterEvent */
+		/* @var $view View */
 
 		Hooks::on_view_alter($event, $view);
 	}
@@ -152,7 +159,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$module = $this
-			->getMockBuilder('ICanBoogie\Module')
+			->getMockBuilder(Module::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'get_descriptor' ])
 			->getMock();
@@ -162,7 +169,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->willReturn($module_descriptor);
 
 		$controller = $this
-			->getMockBuilder('ICanBoogie\Routing\Controller')
+			->getMockBuilder(Controller::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'lazy_get_module' ])
 			->getMockForAbstractClass();
@@ -172,12 +179,12 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->willReturn($module);
 
 		$event = $this
-			->getMockBuilder('ICanBoogie\View\View\AlterEvent')
+			->getMockBuilder(View\AlterEvent::class)
 			->disableOriginalConstructor()
 			->getMock();
 
 		$view = $this
-			->getMockBuilder('ICanBoogie\View\View')
+			->getMockBuilder(View::class)
 			->setConstructorArgs([ $controller ])
 			->setMethods([ 'add_path' ])
 			->getMock();
@@ -186,8 +193,8 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->method('add_path')
 			->with($module_path . 'templates');
 
-		/* @var $event \ICanBoogie\View\View\AlterEvent */
-		/* @var $view \ICanBoogie\View\View */
+		/* @var $event View\AlterEvent */
+		/* @var $view View */
 
 		Hooks::on_view_alter($event, $view);
 	}

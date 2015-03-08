@@ -11,6 +11,11 @@
 
 namespace ICanBoogie\Module;
 
+/**
+ * Module descriptor options.
+ *
+ * @package ICanBoogie\Module
+ */
 final class Descriptor
 {
 	/**

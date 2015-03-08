@@ -9,6 +9,7 @@ return [
 	'events' => [
 
 		'ICanBoogie\Core::boot' => $hooks . 'on_core_boot',
+		'ICanBoogie\Render\BasicTemplateResolver::alter' => $hooks . 'on_template_resolver_alter',
 		'ICanBoogie\View\View::alter' => $hooks . 'on_view_alter',
 
 		'routing.synthesize_routes:before' => $hooks . 'before_synthesize_routes'
