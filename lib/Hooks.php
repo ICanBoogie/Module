@@ -11,7 +11,7 @@
 
 namespace ICanBoogie\Module;
 
-use ICanBoogie\ActiveRecord\Fetcher;
+use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Core;
 use ICanBoogie\HTTP\Request;
@@ -240,7 +240,7 @@ class Hooks
 	 */
 	static public function controller_fetch_records(Controller $controller, array $modifiers)
 	{
-		/* @var $fetcher \ICanBoogie\ActiveRecord\Fetcher */
+		/* @var $fetcher \ICanBoogie\Facets\Fetcher */
 		$fetcher = $controller->records_fetcher;
 
 		return $fetcher($modifiers);

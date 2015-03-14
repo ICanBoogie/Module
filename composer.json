@@ -32,7 +32,7 @@
 		"icanboogie/operation": "~2.1.0",
 		"icanboogie/routing": "~2.3.0",
 		"icanboogie/storage": "~1.0.0",
-		"icanboogie/facets": "dev-master",
+		"icanboogie/facets": "~0.2.0",
 		"icanboogie/i18n": "~2.0.8"
 	},
 
