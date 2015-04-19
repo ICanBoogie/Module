@@ -262,16 +262,6 @@ class Module extends Object
 		return $this->descriptor[Descriptor::PATH];
 	}
 
-	private $collection;
-
-	/**
-	 * @return ModuleCollection
-	 */
-	protected function get_collection()
-	{
-		return $this->collection;
-	}
-
 	/**
 	 * The descriptor of the module.
 	 *
@@ -289,6 +279,23 @@ class Module extends Object
 	protected function get_descriptor()
 	{
 		return $this->descriptor;
+	}
+
+	/**
+	 * Cache for loaded models.
+	 *
+	 * @var ActiveRecord\Model[]
+	 */
+	private $models = [];
+
+	private $collection;
+
+	/**
+	 * @return ModuleCollection
+	 */
+	protected function get_collection()
+	{
+		return $this->collection;
 	}
 
 	/**
@@ -476,13 +483,6 @@ class Module extends Object
 	}
 
 	/**
-	 * Cache for loaded models.
-	 *
-	 * @var ActiveRecord\Model[]
-	 */
-	protected $models = [];
-
-	/**
 	 * Get a model from the module.
 	 *
 	 * If the model has not been created yet, it is created on the fly.
@@ -555,6 +555,8 @@ class Module extends Object
 
 	protected function resolve_model_tags($tags, $which)
 	{
+		$app = $this->app;
+
 		#
 		# The model may use another model, in which case the model to use is defined using a
 		# string e.g. 'contents' or 'terms/nodes'
@@ -567,8 +569,6 @@ class Module extends Object
 			if ($model_name == 'inherit')
 			{
 				$class = get_parent_class($this);
-
-				$app = \ICanBoogie\app();
 
 				foreach ($app->modules->descriptors as $module_id => $descriptor)
 				{
@@ -595,7 +595,8 @@ class Module extends Object
 		$tags += [
 
 			Model::CONNECTION => 'primary',
-			Model::ID => $which == 'primary' ? $id : $id . '/' . $which
+			Model::ID => $which == 'primary' ? $id : $id . '/' . $which,
+			Model::EXTENDING => null
 
 		];
 
@@ -614,7 +615,7 @@ class Module extends Object
 
 			if (is_string($extends))
 			{
-				$extends = \ICanBoogie\app()->models[$extends];
+				$extends = $this->app->models[$extends];
 			}
 
 			if (!$tags[Model::CLASSNAME])
@@ -681,7 +682,7 @@ class Module extends Object
 
 		if (!($connection instanceof Connection))
 		{
-			$tags[Model::CONNECTION] = \ICanBoogie\app()->connections[$connection];
+			$tags[Model::CONNECTION] = $this->app->connections[$connection];
 		}
 
 		return $tags;

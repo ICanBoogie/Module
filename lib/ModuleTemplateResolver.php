@@ -86,6 +86,8 @@ class ModuleTemplateResolver implements TemplateResolver
 			$module = $module->parent;
 		}
 
+		$name = basename($name);
+
 		return $this->resolve_path($this
 			->resolve_tries($paths, $name, $extensions), $tried);
 	}

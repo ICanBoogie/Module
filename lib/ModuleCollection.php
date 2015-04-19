@@ -424,11 +424,17 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		{
 			foreach ($descriptor[Descriptor::MODELS] as $model_id => &$model_descriptor)
 			{
-				if ($model_descriptor == 'inherit')
+				if ($model_descriptor != 'inherit')
 				{
-					$parent_descriptor = $descriptors[$descriptor[Descriptor::INHERITS]];
-					$model_descriptor = $parent_descriptor[Descriptor::MODELS][$model_id];
+					continue;
 				}
+
+				$parent_descriptor = $descriptors[$descriptor[Descriptor::INHERITS]];
+				$model_descriptor = [
+
+					Model::EXTENDING => $parent_descriptor[Descriptor::ID] . '/' . $model_id
+
+				];
 			}
 
 			$descriptor = $this->alter_descriptor($descriptor);
