@@ -1,7 +1,7 @@
 # customization
 
-PACKAGE_NAME = "ICanBoogie/Module"
-PACKAGE_VERSION = 2.2.1
+PACKAGE_NAME = ICanBoogie/Module
+PACKAGE_VERSION = 2.2.2
 COMPOSER_ENV = COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION)
 
 # do not edit the following lines
@@ -29,12 +29,9 @@ doc: vendor
 	@mkdir -p build/docs
 	@apigen generate \
 	--source lib \
-	--exclude "*/composer/*" \
-	--exclude "*/autoload.php" \
 	--destination build/docs/ \
 	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
-	--template-theme "bootstrap" \
-	--debug
+	--template-theme "bootstrap"
 
 clean:
 	@rm -fR build
