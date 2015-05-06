@@ -345,6 +345,7 @@ The package adds the following getters to [Controller][] instances:
 The following method is also added:
 
 - `fetch_records`: Fetches records matching specified conditions using `fetcher`.
+- `fetch_record`: Fetches a record matching specified conditions using `fetcher`.
 
 The route needs to define a `module` property in order for these getters to work, which the
 package does automatically for routes defined in the "config" directory of modules.

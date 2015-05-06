@@ -11,9 +11,11 @@
 
 namespace ICanBoogie\Module;
 
-use ICanBoogie\ActiveRecord\Fetcher;
+use ICanBoogie\ActiveRecord;
+use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Core;
+use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\HTTP\Request;
 use ICanBoogie\I18n;
 use ICanBoogie\Module;
@@ -233,16 +235,36 @@ class Hooks
 	/**
 	 * Fetch records using the controller `records_fetcher`.
 	 *
-	 * @param Controller $controller
+	 * @param Controller|HasRecordsFetcherProperty $controller
 	 * @param array $modifiers
 	 *
-	 * @return array
+	 * @return RecordCollection
 	 */
 	static public function controller_fetch_records(Controller $controller, array $modifiers)
 	{
-		/* @var $fetcher \ICanBoogie\ActiveRecord\Fetcher */
 		$fetcher = $controller->records_fetcher;
 
 		return $fetcher($modifiers);
+	}
+
+	/**
+	 * Fetch records using the controller `records_fetcher`.
+	 *
+	 * @param Controller|HasRecordsFetcherProperty $controller
+	 * @param array $modifiers
+	 * @param Fetcher|null $fetcher Reference to a variable where the fetcher should be stored.
+	 *
+	 * @return ActiveRecord
+	 */
+	static public function controller_fetch_record(Controller $controller, array $modifiers, &$fetcher = null)
+	{
+		$fetcher = $controller->records_fetcher;
+		$records = $fetcher($modifiers);
+
+		if (!$records) {
+			return null;
+		}
+
+		return $records->one;
 	}
 }
