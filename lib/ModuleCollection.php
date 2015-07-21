@@ -151,6 +151,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetSet($id, $enable)
 	{
+		$this->index;
+
 		if (empty($this->descriptors[$id]))
 		{
 			return;
@@ -176,6 +178,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetExists($id)
 	{
+		$this->index;
+
 		$descriptors = $this->descriptors;
 
 		return (isset($descriptors[$id]) && empty($descriptors[$id][Descriptor::DISABLED]));
@@ -191,12 +195,16 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetUnset($id)
 	{
-		if (empty($this->descriptors[$id]))
+		$this->index;
+
+		$descriptors = &$this->descriptors;
+
+		if (empty($descriptors[$id]))
 		{
 			return;
 		}
 
-		$this->descriptors[$id][Descriptor::DISABLED] = true;
+		$descriptors[$id][Descriptor::DISABLED] = true;
 		$this->revoke_constructions();
 	}
 
@@ -219,6 +227,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetGet($id)
 	{
+		$this->index;
+
 		if (isset($this->modules[$id]))
 		{
 			return $this->modules[$id];
@@ -262,6 +272,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function getIterator()
 	{
+		$this->index;
+
 		return new \ArrayIterator($this->modules);
 	}
 
