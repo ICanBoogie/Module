@@ -772,7 +772,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 			foreach ($descriptors as $id => $descriptor)
 			{
-				if (empty($descriptor[Descriptor::REQUIRES][$required_id]))
+				if (!in_array($required_id, $descriptor[Descriptor::REQUIRES]))
 				{
 					continue;
 				}
@@ -823,7 +823,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 				$n++;
 			}
 
-			if (!empty($descriptor[Descriptor::REQUIRES][$module_id]))
+			if (!in_array($module_id, $descriptor[Descriptor::REQUIRES]))
 			{
 				$n++;
 			}

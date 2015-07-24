@@ -89,8 +89,7 @@ final class Descriptor
 	/**
 	 * Defines the modules that the module requires.
 	 *
-	 * The required modules are defined using an array where each key/value pair is the identifier
-	 * of the module and the minimum version required.
+	 * The required modules are defined using an array of identifiers.
 	 *
 	 * @var string
 	 */
@@ -145,13 +144,6 @@ final class Descriptor
 	const TITLE = 'title';
 
 	/**
-	 * Defines the version (and revision) of the module.
-	 *
-	 * @var string
-	 */
-	const VERSION = 'version';
-
-	/**
 	 * Defines the weight of the module.
 	 *
 	 * The weight of the module is resolved during modules indexing according to the
@@ -185,7 +177,6 @@ final class Descriptor
 			Descriptor::PERMISSIONS => [],
 			Descriptor::REQUIRED => false,
 			Descriptor::REQUIRES => [],
-			Descriptor::VERSION => 'dev',
 			Descriptor::WEIGHT => 0
 
 		];

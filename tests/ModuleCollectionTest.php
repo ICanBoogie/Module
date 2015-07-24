@@ -81,4 +81,13 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf(Module::class, $b);
 		$this->assertSame($b, $c->parent);
 	}
+
+	public function test_modules_weight()
+	{
+		$modules = new ModuleCollection([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$modules->index;
+
+		$this->assertSame([ 'b' ], $modules->descriptors['d'][Descriptor::REQUIRES]);
+		$this->assertSame([ 'a', 'b', 'c', 'd' ], array_keys($modules->descriptors));
+	}
 }

@@ -115,15 +115,8 @@ return [
 	],
 
 	Descriptor::REQUIRED => true,
-	Descriptor::REQUIRES => [
-
-		'sites' => '*',
-		'users' => '*'
-
-	],
-
-	Descriptor::TITLE => 'Nodes',
-	Descriptor::VERSION => '1.0'
+	Descriptor::REQUIRES => [ 'sites', 'users' ],
+	Descriptor::TITLE => 'Nodes'
 
 ];
 ```
@@ -142,14 +135,13 @@ Here are the tags (`Descriptor::<tag>`) that can be used to define the module's 
 - `INHERITS`: Defines the module that the module extends.
 - `ID`: Defines the identifier of the module. Defaults to its directory name.
 - `REQUIRED`: Defines that the module is required and cannot be disabled.
-- `REQUIRES`: Defines the modules (and the versions) that the module requires.
+- `REQUIRES`: Defines the modules required, used to compute modules weight.
 - `MODELS`: Defines the models of the module. Take a look at the [ActiveRecord package][] for
-more informations about ActiveRecords and models.
+more information about ActiveRecords and models.
 - `NS`: Defines the namespace of the module.
 - `PERMISSION`: Defines the general permission required to use this module.
 - `PERMISSIONS`: Defines module specific permissions.
 - `TITLE`: Defines the title of the module.
-- `VERSION`: Defines the version of the module.
 
 
 
