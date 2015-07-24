@@ -846,29 +846,19 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * @see is_inheriting
-	 *
-	 * @deprecated
-	 *
-	 * @param string $module_id
-	 * @param string $extending_id
-	 *
-	 * @return bool
-	 */
-	public function is_extending($module_id, $extending_id)
-	{
-		return $this->is_inheriting($module_id, $extending_id);
-	}
-
-	/**
 	 * Install all the enabled modules.
 	 *
-	 * @param Errors $errors
+	 * @param Errors|null $errors
 	 *
 	 * @return Errors
 	 */
-	public function install(Errors $errors)
+	public function install(Errors $errors = null)
 	{
+		if (!$errors)
+		{
+			$errors = new Errors;
+		}
+
 		foreach (array_keys($this->enabled_modules_descriptors) as $id)
 		{
 			try
