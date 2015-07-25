@@ -27,16 +27,13 @@
 	},
 	"require-dev": {
 		"icanboogie/icanboogie": "^2.4.0",
-		"icanboogie/bind-activerecord": "~0.2.1",
-		"icanboogie/bind-view": "~0.2.2",
+		"icanboogie/bind-activerecord": "^0.3.0",
+		"icanboogie/bind-view": "^0.2.2",
 		"icanboogie/bind-routing": "^0.2.0",
-		"icanboogie/bind-facets": "^0.1.0",
+		"icanboogie/bind-facets": "^0.2.0",
 		"icanboogie/bind-event": "dev-master",
-		"icanboogie/activerecord": "^2.3.0",
 		"icanboogie/operation": "^2.2.0",
-		"icanboogie/routing": "^2.5.0",
 		"icanboogie/storage": "^1.1.1",
-		"icanboogie/facets": "^0.4.0",
 		"icanboogie/i18n": "^2.0.8"
 	},
 

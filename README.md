@@ -472,20 +472,20 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-[icanboogie/facets]: https://github.com/ICanBoogie/Facets
-[icanboogie/i18n]: https://github.com/ICanBoogie/I18n
-[ActiveRecord package]: https://github.com/ICanBoogie/ActiveRecord
-[Controller]: http://icanboogie.org/docs/class-ICanBoogie.Routing.Controller.html
-[Events]: http://icanboogie.org/docs/class-ICanBoogie.Events.html
-[Errors]: http://icanboogie.org/docs/class-ICanBoogie.Errors.html
-[Fetcher]: http://icanboogie.org/docs/class-ICanBoogie.ActiveRecord.Fetcher.html
-[ICanBoogie]: http://icanboogie.org/
-[ModelCollection]: http://icanboogie.org/docs/class-ICanBoogie.ModelCollection.html
-[Module]: http://icanboogie.org/docs/class-ICanBoogie.Module.html
-[ModuleCollection]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleCollection.html
-[ModuleNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleNotDefined.html
-[ModuleIsDisabled]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleIsDisabled.html
-[ModuleConstructorMissing]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleConstructorMissing.html
-[ModuleTemplateResolver]: http://icanboogie.org/docs/class-ICanBoogie.Module.ModuleTemplateResolver.html
-[Nodes]: https://github.com/Icybee/module-nodes
-[TemplateResolver\AlterEvent]: http://icanboogie.org/docs/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
+[ICanBoogie]:                  http://icanboogie.org/
+[Errors]:                      http://api.icanboogie.org/errors/1.0/class-ICanBoogie.Errors.html
+[Events]:                      http://api.icanboogie.org/event/1.4/class-ICanBoogie.Events.html
+[Controller]:                  http://api.icanboogie.org/routing/2.5/class-ICanBoogie.Routing.Controller.html
+[Fetcher]:                     http://api.icanboogie.org/facets/0.4/class-ICanBoogie.Facets.Fetcher.html
+[Module]:                      http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.html
+[ModelCollection]:             http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModelCollection.html
+[ModuleCollection]:            http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleCollection.html
+[ModuleNotDefined]:            http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleNotDefined.html
+[ModuleIsDisabled]:            http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleIsDisabled.html
+[ModuleConstructorMissing]:    http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleConstructorMissing.html
+[ModuleTemplateResolver]:      http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleTemplateResolver.html
+[TemplateResolver\AlterEvent]: http://api.icanboogie.org/module/2.3/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
+[icanboogie/facets]:           https://github.com/ICanBoogie/Facets
+[icanboogie/i18n]:             https://github.com/ICanBoogie/I18n
+[ActiveRecord package]:        https://github.com/ICanBoogie/ActiveRecord
+[Nodes]:                       https://github.com/Icybee/module-nodes
