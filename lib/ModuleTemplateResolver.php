@@ -13,32 +13,28 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\Module;
 use ICanBoogie\Render\TemplateResolver;
+use ICanBoogie\Render\TemplateResolverDecorator;
+use ICanBoogie\Render\TemplateResolverDecoratorTrait;
 use ICanBoogie\Render\TemplateResolverTrait;
 
 /**
  * Decorates a template resolver and adds support for module defined templates.
  *
  * Templates are inherited between modules.
- *
- * @package ICanBoogie\Module
  */
-class ModuleTemplateResolver implements TemplateResolver
+class ModuleTemplateResolver implements TemplateResolverDecorator
 {
 	use TemplateResolverTrait;
-
-	/**
-	 * @var TemplateResolver
-	 */
-	private $component;
+	use TemplateResolverDecoratorTrait;
 
 	/**
 	 * @var ModuleCollection
 	 */
 	private $modules;
 
-	public function __construct(TemplateResolver $component, ModuleCollection $modules)
+	public function __construct(TemplateResolver $template_resolver, ModuleCollection $modules)
 	{
-		$this->component = $component;
+		$this->template_resolver = $template_resolver;
 		$this->modules = $modules;
 	}
 
@@ -47,7 +43,7 @@ class ModuleTemplateResolver implements TemplateResolver
 	 */
 	public function resolve($name, array $extensions, &$tried = [])
 	{
-		$template_pathname = $this->component->resolve($name, $extensions, $tried);
+		$template_pathname = $this->template_resolver->resolve($name, $extensions, $tried);
 
 		if ($template_pathname)
 		{
@@ -90,21 +86,5 @@ class ModuleTemplateResolver implements TemplateResolver
 
 		return $this->resolve_path($this
 			->resolve_tries($paths, $name, $extensions), $tried);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function add_path($path, $weight = 0)
-	{
-		$this->component->add_path($path, $weight);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_paths()
-	{
-		return $this->component->get_paths();
 	}
 }
