@@ -28,7 +28,7 @@ The following directory structure demonstrates how a very basic `nodes` module c
 
 	nodes
 	|_ lib
-	|  |_ module.php
+	|  |_ Module.php
 	|_ descriptor.php
 
 The following directory structure demonstrates a more advanced module:
@@ -37,15 +37,7 @@ The following directory structure demonstrates a more advanced module:
 	|_ config
 	|  |_ <configuration files>
 	|_ lib
-	|  |_ activerecords
-	|  |  |_ node.php
-	|  |  |_ node.model.php
-	|  |_ elements
-	|  |  |_ <html elements>
-	|  |_ operations
-	|  |  |_ <operations handled by the module>
-	|  |_ views
-	|     |_ <views and providers>
+	|  |_ Module.php
 	|_ locale
 	|  |_ <message catalogs>
 	|_ public
@@ -87,21 +79,18 @@ return [
 
 			Model::SCHEMA => [
 
-				'fields' => [
+				'nid' => 'serial',
+				'uid' => 'foreign',
+				'site_id' => 'foreign',
+				'native_id' => 'foreign',
+				'constructor' => [ 'varchar', 64, 'indexed' => true ],
+				'title' => 'varchar',
+				'slug' => [ 'varchar', 80, 'indexed' => true ],
+				'language' => [ 'varchar', 8, 'indexed' => true ],
+				'created' => [ 'timestamp', 'default' => 'CURRENT_TIMESTAMP()' ],
+				'modified' => 'timestamp',
+				'is_online' => [ 'boolean', 'indexed' => true ]
 
-					'nid' => 'serial',
-					'uid' => 'foreign',
-					'site_id' => 'foreign',
-					'native_id' => 'foreign',
-					'constructor' => [ 'varchar', 64, 'indexed' => true ],
-					'title' => 'varchar',
-					'slug' => [ 'varchar', 80, 'indexed' => true ],
-					'language' => [ 'varchar', 8, 'indexed' => true ],
-					'created' => [ 'timestamp', 'default' => 'CURRENT_TIMESTAMP()' ],
-					'modified' => 'timestamp',
-					'is_online' => [ 'boolean', 'indexed' => true ]
-
-				]
 			]
 		]
 	],

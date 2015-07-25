@@ -436,9 +436,13 @@ class Module extends Object
 				continue;
 			}
 
-			if (!$model->install())
+			try
 			{
-				$errors[$this->id] = $errors->format('Unable to install model %model', [ '%model' => $name ]);
+				$model->install();
+			}
+			catch (\Exception $e)
+			{
+				$errors[$this->id] = $errors->format('Unable to install model %model: !message', [ 'model' => $name, 'message' => $e->getMessage() ]);
 
 				$rc = false;
 			}

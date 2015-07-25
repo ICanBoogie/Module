@@ -11,6 +11,8 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\ActiveRecord\SchemaColumn;
+
 /**
  * The "save" operation is used to create or update a record.
  */
@@ -76,17 +78,16 @@ class SaveOperation extends Operation
 	protected function lazy_get_properties()
 	{
 		$schema = $this->module->model->extended_schema;
-		$fields = $schema['fields'];
 		$request = $this->request;
-		$properties = array_intersect_key($request->params, $fields);
+		$properties = array_intersect_key($request->params, $schema->columns);
 
-		foreach ($fields as $identifier => $definition)
+		foreach ($schema as $identifier => $column)
 		{
-			$type = $definition['type'];
+			$type = $column->type;
 
-			if ($type == 'boolean')
+			if ($type == SchemaColumn::TYPE_BOOLEAN)
 			{
-				if (!empty($definition['null']) && ($request[$identifier] === null || $request[$identifier] === ''))
+				if ($column->null && ($request[$identifier] === null || $request[$identifier] === ''))
 				{
 					$properties[$identifier] = null;
 				}
@@ -102,7 +103,7 @@ class SaveOperation extends Operation
 					$properties[$identifier] = filter_var($properties[$identifier], FILTER_VALIDATE_BOOLEAN);
 				}
 			}
-			else if ($type == 'varchar')
+			else if ($type == SchemaColumn::TYPE_VARCHAR)
 			{
 				if (empty($properties[$identifier]) || !is_string($properties[$identifier]))
 				{

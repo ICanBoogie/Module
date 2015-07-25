@@ -37,12 +37,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 					Model::CONNECTION => self::$connection,
 					Model::SCHEMA => [
 
-						'fields' => [
+						'nid' => 'serial',
+						'title' => [ 'varchar', 80 ]
 
-							'nid' => 'serial',
-							'title' => [ 'varchar', 80 ]
-
-						]
 					]
 				]
 			],

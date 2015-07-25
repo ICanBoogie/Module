@@ -12,12 +12,12 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
+use ICanBoogie\Autoconfig\Config;
 use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Core;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\HTTP\Request;
-use ICanBoogie\I18n;
 use ICanBoogie\Module;
 use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\Prototype;
@@ -26,8 +26,30 @@ use ICanBoogie\Routing;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\View\View;
 
+/**
+ * Hook callbacks.
+ */
 class Hooks
 {
+	/**
+	 * Returns the application's module collection.
+	 *
+	 * @return ModuleCollection
+	 */
+	static private function get_app_modules()
+	{
+		static $modules;
+
+		if ($modules === null)
+		{
+			/* @var $app CoreBindings */
+			$app = \ICanBoogie\app();
+			$modules = $app->modules;
+		}
+
+		return $modules;
+	}
+
 	/*
 	 * Config
 	 */
@@ -59,17 +81,12 @@ class Hooks
 	 * paths and the config paths.
 	 *
 	 * @param Core\BootEvent $event
-	 * @param Core $app
+	 * @param Core|CoreBindings $app
 	 */
 	static public function on_core_boot(Core\BootEvent $event, Core $app)
 	{
 		$modules = $app->modules;
 		$modules->index;
-
-		if (class_exists('ICanBoogie\I18n', true))
-		{
-			I18n::$load_paths = array_merge(I18n::$load_paths, $modules->locale_paths);
-		}
 
 		#
 		# Add modules config paths to the configs path.
@@ -79,7 +96,7 @@ class Hooks
 
 		if ($modules_config_paths)
 		{
-			$app->configs->add($modules->config_paths, \ICanBoogie\Autoconfig\Config::CONFIG_WEIGHT_MODULE);
+			$app->configs->add($modules->config_paths, Config::CONFIG_WEIGHT_MODULE);
 		}
 
 		#
@@ -88,7 +105,7 @@ class Hooks
 
 		Prototype::configure($app->configs['prototypes']);
 
-		$app->events->configure($app->configs['events']);
+		$app->events->attach_many($app->configs['events']);
 	}
 
 	/**
@@ -101,7 +118,7 @@ class Hooks
 	{
 		$module_roots = [];
 
-		foreach (\ICanBoogie\app()->modules->descriptors as $module_id => $descriptor)
+		foreach (self::get_app_modules()->descriptors as $module_id => $descriptor)
 		{
 			$module_roots[$descriptor[Descriptor::PATH]] = $module_id;
 		}
@@ -136,7 +153,7 @@ class Hooks
 	 */
 	static public function on_template_resolver_alter(TemplateResolver\AlterEvent $event)
 	{
-		$event->instance = new ModuleTemplateResolver($event->instance, \ICanBoogie\app()->modules);
+		$event->instance = new ModuleTemplateResolver($event->instance, self::get_app_modules());
 	}
 
 	/**
@@ -150,7 +167,9 @@ class Hooks
 	{
 		try
 		{
-			$module = $target->controller->module;
+			/* @var $controller ControllerBindings */
+			$controller = $target->controller;
+			$module = $controller->module;
 		}
 		catch (PropertyNotDefined $e)
 		{
@@ -181,7 +200,7 @@ class Hooks
 	/**
 	 * Returns the {@link ModelCollection} instance used to obtain the models defined by the modules.
 	 *
-	 * @param Core $app
+	 * @param Core|CoreBindings|\ICanBoogie\Binding\ActiveRecord\CoreBindings $app
 	 *
 	 * @return ModelCollection The models accessor.
 	 */
@@ -193,21 +212,19 @@ class Hooks
 	/**
 	 * Return the {@link Module} instance associated with the route handled by the controller.
 	 *
-	 * @param Controller $controller
+	 * @param Controller|ControllerBindings $controller
 	 *
 	 * @return Module
 	 */
 	static public function controller_get_module(Controller $controller)
 	{
-		$module_id = $controller->route->module;
-
-		return $controller->app->modules[$module_id];
+		return $controller->app->modules[$controller->route->module];
 	}
 
 	/**
 	 * Return the primary model of the module associated with the route handled by the controller.
 	 *
-	 * @param Controller $controller
+	 * @param Controller|ControllerBindings $controller
 	 *
 	 * @return \ICanBoogie\ActiveRecord\Model
 	 *
@@ -223,7 +240,7 @@ class Hooks
 	 *
 	 * **Note:** The "icanboogie/facets" package is required.
 	 *
-	 * @param Controller $controller
+	 * @param Controller|ControllerBindings $controller
 	 *
 	 * @return Fetcher
 	 */
@@ -235,7 +252,7 @@ class Hooks
 	/**
 	 * Fetch records using the controller `records_fetcher`.
 	 *
-	 * @param Controller|HasRecordsFetcherProperty $controller
+	 * @param Controller|ControllerBindings $controller
 	 * @param array $modifiers
 	 *
 	 * @return RecordCollection
@@ -250,7 +267,7 @@ class Hooks
 	/**
 	 * Fetch records using the controller `records_fetcher`.
 	 *
-	 * @param Controller|HasRecordsFetcherProperty $controller
+	 * @param Controller|ControllerBindings $controller
 	 * @param array $modifiers
 	 * @param Fetcher|null $fetcher Reference to a variable where the fetcher should be stored.
 	 *

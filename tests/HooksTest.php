@@ -4,7 +4,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\Config;
 use ICanBoogie\Core;
-use ICanBoogie\Events;
+use ICanBoogie\EventCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\View\View;
@@ -89,13 +89,13 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->willReturn($modules_config_paths);
 
 		$events = $this
-			->getMockBuilder(Events::class)
+			->getMockBuilder(EventCollection::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'configure' ])
+			->setMethods([ 'attach_many' ])
 			->getMock();
 		$events
 			->expects($this->once())
-			->method('configure')
+			->method('attach_many')
 			->with($events_config);
 
 		$app = $this
