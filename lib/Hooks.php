@@ -158,7 +158,7 @@ class Hooks
 
 	/**
 	 * If the view renders a module's route, the "template" directory of that module is added
-	 * to the list of templates locations.
+	 * to the list of templates locations. Also, the module is set as `module` view variable.
 	 *
 	 * @param View\AlterEvent $event
 	 * @param View $target
@@ -176,7 +176,8 @@ class Hooks
 			return;
 		}
 
-		$target->add_path($module->descriptor[Descriptor::PATH] . 'templates');
+		$target['module'] = $module;
+		$target->template_resolver->add_path($module->descriptor[Descriptor::PATH] . 'templates');
 	}
 
 	/*
