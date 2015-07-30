@@ -15,7 +15,7 @@ use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Errors;
 use ICanBoogie\Module;
-use ICanBoogie\Storage\StorageInterface;
+use ICanBoogie\Storage\Storage;
 
 /**
  * A module collection.
@@ -29,6 +29,18 @@ use ICanBoogie\Storage\StorageInterface;
 class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 {
 	use AccessorTrait;
+
+	/**
+	 * May be used with the {@link filter_descriptors_by_users()} method to filter the descriptors
+	 * of enabled modules.
+	 */
+	const ONLY_ENABLED_MODULES = false;
+
+	/**
+	 * May be used with the {@link filter_descriptors_by_users()} method to filter the descriptors
+	 * of all modules, enabled or not.
+	 */
+	const ALL_MODULES = true;
 
 	/**
 	 * Formats a SQL table name given the module id and the model id.
@@ -60,7 +72,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * A cache for the modules index.
 	 *
-	 * @var StorageInterface
+	 * @var Storage
 	 */
 	protected $cache;
 
@@ -75,9 +87,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * The index for the available modules is created with the accessor object.
 	 *
 	 * @param array $paths The paths to look for modules.
-	 * @param StorageInterface $cache The cache to use for the module indexes.
+	 * @param Storage $cache The cache to use for the module indexes.
 	 */
-	public function __construct($paths, StorageInterface $cache=null)
+	public function __construct($paths, Storage $cache=null)
 	{
 		$this->paths = $paths;
 		$this->cache = $cache;
@@ -799,37 +811,43 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Returns the usage of a module by other modules.
+	 * Returns the modules using a module.
 	 *
-	 * @param string $module_id The identifier of the module.
-	 * @param bool $all The usage is only computed for enabled module, this parameter can be used
-	 * to compute the usage with disabled modules also.
+	 * @param string $module_id Used module identifier.
+	 * @param bool $all One of {@link ONLY_ENABLED_MODULES} or {@link ALL_MODULES}.
+	 * Default: {@link ONLY_ENABLED_MODULES}.
 	 *
-	 * @return int
+	 * @return array A array of filtered descriptors.
 	 */
-	public function usage($module_id, $all=false)
+	public function filter_descriptors_by_users($module_id, $all = self::ONLY_ENABLED_MODULES)
 	{
-		$n = 0;
+		$users = [];
+		$descriptors = $all ? $this->descriptors : $this->enabled_modules_descriptors;
 
-		foreach ($this->descriptors as $m_id => $descriptor)
+		foreach ($descriptors as $user_id => $descriptor)
 		{
-			if (!$all && !isset($this[$m_id]))
+			if ($descriptor[Descriptor::INHERITS] == $module_id
+			|| in_array($module_id, $descriptor[Descriptor::REQUIRES]))
 			{
-				continue;
-			}
-
-			if ($descriptor[Descriptor::INHERITS] == $module_id)
-			{
-				$n++;
-			}
-
-			if (!in_array($module_id, $descriptor[Descriptor::REQUIRES]))
-			{
-				$n++;
+				$users[$user_id] = $descriptor;
 			}
 		}
 
-		return $n;
+		return $users;
+	}
+
+	/**
+	 * Returns the usage of a module by other modules.
+	 *
+	 * @param string $module_id The identifier of the module.
+	 * @param bool $all One of {@link ONLY_ENABLED_MODULES} or {@link ALL_MODULES}.
+	 * Default: {@link ONLY_ENABLED_MODULES}.
+	 *
+	 * @return int
+	 */
+	public function usage($module_id, $all = self::ONLY_ENABLED_MODULES)
+	{
+		return count($this->filter_descriptors_by_users($module_id, $all));
 	}
 
 	/**
