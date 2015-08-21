@@ -628,14 +628,14 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 				$definition[Model::NAME] = self::format_model_name($id, $model_id);
 			}
 
-			if (empty($definition[Model::CLASSNAME]))
-			{
-				$definition[Model::CLASSNAME] = $namespace . '\\' . ($model_id == 'primary' ? 'Model' : \ICanBoogie\camelize(\ICanBoogie\singularize($model_id)) . 'Model');
-			}
-
 			if (empty($definition[Model::ACTIVERECORD_CLASS]))
 			{
 				$definition[Model::ACTIVERECORD_CLASS] = $namespace . '\\' . \ICanBoogie\camelize(\ICanBoogie\singularize($model_id == 'primary' ? $basename : $model_id));
+			}
+
+			if (empty($definition[Model::CLASSNAME]))
+			{
+				$definition[Model::CLASSNAME] = $definition[Model::ACTIVERECORD_CLASS] . 'Model';
 			}
 		}
 
