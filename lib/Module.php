@@ -29,7 +29,7 @@ use ICanBoogie\Module\ModuleCollection;
  * @property-read string $path The path to the module, defined by {@link Descriptor::PATH}.
  * @property-read string $title The localized title of the module.
  * @property-read ModuleCollection $collection
- * @property-read Core $app
+ * @property-read Core|Module\CoreBindings|Binding\ActiveRecord\CoreBindings|Binding\I18n\CoreBindings $app
  */
 class Module extends Object
 {
@@ -355,12 +355,14 @@ class Module extends Object
 	 * Returns the module title, translated to the current language.
 	 *
 	 * @return string
+	 *
+	 * @deprecated
 	 */
 	protected function get_title()
 	{
 		$default = isset($this->descriptor[Descriptor::TITLE]) ? $this->descriptor[Descriptor::TITLE] : 'Undefined';
 
-		return I18n\t($this->flat_id, [], [ 'scope' => 'module_title', 'default' => $default ]);
+		return $this->app->translate($this->flat_id, [], [ 'scope' => 'module_title', 'default' => $default ]);
 	}
 
 	/**
