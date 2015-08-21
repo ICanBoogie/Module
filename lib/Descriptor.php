@@ -25,8 +25,6 @@ final class Descriptor
 	 * used to create the main navigation menu of the admin interface.
 	 *
 	 * The category of the module is translated within the `module_category` scope.
-	 *
-	 * @var string
 	 */
 	const CATEGORY = 'category';
 
@@ -35,36 +33,26 @@ final class Descriptor
 	 *
 	 * If the class is not defined it is resolved during indexing using the {@link NS}
 	 * tag and the following pattern : `<namespace>\Module`.
-	 *
-	 * @var string
 	 */
 	const CLASSNAME = 'class';
 
 	/**
 	 * Defines a short description of what the module do.
-	 *
-	 * @var string
 	 */
 	const DESCRIPTION = 'description';
 
 	/**
 	 * Defines the state of the module.
-	 *
-	 * @var string
 	 */
 	const DISABLED = 'disabled';
 
 	/**
 	 * Defines extra values.
-	 *
-	 * @var string
 	 */
 	const EXTRA = 'extra';
 
 	/**
 	 * Defines the parent module the module inherits from.
-	 *
-	 * @var string
 	 */
 	const INHERITS = 'extends'; // TODO-20101017: change to 'inherits' once the transition is over
 
@@ -72,8 +60,6 @@ final class Descriptor
 	 * Defines the identifier of the module.
 	 *
 	 * If the identifier is not defined the name of the module directory is used instead.
-	 *
-	 * @var string
 	 */
 	const ID = 'id';
 
@@ -81,8 +67,6 @@ final class Descriptor
 	 * Defines the state of the module.
 	 *
 	 * Required modules are always enabled.
-	 *
-	 * @var string
 	 */
 	const REQUIRED = 'required';
 
@@ -90,15 +74,11 @@ final class Descriptor
 	 * Defines the modules that the module requires.
 	 *
 	 * The required modules are defined using an array of identifiers.
-	 *
-	 * @var string
 	 */
 	const REQUIRES = 'requires';
 
 	/**
 	 * Defines the models of the module.
-	 *
-	 * @var string
 	 */
 	const MODELS = 'models';
 
@@ -106,8 +86,6 @@ final class Descriptor
 	 * Defines the namespace of the module.
 	 *
 	 * This attribute must be defined at construct time.
-	 *
-	 * @var string
 	 */
 	const NS = 'namespace';
 
@@ -115,22 +93,16 @@ final class Descriptor
 	 * Path to the module's directory.
 	 *
 	 * This tag is resolved when the module is indexed.
-	 *
-	 * @var string
 	 */
 	const PATH = 'path';
 
 	/**
 	 * General permission of the module.
-	 *
-	 * @var string
 	 */
 	const PERMISSION = 'permission';
 
 	/**
 	 * Defines the permissions added by the module.
-	 *
-	 * @var string
 	 */
 	const PERMISSIONS = 'permissions';
 
@@ -138,8 +110,6 @@ final class Descriptor
 	 * Defines the title of the module.
 	 *
 	 * The title of the module is translated within the `module_title` scope.
-	 *
-	 * @var string
 	 */
 	const TITLE = 'title';
 
@@ -148,8 +118,6 @@ final class Descriptor
 	 *
 	 * The weight of the module is resolved during modules indexing according to the
 	 * {@link EXTENDS} and {@link REQUIRES} tags.
-	 *
-	 * @var string
 	 */
 	const WEIGHT = 'weight';
 

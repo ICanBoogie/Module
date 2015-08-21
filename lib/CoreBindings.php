@@ -16,26 +16,11 @@ namespace ICanBoogie\Module;
  *
  * @property ModuleCollection $modules
  * @property ModelCollection $models
+ *
+ * @see \ICanBoogie\Module\Hooks::get_modules
+ * @see \ICanBoogie\Module\Hooks::get_models
  */
 trait CoreBindings
 {
-	/**
-	 * @return ModuleCollection
-	 *
-	 * @see \ICanBoogie\Module\Hooks::get_modules
-	 */
-	protected function lazy_get_modules()
-	{
-		return parent::lazy_get_modules();
-	}
 
-	/**
-	 * @return ModelCollection
-	 *
-	 * @see \ICanBoogie\Module\Hooks::get_models
-	 */
-	protected function lazy_get_models()
-	{
-		return parent::lazy_get_models();
-	}
 }

@@ -52,7 +52,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	static public function format_model_name($module_id, $model_id='primary')
 	{
-		return preg_replace('#[^0-9,a-z,A-Z$_]#', '_', $module_id) . ($model_id == 'primary' ? '' : '__' . $model_id);
+		return preg_replace('#[^0-9a-zA-Z$_]#', '_', $module_id) . ($model_id == 'primary' ? '' : '__' . $model_id);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Instantiated modules.
 	 *
-	 * @var array
+	 * @var Module[]
 	 */
 	protected $modules = [];
 
@@ -89,7 +89,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @param array $paths The paths to look for modules.
 	 * @param Storage $cache The cache to use for the module indexes.
 	 */
-	public function __construct($paths, Storage $cache=null)
+	public function __construct($paths, Storage $cache = null)
 	{
 		$this->paths = $paths;
 		$this->cache = $cache;
@@ -418,7 +418,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		# Compute inheritance.
 		#
 
-		$find_parents = function($id, &$parents=[]) use (&$find_parents, &$descriptors)
+		$find_parents = function($id, &$parents = []) use (&$find_parents, &$descriptors)
 		{
 			$parent = $descriptors[$id][Descriptor::INHERITS];
 

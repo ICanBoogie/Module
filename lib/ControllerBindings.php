@@ -21,6 +21,14 @@ use ICanBoogie\Module;
 /**
  * {@link \ICanBoogie\Routing\Controller} prototype bindings.
  *
+ * @method RecordCollection fetch_records(array $modifiers)
+ *     Fetches records using the controller `records_fetcher`.
+ *     @see \ICanBoogie\Module\Hooks::controller_fetch_records
+ *
+ * @method ActiveRecord fetch_record(array $modifiers, &$fetcher = null)
+ *     Fetches a record using the controller `records_fetcher`.
+ *     @see \ICanBoogie\Module\Hooks::controller_fetch_record
+ *
  * @property-read Core $app
  * @property-read Module $module
  * @property-read Model $model
@@ -29,62 +37,5 @@ use ICanBoogie\Module;
  */
 trait ControllerBindings
 {
-	/**
-	 * @see \ICanBoogie\Module\Hooks::controller_get_module
-	 *
-	 * @return Module
-	 */
-	protected function get_module()
-	{
-		return parent::get_module();
-	}
 
-	/**
-	 * @see \ICanBoogie\Module\Hooks::controller_get_model
-	 *
-	 * @return Model
-	 */
-	protected function get_model()
-	{
-		return parent::get_model();
-	}
-
-	/**
-	 * @see \ICanBoogie\Module\Hooks::controller_lazy_get_records_fetcher
-	 *
-	 * @return Fetcher
-	 */
-	protected function lazy_get_records_fetcher()
-	{
-		return parent::lazy_get_records_fetcher();
-	}
-
-	/**
-	 * Fetch records using the controller `records_fetcher`.
-	 *
-	 * @see \ICanBoogie\Module\Hooks::controller_fetch_records
-	 *
-	 * @param array $modifiers
-	 *
-	 * @return RecordCollection
-	 */
-	protected function fetch_records(array $modifiers)
-	{
-		return parent::fetch_records($modifiers);
-	}
-
-	/**
-	 * Fetch records using the controller `records_fetcher`.
-	 *
-	 * @see \ICanBoogie\Module\Hooks::controller_fetch_record
-	 *
-	 * @param array $modifiers
-	 * @param Fetcher|null $fetcher Reference to a variable where the fetcher should be stored.
-	 *
-	 * @return ActiveRecord
-	 */
-	protected function fetch_record(array $modifiers, &$fetcher = null)
-	{
-		return parent::fetch_record($modifiers, $fetcher);
-	}
 }

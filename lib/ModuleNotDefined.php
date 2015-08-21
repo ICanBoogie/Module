@@ -12,6 +12,7 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Accessor\AccessorTrait;
+use ICanBoogie\HTTP\Status;
 
 /**
  * Exception thrown when a requested module is not defined.
@@ -34,7 +35,7 @@ class ModuleNotDefined extends \RuntimeException
 		return $this->module_id;
 	}
 
-	public function __construct($module_id, $code=500, \Exception $previous=null)
+	public function __construct($module_id, $code = Status::INTERNAL_SERVER_ERROR, \Exception $previous = null)
 	{
 		$this->module_id = $module_id;
 

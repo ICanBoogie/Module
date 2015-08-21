@@ -47,7 +47,7 @@ class ModuleConstructorMissing extends \RuntimeException
 		return $this->class;
 	}
 
-	public function __construct($module_id, $class, $code=500, \Exception $previous=null)
+	public function __construct($module_id, $class, $code = 500, \Exception $previous = null)
 	{
 		$this->module_id = $module_id;
 		$this->class = $class;

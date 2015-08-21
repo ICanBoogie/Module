@@ -33,174 +33,6 @@ use ICanBoogie\Module\ModuleCollection;
  */
 class Module extends Object
 {
-	/**
-	 * Defines the category for the module.
-	 *
-	 * When modules are listed they are usually grouped by category. The category is also often
-	 * used to create the main navigation menu of the admin interface.
-	 *
-	 * The category of the module is translated within the `module_category` scope.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_CATEGORY = 'category';
-
-	/**
-	 * Defines the PHP class of the module.
-	 *
-	 * If the class is not defined it is resolved during indexing using the {@link T_NAMESPACE}
-	 * tag and the following pattern : `<namespace>\Module`.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_CLASS = 'class';
-
-	/**
-	 * Defines a short description of what the module do.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_DESCRIPTION = 'description';
-
-	/**
-	 * Defines the state of the module.
-	 *
-	 * @var bool
-	 *
-	 * @deprecated
-	 */
-	const T_DISABLED = 'disabled';
-
-	/**
-	 * Defines the module that the module extends.
-	 *
-	 * @var string|\ICanBoogie\Module
-	 *
-	 * @deprecated
-	 */
-	const T_EXTENDS = 'extends';
-
-	/**
-	 * Defines the identifier of the module.
-	 *
-	 * If the identifier is not defined the name of the module directory is used instead.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_ID = 'id';
-
-	/**
-	 * Defines the state of the module.
-	 *
-	 * Required modules are always enabled.
-	 *
-	 * @var bool
-	 *
-	 * @deprecated
-	 */
-	const T_REQUIRED = 'required';
-
-	/**
-	 * Defines the modules that the module requires.
-	 *
-	 * The required modules are defined using an array where each key/value pair is the identifier
-	 * of the module and the minimum version required.
-	 *
-	 * @var array[string]string
-	 *
-	 * @deprecated
-	 */
-	const T_REQUIRES = 'requires';
-
-	/**
-	 * Defines the models of the module.
-	 *
-	 * @var array[string]array|string
-	 *
-	 * @deprecated
-	 */
-	const T_MODELS = 'models';
-
-	/**
-	 * Defines the namespace of the module.
-	 *
-	 * This attribute must be defined at construct time.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_NAMESPACE = 'namespace';
-
-	/**
-	 * Path to the module's directory.
-	 *
-	 * This tag is resolved when the module is indexed.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_PATH = 'path';
-
-	/**
-	 * General permission of the module.
-	 *
-	 * @var string|int
-	 *
-	 * @deprecated
-	 */
-	const T_PERMISSION = 'permission';
-
-	/**
-	 * Defines the permissions added by the module.
-	 *
-	 * @var array[]string
-	 *
-	 * @deprecated
-	 */
-	const T_PERMISSIONS = 'permissions';
-
-	/**
-	 * Defines the title of the module.
-	 *
-	 * The title of the module is translated within the `module_title` scope.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_TITLE = 'title';
-
-	/**
-	 * Defines the version (and revision) of the module.
-	 *
-	 * @var string
-	 *
-	 * @deprecated
-	 */
-	const T_VERSION = 'version';
-
-	/**
-	 * Defines the weight of the module.
-	 *
-	 * The weight of the module is resolved during modules indexing according to the
-	 * {@link T_EXTENDS} and {@link T_REQUIRES} tags.
-	 *
-	 * @var int
-	 *
-	 * @deprecated
-	 */
-	const T_WEIGHT = 'weight';
-
 	/*
 	 * PERMISSIONS:
 	 *
@@ -226,15 +58,11 @@ class Module extends Object
 
 	/**
 	 * Defines the name of the operation used to save the records of the module.
-	 *
-	 * @var string
 	 */
 	const OPERATION_SAVE = 'save';
 
 	/**
 	 * Defines the name of the operation used to delete the records of the module.
-	 *
-	 * @var string
 	 */
 	const OPERATION_DELETE = 'delete';
 
@@ -288,6 +116,9 @@ class Module extends Object
 	 */
 	private $models = [];
 
+	/**
+	 * @var ModuleCollection
+	 */
 	private $collection;
 
 	/**
@@ -500,7 +331,7 @@ class Module extends Object
 	 * @throws ModelNotDefined when the model is not defined by the module.
 	 * @throws \RuntimeException when the class of the model does not exists.
 	 */
-	public function model($which='primary')
+	public function model($which = 'primary')
 	{
 		if (empty($this->models[$which]))
 		{
