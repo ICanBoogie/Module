@@ -28,7 +28,7 @@
 	"require-dev": {
 		"icanboogie/icanboogie": "^2.4.0",
 		"icanboogie/bind-activerecord": "^0.3.0",
-		"icanboogie/bind-view": "^0.2.2",
+		"icanboogie/bind-view": "^0.4.0",
 		"icanboogie/bind-routing": "^0.2.0",
 		"icanboogie/bind-facets": "^0.2.0",
 		"icanboogie/bind-event": "dev-master",

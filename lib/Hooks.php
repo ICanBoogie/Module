@@ -75,18 +75,24 @@ class Hooks
 	 */
 
 	/**
-	 * Boot enabled modules.
+	 * Extends application configuration according to modules features.
 	 *
-	 * Before the modules are actually booted up, their index is used to alter the I18n load
-	 * paths and the config paths.
+	 * The method may extend the `locale-path` configuration value and the configuration paths
+	 * according to the modules features.
 	 *
-	 * @param Core\BootEvent $event
+	 * @param Core\ConfigureEvent $event
 	 * @param Core|CoreBindings $app
 	 */
-	static public function on_core_boot(Core\BootEvent $event, Core $app)
+	static public function on_core_configure(Core\ConfigureEvent $event, Core $app)
 	{
 		$modules = $app->modules;
 		$modules->index;
+
+		#
+		# Add locale paths
+		#
+
+		$app->config['locale-path'] = array_merge($app->config['locale-path'], $modules->locale_paths);
 
 		#
 		# Add modules config paths to the configs path.
@@ -98,7 +104,19 @@ class Hooks
 		{
 			$app->configs->add($modules->config_paths, Config::CONFIG_WEIGHT_MODULE);
 		}
+	}
 
+	/**
+	 * Boot enabled modules.
+	 *
+	 * Before the modules are actually booted up, their index is used to alter the I18n load
+	 * paths and the config paths.
+	 *
+	 * @param Core\BootEvent $event
+	 * @param Core|CoreBindings $app
+	 */
+	static public function on_core_boot(Core\BootEvent $event, Core $app)
+	{
 		#
 		# Revoke prototypes and events.
 		#
