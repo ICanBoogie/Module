@@ -58,7 +58,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 
 					];
 
-					case 'prototypes': return [
+					case 'prototype': return [
 
 
 					];

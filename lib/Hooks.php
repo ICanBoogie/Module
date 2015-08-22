@@ -121,7 +121,7 @@ class Hooks
 		# Revoke prototypes and events.
 		#
 
-		Prototype::configure($app->configs['prototypes']);
+		Prototype::configure($app->configs['prototype']);
 
 		$app->events->attach_many($app->configs['events']);
 	}
