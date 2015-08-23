@@ -123,7 +123,7 @@ class Hooks
 
 		Prototype::configure($app->configs['prototype']);
 
-		$app->events->attach_many($app->configs['events']);
+		$app->events->attach_many($app->configs['event']);
 	}
 
 	/**
