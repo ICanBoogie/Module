@@ -31,7 +31,7 @@ use ICanBoogie\Module\ModuleCollection;
  * @property-read ModuleCollection $collection
  * @property-read Core|Module\CoreBindings|Binding\ActiveRecord\CoreBindings|Binding\I18n\CoreBindings $app
  */
-class Module extends Object
+class Module extends Prototyped
 {
 	/*
 	 * PERMISSIONS:
