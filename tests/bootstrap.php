@@ -20,7 +20,7 @@ $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleA\\', __DIR__ . '/module
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleB\\', __DIR__ . '/modules/b/lib');
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleC\\', __DIR__ . '/modules/c/lib');
 
-(new Core(array_merge_recursive(get_autoconfig(), [
+$app = new Core(array_merge_recursive(get_autoconfig(), [
 
 	'config-path' => [
 
@@ -28,4 +28,8 @@ $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleC\\', __DIR__ . '/module
 
 	]
 
-])))->boot();
+]));
+
+Prototype::configure($app->configs['prototype']);
+
+$app->boot();

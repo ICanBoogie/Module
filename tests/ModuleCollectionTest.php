@@ -42,29 +42,29 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 
 		return [
 
-			[ $modules, 'AAAOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\AAAOperation' ],
-			[ $modules, 'AAAOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleA\AAAOperation' ],
-			[ $modules, 'AAAOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleA\AAAOperation' ],
+			[ $modules, 'Operation\AAAOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AAAOperation' ],
+			[ $modules, 'Operation\AAAOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AAAOperation' ],
+			[ $modules, 'Operation\AAAOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AAAOperation' ],
 
-			[ $modules, 'BBBOperation', 'a', false ],
-			[ $modules, 'BBBOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\BBBOperation' ],
-			[ $modules, 'BBBOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleB\BBBOperation' ],
+			[ $modules, 'Operation\BBBOperation', 'a', false ],
+			[ $modules, 'Operation\BBBOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\Operation\BBBOperation' ],
+			[ $modules, 'Operation\BBBOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleB\Operation\BBBOperation' ],
 
-			[ $modules, 'CCCOperation', 'a', false ],
-			[ $modules, 'CCCOperation', 'b', false ],
-			[ $modules, 'CCCOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\CCCOperation' ],
+			[ $modules, 'Operation\CCCOperation', 'a', false ],
+			[ $modules, 'Operation\CCCOperation', 'b', false ],
+			[ $modules, 'Operation\CCCOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\Operation\CCCOperation' ],
 
-			[ $modules, 'DDDOperation', 'a', false ],
-			[ $modules, 'DDDOperation', 'b', false ],
-			[ $modules, 'DDDOperation', 'c', false ],
+			[ $modules, 'Operation\DDDOperation', 'a', false ],
+			[ $modules, 'Operation\DDDOperation', 'b', false ],
+			[ $modules, 'Operation\DDDOperation', 'c', false ],
 
-			[ $modules, 'ABCOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\ABCOperation' ],
-			[ $modules, 'ABCOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\ABCOperation' ],
-			[ $modules, 'ABCOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\ABCOperation' ],
+			[ $modules, 'Operation\ABCOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\ABCOperation' ],
+			[ $modules, 'Operation\ABCOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\Operation\ABCOperation' ],
+			[ $modules, 'Operation\ABCOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\Operation\ABCOperation' ],
 
-			[ $modules, 'AACOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\AACOperation' ],
-			[ $modules, 'AACOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleA\AACOperation' ],
-			[ $modules, 'AACOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\AACOperation' ]
+			[ $modules, 'Operation\AACOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AACOperation' ],
+			[ $modules, 'Operation\AACOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AACOperation' ],
+			[ $modules, 'Operation\AACOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\Operation\AACOperation' ]
 
 		];
 	}

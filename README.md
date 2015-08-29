@@ -27,26 +27,28 @@ The module directory is usually named with the identifier of the module.
 The following directory structure demonstrates how a very basic `nodes` module could be defined:
 
 	nodes
-	|_ lib
-	|  |_ Module.php
-	|_ descriptor.php
+	├─ lib
+	│  └─ Module.php
+	└─ descriptor.php
 
 The following directory structure demonstrates a more advanced module:
 
 	nodes
-	|_ config
-	|  |_ <configuration files>
-	|_ lib
-	|  |_ Module.php
-	|_ locale
-	|  |_ <message catalogs>
-	|_ public
-	|  |_ <public assets>
-	|_ tests
-	|  |_ <tests>
-	|_ templates
-	|  |_ <view templates>
-	|_ descriptor.php
+	├─ config
+	|  └─ <configuration files>
+	├─ lib
+	|  ├─ Operation
+	|  |  └─ <operation classes>
+	|  └─ Module.php
+	├─ locale
+	|  └─ <message catalogs>
+	├─ public
+	|  └─ <public assets>
+	├─ tests
+	|  └─ <tests>
+	├─ templates
+	|  └─ <view templates>
+	└─ descriptor.php
 
 
 
@@ -138,17 +140,17 @@ more information about ActiveRecords and models.
 
 ### Operations
 
-Module operations are usually defined in the "lib/operations" directory. For example a `save`
-operation would be a class named `SaveOperation` declared within the namespace of the module,
-located in a "save.php" file.
+Module operations are defined in the "lib/Operation" directory. For example a `save`
+operation would be a class named `SaveOperation` declared within the namespace `<module namespace>\Operation`,
+located in a "SaveOperation.php" file.
 
 Operations are considered inherited. If the `save` operation is requested on a _News_ module,
 the framework tries to locate the best matching operation class, according to the modules it
 extends:
 
-- `..\News\SaveOperation`
-- `..\Contents\SaveOperation`
-- `..\Nodes\SaveOperation`
+- `..\News\Operation\SaveOperation`
+- `..\Contents\Operation\SaveOperation`
+- `..\Nodes\Operation\SaveOperation`
 
 
 
@@ -221,7 +223,7 @@ isset($modules['undefined_module']); // false
 
 
 
-## (Un)Installing modules
+## Installing and uninstalling modules
 
 Modules are installed using the `install()` method, and uninstalled using the
 `uninstall()` method. The `is_installed()` method returns the installation state of the
@@ -254,15 +256,23 @@ if (!$nodes->is_installed($errors))
 $nodes->uninstall();
 ```
 
-Enabled modules can be installed at once using a [ModuleCollection][] instance. Errors and
-exceptions are collected in the specified [Errors][] instance.
+Enabled modules can be installed at once using a [ModuleCollection][] instance.
+The [ModuleCollectionInstallFailed][] exception is thrown with all the errors and
+exceptions collected in a [Errors][] instance if the installation fails.
 
 ```php
 <?php
 
-use ICanBoogie\Errors;
+use ICanBoogie\Module\ModuleCollectionInstallFailed;
 
-$errors = $modules->install(new Errors);
+try
+{
+	$modules->install();
+}
+catch (ModuleCollectionInstallFailed $e)
+{
+	echo get_class($e->errors); // ICanBoogie\Errors
+}
 ```
 
 
@@ -472,20 +482,21 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-[ICanBoogie]:                  http://icanboogie.org/
-[Errors]:                      http://api.icanboogie.org/errors/1.0/class-ICanBoogie.Errors.html
-[Events]:                      http://api.icanboogie.org/event/1.4/class-ICanBoogie.Events.html
-[Controller]:                  http://api.icanboogie.org/routing/2.5/class-ICanBoogie.Routing.Controller.html
-[Fetcher]:                     http://api.icanboogie.org/facets/0.4/class-ICanBoogie.Facets.Fetcher.html
-[Module]:                      http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.html
-[ModelCollection]:             http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModelCollection.html
-[ModuleCollection]:            http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleCollection.html
-[ModuleNotDefined]:            http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleNotDefined.html
-[ModuleIsDisabled]:            http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleIsDisabled.html
-[ModuleConstructorMissing]:    http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleConstructorMissing.html
-[ModuleTemplateResolver]:      http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleTemplateResolver.html
-[TemplateResolver\AlterEvent]: http://api.icanboogie.org/module/2.3/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
-[icanboogie/facets]:           https://github.com/ICanBoogie/Facets
-[icanboogie/i18n]:             https://github.com/ICanBoogie/I18n
-[ActiveRecord package]:        https://github.com/ICanBoogie/ActiveRecord
-[Nodes]:                       https://github.com/Icybee/module-nodes
+[ICanBoogie]:                    http://icanboogie.org/
+[Errors]:                        http://api.icanboogie.org/errors/1.0/class-ICanBoogie.Errors.html
+[Events]:                        http://api.icanboogie.org/event/1.4/class-ICanBoogie.Events.html
+[Controller]:                    http://api.icanboogie.org/routing/2.5/class-ICanBoogie.Routing.Controller.html
+[Fetcher]:                       http://api.icanboogie.org/facets/0.4/class-ICanBoogie.Facets.Fetcher.html
+[Module]:                        http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.html
+[ModelCollection]:               http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModelCollection.html
+[ModuleCollection]:              http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleCollection.html
+[ModuleNotDefined]:              http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleNotDefined.html
+[ModuleIsDisabled]:              http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleIsDisabled.html
+[ModuleCollectionInstallFailed]: http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
+[ModuleConstructorMissing]:      http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleConstructorMissing.html
+[ModuleTemplateResolver]:        http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleTemplateResolver.html
+[TemplateResolver\AlterEvent]:   http://api.icanboogie.org/module/2.3/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
+[icanboogie/facets]:             https://github.com/ICanBoogie/Facets
+[icanboogie/i18n]:               https://github.com/ICanBoogie/I18n
+[ActiveRecord package]:          https://github.com/ICanBoogie/ActiveRecord
+[Nodes]:                         https://github.com/Icybee/module-nodes

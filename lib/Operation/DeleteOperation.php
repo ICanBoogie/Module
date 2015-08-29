@@ -9,7 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace ICanBoogie\Module\Operation;
+
+use ICanBoogie\Errors;
+use ICanBoogie\Module;
+use ICanBoogie\Operation;
 
 /**
  * Deletes a record.

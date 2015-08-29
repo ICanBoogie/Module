@@ -9,9 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace ICanBoogie\Module\Operation;
 
 use ICanBoogie\ActiveRecord\SchemaColumn;
+use ICanBoogie\Errors;
+use ICanBoogie\Module;
+use ICanBoogie\Operation;
 
 /**
  * The "save" operation is used to create or update a record.

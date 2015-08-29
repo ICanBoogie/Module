@@ -46,7 +46,7 @@
 		"psr-4": {
 			"ICanBoogie\\Module\\": "lib"
 		},
-		"classmap": [ "lib/Module.php", "lib/operations" ]
+		"classmap": [ "lib/Module.php" ]
 	},
 
 	"scripts": {
