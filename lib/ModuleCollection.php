@@ -881,6 +881,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @param Errors|null $errors
 	 *
 	 * @return Errors
+	 *
+	 * @throws ModuleCollectionInstallFailed if an error occurs.
 	 */
 	public function install(Errors $errors = null)
 	{
@@ -908,6 +910,11 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			{
 				$errors[$id] = $e;
 			}
+		}
+
+		if ($errors->count())
+		{
+			throw new ModuleCollectionInstallFailed($errors);
 		}
 
 		return $errors;
