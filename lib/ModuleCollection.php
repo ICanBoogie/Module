@@ -928,13 +928,14 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param string $unqualified_classname
 	 * @param string|Module $module
+	 * @param array $tried
 	 *
 	 * @return string|false The resolved file name, or `false` if it could not be resolved.
 	 *
 	 * @throws ModuleNotDefined if the specified module, or the module specified by
 	 * {@link Descriptor::INHERITS} is not defined.
 	 */
-	public function resolve_classname($unqualified_classname, $module)
+	public function resolve_classname($unqualified_classname, $module, array &$tried = [])
 	{
 		if ($module instanceof Module)
 		{
@@ -950,6 +951,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 			$descriptor = $this->descriptors[$module];
 			$fully_qualified_classname = $descriptor[Descriptor::NS] . '\\' . $unqualified_classname;
+			$tried[] = $fully_qualified_classname;
 
 			if (class_exists($fully_qualified_classname, true))
 			{
