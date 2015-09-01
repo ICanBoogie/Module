@@ -11,6 +11,7 @@
 
 namespace ICanBoogie\Module\Operation;
 
+use ICanBoogie\ActiveRecord;
 use ICanBoogie\ActiveRecord\SchemaColumn;
 use ICanBoogie\Errors;
 use ICanBoogie\Module;
@@ -117,6 +118,8 @@ class SaveOperation extends Operation
 			}
 		}
 
+		unset($properties[$schema->primary]);
+
 		return $properties;
 	}
 
@@ -143,23 +146,53 @@ class SaveOperation extends Operation
 	 *
 	 * @return array An array composed of the save mode ('update' or 'new') and the record's
 	 * key.
+	 *
 	 * @throws \RuntimeException when saving the record fails.
 	 */
 	protected function process()
 	{
 		$key = $this->key;
-		$record_key = $this->module->model->save($this->properties, $key);
+		$properties = $this->properties;
 		$log_params = [ 'key' => $key, 'module' => $this->module->title ];
+		$record_key = $key
+			? $this->update_record($properties)
+			: $this->create_record($properties, $this->record);
 
 		if (!$record_key)
 		{
 			throw new \RuntimeException($this->format($key ? 'Unable to update record %key in %module.' : 'Unable to create record in %module.', $log_params));
 		}
 
-		$this->record = $this->module->model[$record_key];
 		$this->response->location = $this->request->uri;
 		$this->response->message = $this->format($key ? 'The record %key in %module has been saved.' : 'A new record has been saved in %module.', $log_params);
 
 		return [ 'mode' => $key ? 'update' : 'new', 'key' => $record_key ];
+	}
+
+	/**
+	 * Update the operation record with properties.
+	 *
+	 * @param array $properties
+	 *
+	 * @return bool|int
+	 */
+	protected function update_record(array $properties)
+	{
+		return $this->record->assign($properties)->save();
+	}
+
+	/**
+	 * Creates a record from properties.
+	 *
+	 * @param array $properties
+	 * @param ActiveRecord $record The new record is saved in that variable.
+	 *
+	 * @return bool|int
+	 */
+	protected function create_record(array $properties, &$record)
+	{
+		$record = $this->module->model->new($properties);
+
+		return $record->save();
 	}
 }
