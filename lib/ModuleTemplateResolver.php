@@ -51,7 +51,7 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 		}
 
 		$modules = $this->modules;
-		$module_id = dirname($name);
+		$module_id = $this->resolve_module_id($name);
 
 		if (empty($modules[$module_id]))
 		{
@@ -59,6 +59,23 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 		}
 
 		return $this->resolve_from_module($modules[$module_id], $name, $extensions, $tried);
+	}
+
+	/**
+	 * Resolves module identifier form a template name.
+	 *
+	 * @param string $name
+	 *
+	 * @return string|null The module identifier or `null` if it cannot be determined.
+	 */
+	protected function resolve_module_id($name)
+	{
+		if (!preg_match('#^([^/]+)#', $name, $matches))
+		{
+			return null;
+		}
+
+		return $matches[1];
 	}
 
 	/**
@@ -71,9 +88,10 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 	 *
 	 * @return string|null
 	 */
-	public function resolve_from_module(Module $module, $name, array $extensions, &$tried = [])
+	protected function resolve_from_module(Module $module, $name, array $extensions, &$tried = [])
 	{
 		$paths = [];
+		$name = substr($name, strlen($module->id) + 1);
 
 		while ($module)
 		{
@@ -81,8 +99,6 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 
 			$module = $module->parent;
 		}
-
-		$name = basename($name);
 
 		return $this->resolve_path($this
 			->resolve_tries($paths, $name, $extensions), $tried);
