@@ -227,7 +227,7 @@ class Module extends Prototyped
 		{
 			if (!$this->model($name)->is_installed())
 			{
-				$errors[$this->id] = $errors->format("The model %name is not installed.", [
+				$errors->add($this->id, "The model %name is not installed.", [
 
 					'name' => $name
 
@@ -275,7 +275,12 @@ class Module extends Prototyped
 			}
 			catch (\Exception $e)
 			{
-				$errors[$this->id] = $errors->format('Unable to install model %model: !message', [ 'model' => $name, 'message' => $e->getMessage() ]);
+				$errors->add($this->id, "Unable to install model %model: !message", [
+
+					'model' => $name,
+					'message' => $e->getMessage()
+
+				]);
 
 				$rc = false;
 			}
