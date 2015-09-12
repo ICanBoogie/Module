@@ -26,14 +26,14 @@
 		"icanboogie/event": "^2.0.0"
 	},
 	"require-dev": {
-		"icanboogie/icanboogie": "^2.4.0",
-		"icanboogie/bind-activerecord": "^0.3.0",
+		"icanboogie/icanboogie": "^3.0.0",
+		"icanboogie/bind-activerecord": "^1.0.0",
 		"icanboogie/bind-view": "^1.0.0",
-		"icanboogie/bind-routing": "^0.2.0",
-		"icanboogie/bind-facets": "^0.2.0",
+		"icanboogie/bind-routing": "^1.0.0",
+		"icanboogie/bind-facets": "^1.0.0",
 		"icanboogie/bind-event": "^2.0.0",
 		"icanboogie/operation": "^3.0.0",
-		"icanboogie/storage": "^1.1.1",
+		"icanboogie/storage": "^1.2.0",
 		"icanboogie/i18n": "^2.0.8"
 	},
 
