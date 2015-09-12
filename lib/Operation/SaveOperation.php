@@ -19,6 +19,8 @@ use ICanBoogie\Operation;
 
 /**
  * The "save" operation is used to create or update a record.
+ *
+ * @property array $properties The properties to save.
  */
 class SaveOperation extends Operation
 {
@@ -44,23 +46,6 @@ class SaveOperation extends Operation
 	}
 
 	/**
-	 * Overrides the getter to prevent exceptions when the operation key is empty.
-	 */
-	protected function lazy_get_record()
-	{
-		return $this->key ? parent::lazy_get_record() : null;
-	}
-
-	/**
-	 * Overrides the method in order for the control to pass if the operation key is empty, which
-	 * is the case when creating a new record.
-	 */
-	protected function control_record()
-	{
-		return $this->key ? parent::control_record() : true;
-	}
-
-	/**
 	 * Filters out the operation's parameters, which are not defined as fields by the
 	 * primary model of the module, and take care of filtering or resolving properties values.
 	 *
@@ -76,6 +61,8 @@ class SaveOperation extends Operation
 	 *
 	 * If the property is not empty in the operation params, the property value is trimmed using the
 	 * trim() function, ensuring that there is no leading or trailing white spaces.
+	 *
+	 * **Note::** The getter should only be called during the {@link process()} method.
 	 *
 	 * @return array The properties of the operation.
 	 */
@@ -121,6 +108,23 @@ class SaveOperation extends Operation
 		unset($properties[$schema->primary]);
 
 		return $properties;
+	}
+
+	/**
+	 * Overrides the getter to prevent exceptions when the operation key is empty.
+	 */
+	protected function lazy_get_record()
+	{
+		return $this->key ? parent::lazy_get_record() : null;
+	}
+
+	/**
+	 * Overrides the method in order for the control to pass if the operation key is empty, which
+	 * is the case when creating a new record.
+	 */
+	protected function control_record()
+	{
+		return $this->key ? parent::control_record() : true;
 	}
 
 	/**
