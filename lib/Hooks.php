@@ -18,7 +18,9 @@ use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Core;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\HTTP\Request;
+use ICanBoogie\HTTP\RequestDispatcher;
 use ICanBoogie\Module;
+use ICanBoogie\Operation\OperationRouteDispatcher;
 use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\Prototype;
 use ICanBoogie\Render\TemplateResolver;
@@ -117,10 +119,6 @@ class Hooks
 	 */
 	static public function on_core_boot(Core\BootEvent $event, Core $app)
 	{
-		#
-		# Revoke prototypes and events.
-		#
-
 		Prototype::configure($app->configs['prototype']);
 
 		$app->events->attach_many($app->configs['event']);
@@ -199,6 +197,22 @@ class Hooks
 		$target['module'] = $module;
 		$template_resolver = $target->template_resolver;
 		$template_resolver->add_path($module->descriptor[Descriptor::PATH] . 'templates');
+	}
+
+	/**
+	 * @param RequestDispatcher\AlterEvent $event
+	 * @param RequestDispatcher $target
+	 */
+	static public function on_alter_request_dispatcher(RequestDispatcher\AlterEvent $event, RequestDispatcher $target)
+	{
+		$routing = $target['routing'];
+
+		self::assert_routing_dispatcher_is_valid($routing);
+
+		$modules = self::get_app_modules();
+
+		$target['routing'] = new ModuleOperationDispatcher($routing->routes, $modules);
+		$event->insert_before('forwarded_operation', new ForwardedOperationDispatcher($modules), 'routing');
 	}
 
 	/*
@@ -305,5 +319,30 @@ class Hooks
 		}
 
 		return $records->one;
+	}
+
+	/*
+	 * Support
+	 */
+
+	/**
+	 * Asserts that a dispatcher is an instance of {@link \ICanBoogie\Routing\RouteDispacther}.
+	 *
+	 * @param mixed $dispatcher
+	 *
+	 * @throws \LogicException if the dispatcher is not an instance of
+	 * {@link \ICanBoogie\Routing\RouteDispacther}.
+	 */
+	static private function assert_routing_dispatcher_is_valid($dispatcher)
+	{
+		if (!$dispatcher instanceof OperationRouteDispatcher)
+		{
+			throw new \LogicException(\ICanBoogie\format("Expected `routing` dispatcher to be an instance of %expected, got %actual instead.", [
+
+				'expected' => OperationRouteDispatcher::class,
+				'actual' => get_class($dispatcher)
+
+			]));
+		}
 	}
 }

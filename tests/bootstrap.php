@@ -19,6 +19,7 @@ $autoload = require __DIR__ . '/../vendor/autoload.php';
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleA\\', __DIR__ . '/modules/a/lib');
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleB\\', __DIR__ . '/modules/b/lib');
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleC\\', __DIR__ . '/modules/c/lib');
+$autoload->setPsr4('ICanBoogie\Module\ModulesTest\Sample\\', __DIR__ . '/modules/sample/lib');
 
 $app = new Core(array_merge_recursive(get_autoconfig(), [
 
@@ -26,10 +27,17 @@ $app = new Core(array_merge_recursive(get_autoconfig(), [
 
 		__DIR__ . '/../config' => Config::CONFIG_WEIGHT_APP
 
+	],
+
+	'module-path' => [
+
+		__DIR__ . DIRECTORY_SEPARATOR . 'modules'
+
 	]
 
 ]));
 
-Prototype::configure($app->configs['prototype']);
+
+//Prototype::configure($app->configs['prototype']);
 
 $app->boot();

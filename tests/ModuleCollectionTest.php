@@ -88,6 +88,6 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 		$modules->index;
 
 		$this->assertSame([ 'b' ], $modules->descriptors['d'][Descriptor::REQUIRES]);
-		$this->assertSame([ 'a', 'b', 'c', 'd' ], array_keys($modules->descriptors));
+		$this->assertSame([ 'a', 'b', 'c', 'd', 'sample' ], array_keys($modules->descriptors));
 	}
 }
