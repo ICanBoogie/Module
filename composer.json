@@ -33,7 +33,6 @@
 		"icanboogie/bind-routing": "^1.0.0",
 		"icanboogie/bind-facets": "^1.0.0",
 		"icanboogie/bind-event": "^2.0.0",
-		"icanboogie/storage": "^1.2.0",
 		"icanboogie/i18n": "^2.0.8"
 	},
 
@@ -56,7 +55,6 @@
 	"extra": {
 		"icanboogie": {
 			"config-path": "config",
-			"config-weight": -50,
 			"autoconfig-filters": [ "ICanBoogie\\Module\\Hooks::filter_autoconfig" ]
 		}
 	}
