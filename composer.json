@@ -23,7 +23,8 @@
 	"require": {
 		"php": ">=5.5.0",
 		"icanboogie/errors": "^1.0.0",
-		"icanboogie/event": "^2.0.0"
+		"icanboogie/event": "^2.0.0",
+		"icanboogie/operation": "^3.0.0"
 	},
 	"require-dev": {
 		"icanboogie/icanboogie": "^3.0.0",
@@ -32,7 +33,6 @@
 		"icanboogie/bind-routing": "^1.0.0",
 		"icanboogie/bind-facets": "^1.0.0",
 		"icanboogie/bind-event": "^2.0.0",
-		"icanboogie/operation": "^3.0.0",
 		"icanboogie/storage": "^1.2.0",
 		"icanboogie/i18n": "^2.0.8"
 	},
