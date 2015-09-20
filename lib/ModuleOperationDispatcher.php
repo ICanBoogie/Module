@@ -63,11 +63,18 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 
 		list($module, $operation_name, $operation_key) = $parsed_path;
 
+		$operation_class = $this->resolve_operation_class($operation_name, $module);
+
+		if (!$operation_class)
+		{
+			return null;
+		}
+
+		$captured[Operation::KEY] = $operation_key;
+
 		$pattern = $operation_key
 			? sprintf('/api/:%s/:%s/:%s', Operation::DESTINATION, Operation::KEY, Operation::NAME)
 			: sprintf('/api/:%s/:%s', Operation::DESTINATION, Operation::NAME);
-
-		$operation_class = $this->resolve_operation_class($operation_name, $module);
 
 		return new Route($this->routes, $pattern, [
 
