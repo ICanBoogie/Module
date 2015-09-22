@@ -49,8 +49,9 @@ class DeleteOperation extends Operation
 	protected function process()
 	{
 		$key = $this->key;
+		$record = $this->record;
 
-		if (!$this->module->model->delete($key))
+		if (!$record->delete())
 		{
 			throw new \RuntimeException($this->format('Unable to delete the record %key from %module.', [
 
