@@ -33,7 +33,8 @@
 		"icanboogie/bind-routing": "^1.0.0",
 		"icanboogie/bind-facets": "^1.0.0",
 		"icanboogie/bind-event": "^2.0.0",
-		"icanboogie/i18n": "^2.0.8"
+		"icanboogie/i18n": "^2.0.8",
+		"icanboogie/routing": "^3.0.0"
 	},
 
 	"suggest": {

@@ -11,9 +11,7 @@
 
 namespace ICanBoogie\Module;
 
-use ICanBoogie\HTTP\Dispatcher;
 use ICanBoogie\HTTP\Request;
-use ICanBoogie\HTTP\Response;
 use ICanBoogie\Module;
 use ICanBoogie\Operation;
 use ICanBoogie\Routing\Route;
@@ -76,11 +74,12 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 			? sprintf('/api/:%s/:%s/:%s', Operation::DESTINATION, Operation::KEY, Operation::NAME)
 			: sprintf('/api/:%s/:%s', Operation::DESTINATION, Operation::NAME);
 
-		return new Route($this->routes, $pattern, [
+		return Route::from([
 
-			'controller' => $operation_class,
-			'module' => $module->id,
-			'via' => $request->method
+			ModuleRouteDefinition::PATTERN => $pattern,
+			ModuleRouteDefinition::CONTROLLER => $operation_class,
+			ModuleRouteDefinition::MODULE => $module->id,
+			ModuleRouteDefinition::VIA => $request->method
 
 		]);
 	}

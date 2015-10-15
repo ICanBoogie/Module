@@ -154,8 +154,7 @@ class Hooks
 			{
 				$route += [
 
-					'via' => Request::METHOD_ANY,
-					'module' => $module_id
+					ModuleRouteDefinition::MODULE => $module_id
 
 				];
 			}
