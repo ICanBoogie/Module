@@ -214,6 +214,23 @@ class Hooks
 		$event->insert_before('forwarded_operation', new ForwardedOperationDispatcher($modules), 'routing');
 	}
 
+	/**
+	 * Clears modules cache.
+	 *
+	 * @param Core\ClearCacheEvent $event
+	 * @param Core $app
+	 */
+	static public function on_core_clear_cache(Core\ClearCacheEvent $event, Core $app)
+	{
+		$vars = $app->vars;
+		$iterator = new \RegexIterator($vars->getIterator(), '/^cached_modules_/');
+
+		foreach ($iterator as $key)
+		{
+			$vars->eliminate($key);
+		}
+	}
+
 	/*
 	 * Prototypes
 	 */
