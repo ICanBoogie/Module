@@ -50,7 +50,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return string
 	 */
-	static public function format_model_name($module_id, $model_id='primary')
+	static public function format_model_name($module_id, $model_id = 'primary')
 	{
 		return preg_replace('#[^0-9a-zA-Z$_]#', '_', $module_id) . ($model_id == 'primary' ? '' : '__' . $model_id);
 	}
@@ -117,64 +117,44 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Chnages a module availability.
-	 *
-	 * @param string $module_id
-	 * @param bool $available
-	 */
-	protected function change_module_availability($module_id, $available)
-	{
-		$this->index;
-
-		if (empty($this->descriptors[$module_id]))
-		{
-			return;
-		}
-
-		$this->descriptors[$module_id][Descriptor::DISABLED] = $available;
-		$this->revoke_constructions();
-	}
-
-	/**
 	 * Enables a module.
 	 *
-	 * @param string $id Identifier of the module.
+	 * @param string $module_id Module identifier.
 	 */
-	public function enable($id)
+	public function enable($module_id)
 	{
-		$this->change_module_availability($id, false);
+		$this->change_module_availability($module_id, false);
 	}
 
 	/**
 	 * Disables a module.
 	 *
-	 * @param string $id Identifier of the module.
+	 * @param string $module_id Module identifier.
 	 */
-	public function disable($id)
+	public function disable($module_id)
 	{
-		$this->change_module_availability($id, true);
+		$this->change_module_availability($module_id, true);
 	}
 
 	/**
-	 * Used to enable or disable a module using the specified offset as the module's id.
+	 * Used to enable or disable a module using the specified offset as a module identifier.
 	 *
-	 * The module is enabled or disabled by modifying the value of the {@link Descriptor::DISABLED}
-	 * key of the module's descriptor.
-	 *
-	 * @param mixed $id Identifier of the module.
-	 * @param mixed $enable Status of the module: `true` for enabled, `false` for disabled.
+	 * @param string $module_id Identifier of the module.
+	 * @param bool $enable Status of the module: `true` for enabled, `false` for disabled.
 	 */
-	public function offsetSet($id, $enable)
+	public function offsetSet($module_id, $enable)
 	{
-		$this->index;
+		$this->change_module_availability($module_id, $enable);
+	}
 
-		if (empty($this->descriptors[$id]))
-		{
-			return;
-		}
-
-		$this->descriptors[$id][Descriptor::DISABLED] = empty($enable);
-		$this->revoke_constructions();
+	/**
+	 * Disables a module by setting the {@link Descriptor::DISABLED} key of its descriptor to `true`.
+	 *
+	 * @param string $module_id Module identifier.
+	 */
+	public function offsetUnset($module_id)
+	{
+		$this->change_module_availability($module_id, false);
 	}
 
 	/**
@@ -187,40 +167,17 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * you want to use the module you check, better check using `!isset()`, otherwise the module
 	 * you check is loaded too.
 	 *
-	 * @param string $id Identifier of the module.
+	 * @param string $module_id Module identifier.
 	 *
 	 * @return boolean Whether or not the module is available.
 	 */
-	public function offsetExists($id)
+	public function offsetExists($module_id)
 	{
-		$this->index;
+		$this->ensure_modules_are_indexed();
 
 		$descriptors = $this->descriptors;
 
-		return (isset($descriptors[$id]) && empty($descriptors[$id][Descriptor::DISABLED]));
-	}
-
-	/**
-	 * Disables a module by setting the {@link Descriptor::DISABLED} key of its descriptor to `true`.
-	 *
-	 * The method also dismisses the {@link enabled_modules_descriptors} and
-	 * {@link disabled_modules_descriptors} properties.
-	 *
-	 * @param string $id Identifier of the module.
-	 */
-	public function offsetUnset($id)
-	{
-		$this->index;
-
-		$descriptors = &$this->descriptors;
-
-		if (empty($descriptors[$id]))
-		{
-			return;
-		}
-
-		$descriptors[$id][Descriptor::DISABLED] = true;
-		$this->revoke_constructions();
+		return (isset($descriptors[$module_id]) && empty($descriptors[$module_id][Descriptor::DISABLED]));
 	}
 
 	/**
@@ -229,7 +186,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * If the {@link autorun} property is `true`, the {@link Module::run()} method of the module
 	 * is invoked upon its first loading.
 	 *
-	 * @param string $id The identifier of the module.
+	 * @param string $module_id Module identifier.
 	 *
 	 * @throws ModuleNotDefined when the requested module is not defined.
 	 *
@@ -240,44 +197,16 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return Module
 	 */
-	public function offsetGet($id)
+	public function offsetGet($module_id)
 	{
-		$this->index;
+		$this->ensure_modules_are_indexed();
 
-		if (isset($this->modules[$id]))
+		if (isset($this->modules[$module_id]))
 		{
-			return $this->modules[$id];
+			return $this->modules[$module_id];
 		}
 
-		$descriptors = $this->descriptors;
-
-		if (empty($descriptors[$id]))
-		{
-			throw new ModuleNotDefined($id);
-		}
-
-		$descriptor = $descriptors[$id];
-
-		if (!empty($descriptor[Descriptor::DISABLED]))
-		{
-			throw new ModuleIsDisabled($id);
-		}
-
-		$class = $descriptor[Descriptor::CLASSNAME];
-
-		if (!class_exists($class, true))
-		{
-			throw new ModuleConstructorMissing($id, $class);
-		}
-
-		$parent = &$descriptor[Descriptor::INHERITS];
-
-		if ($parent)
-		{
-			$parent = $this[$parent];
-		}
-
-		return $this->modules[$id] = new $class($this, $descriptor);
+		return $this->modules[$module_id] = $this->instantiate_module($module_id);
 	}
 
 	/**
@@ -287,7 +216,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function getIterator()
 	{
-		$this->index;
+		$this->ensure_modules_are_indexed();
 
 		return new \ArrayIterator($this->modules);
 	}
@@ -525,8 +454,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * The descriptor file is extended with private values and default values.
 	 *
-	 * @param string $id The identifier of the module.
+	 * @param string $module_id The identifier of the module.
 	 * @param string $path The path to the directory where the descriptor is located.
+	 *
 	 * @throws \InvalidArgumentException in the following situations:
 	 * - The descriptor is not an array
 	 * - The {@link Descriptor::TITLE} key is empty.
@@ -534,7 +464,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array
 	 */
-	protected function read_descriptor($id, $path)
+	protected function read_descriptor($module_id, $path)
 	{
 		$descriptor_path = $path . 'descriptor.php';
 		$descriptor = require $descriptor_path;
@@ -560,7 +490,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 				'The %name value of the %id module descriptor is empty in %path.', [
 
 					'name' => Descriptor::TITLE,
-					'id' => $id,
+					'id' => $module_id,
 					'path' => $descriptor_path
 
 				]
@@ -574,7 +504,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 				'%name is required. Invalid descriptor for module %id in %path.', [
 
 					'name' => Descriptor::NS,
-					'id' => $id,
+					'id' => $module_id,
 					'path' => $descriptor_path
 
 				]
@@ -583,7 +513,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 		return Descriptor::normalize($descriptor + [
 
-			Descriptor::ID => $id,
+			Descriptor::ID => $module_id,
 			Descriptor::PATH => $path,
 
 			'__has_config' => is_dir($path . 'config'),
@@ -656,17 +586,17 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		$enabled = [];
 		$disabled = [];
 
-		$this->index; // we make sure that the modules were indexed
+		$this->ensure_modules_are_indexed();
 
-		foreach ($this->descriptors as $id => &$descriptor)
+		foreach ($this->descriptors as $module_id => &$descriptor)
 		{
-			if (isset($this[$id]))
+			if (isset($this[$module_id]))
 			{
-				$enabled[$id] = $descriptor;
+				$enabled[$module_id] = $descriptor;
 			}
 			else
 			{
-				$disabled[$id] = $descriptor;
+				$disabled[$module_id] = $descriptor;
 			}
 		}
 
@@ -754,7 +684,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array
 	 */
-	public function order_ids(array $ids, array $descriptors=null)
+	public function order_ids(array $ids, array $descriptors = null)
 	{
 		$ordered = [];
 		$extends_weight = [];
@@ -768,14 +698,14 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		{
 			$i = 0;
 
-			foreach ($descriptors as $id => $descriptor)
+			foreach ($descriptors as $module_id => $descriptor)
 			{
 				if ($descriptor[Descriptor::INHERITS] !== $super_id)
 				{
 					continue;
 				}
 
-				$i += 1 + $count_extends($id);
+				$i += 1 + $count_extends($module_id);
 			}
 
 			return $i;
@@ -785,27 +715,27 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		{
 			$i = 0;
 
-			foreach ($descriptors as $id => $descriptor)
+			foreach ($descriptors as $module_id => $descriptor)
 			{
 				if (!in_array($required_id, $descriptor[Descriptor::REQUIRES]))
 				{
 					continue;
 				}
 
-				$i += 1 + $extends_weight[$id];
+				$i += 1 + $extends_weight[$module_id];
 			}
 
 			return $i;
 		};
 
-		foreach ($ids as $id)
+		foreach ($ids as $module_id)
 		{
-			$extends_weight[$id] = $count_extends($id);
+			$extends_weight[$module_id] = $count_extends($module_id);
 		}
 
-		foreach ($ids as $id)
+		foreach ($ids as $module_id)
 		{
- 			$ordered[$id] = -$extends_weight[$id] -$count_required($id) + $descriptors[$id][Descriptor::WEIGHT];
+ 			$ordered[$module_id] = -$extends_weight[$module_id] -$count_required($module_id) + $descriptors[$module_id][Descriptor::WEIGHT];
 		}
 
 		\ICanBoogie\stable_sort($ordered);
@@ -894,12 +824,11 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			$errors = new Errors;
 		}
 
-		foreach (array_keys($this->enabled_modules_descriptors) as $id)
+		foreach (array_keys($this->enabled_modules_descriptors) as $module_id)
 		{
 			try
 			{
-				$module = $this[$id];
-
+				$module = $this[$module_id];
 				$is_installed_errors = new Errors;
 
 				if ($module->is_installed($is_installed_errors))
@@ -911,7 +840,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			}
 			catch (\Exception $e)
 			{
-				$errors[$id] = $e;
+				$errors[$module_id] = $e;
 			}
 		}
 
@@ -930,7 +859,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * specified module—if the class exists. If it does, it returns its fully qualified name.
 	 *
 	 * @param string $unqualified_classname
-	 * @param string|Module $module
+	 * @param string|Module $module_id
 	 * @param array $tried
 	 *
 	 * @return string|false The resolved file name, or `false` if it could not be resolved.
@@ -938,21 +867,18 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @throws ModuleNotDefined if the specified module, or the module specified by
 	 * {@link Descriptor::INHERITS} is not defined.
 	 */
-	public function resolve_classname($unqualified_classname, $module, array &$tried = [])
+	public function resolve_classname($unqualified_classname, $module_id, array &$tried = [])
 	{
-		if ($module instanceof Module)
+		if ($module_id instanceof Module)
 		{
-			$module = $module->id;
+			$module_id = $module_id->id;
 		}
 
-		while ($module)
+		while ($module_id)
 		{
-			if (empty($this->descriptors[$module]))
-			{
-				throw new ModuleNotDefined($module);
-			}
+			$this->assert_module_is_defined($module_id);
 
-			$descriptor = $this->descriptors[$module];
+			$descriptor = $this->descriptors[$module_id];
 			$fully_qualified_classname = $descriptor[Descriptor::NS] . '\\' . $unqualified_classname;
 			$tried[] = $fully_qualified_classname;
 
@@ -961,9 +887,107 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 				return $fully_qualified_classname;
 			}
 
-			$module = $descriptor[Descriptor::INHERITS];
+			$module_id = $descriptor[Descriptor::INHERITS];
 		}
 
 		return false;
+	}
+
+	/**
+	 * Changes a module availability.
+	 *
+	 * @param string $module_id
+	 * @param bool $available
+	 */
+	protected function change_module_availability($module_id, $available)
+	{
+		$this->ensure_modules_are_indexed();
+
+		if (empty($this->descriptors[$module_id]))
+		{
+			return;
+		}
+
+		$this->descriptors[$module_id][Descriptor::DISABLED] = $available;
+		$this->revoke_constructions();
+	}
+
+	/**
+	 * Ensures that modules are indexed, index them if not.
+	 */
+	protected function ensure_modules_are_indexed()
+	{
+		$this->index;
+	}
+
+	/**
+	 * Asserts that a module is defined.
+	 *
+	 * @param string $module_id Module identifier.
+	 *
+	 * @throws ModuleNotDefined if the module is not defined.
+	 */
+	protected function assert_module_is_defined($module_id)
+	{
+		if (empty($this->descriptors[$module_id]))
+		{
+			throw new ModuleNotDefined($module_id);
+		}
+	}
+
+	/**
+	 * Asserts that a module is enabled.
+	 *
+	 * @param string $module_id
+	 *
+	 * @throws ModuleIsDisabled if the module is disabled.
+	 */
+	protected function assert_module_is_enabled($module_id)
+	{
+		if (!empty($this->descriptors[$module_id][Descriptor::DISABLED]))
+		{
+			throw new ModuleIsDisabled($module_id);
+		}
+	}
+
+	/**
+	 * Asserts that a module constructor exists.
+	 *
+	 * @param string $module_id Module identifier.
+	 * @param string $class Constructor class.
+	 */
+	protected function assert_constructor_exists($module_id, $class)
+	{
+		if (!class_exists($class, true))
+		{
+			throw new ModuleConstructorMissing($module_id, $class);
+		}
+	}
+
+	/**
+	 * Instantiate a module.
+	 *
+	 * @param string $module_id Module identifier.
+	 *
+	 * @return Module
+	 */
+	protected function instantiate_module($module_id)
+	{
+		$this->assert_module_is_defined($module_id);
+		$this->assert_module_is_enabled($module_id);
+
+		$descriptor = $this->descriptors[$module_id];
+		$class = $descriptor[Descriptor::CLASSNAME];
+
+		$this->assert_constructor_exists($module_id, $class);
+
+		$parent = &$descriptor[Descriptor::INHERITS];
+
+		if ($parent)
+		{
+			$parent = $this[$parent];
+		}
+
+		return new $class($this, $descriptor);
 	}
 }
