@@ -21,7 +21,7 @@ functionality.
 
 It takes at least two files to define a module: a descriptor and another where the class used to
 instantiate the module is defined. The descriptor is a `descriptor.php` file that must be located
-at the root of the module directory. The class is usually located in the file 'lib/module.php`.
+at the root of the module directory. The class is usually located in the file `lib/module.php`.
 The module directory is usually named with the identifier of the module.
 
 The following directory structure demonstrates how a very basic `nodes` module could be defined:

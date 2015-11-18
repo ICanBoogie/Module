@@ -117,21 +117,32 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
+	 * Chnages a module availability.
+	 *
+	 * @param string $module_id
+	 * @param bool $available
+	 */
+	protected function change_module_availability($module_id, $available)
+	{
+		$this->index;
+
+		if (empty($this->descriptors[$module_id]))
+		{
+			return;
+		}
+
+		$this->descriptors[$module_id][Descriptor::DISABLED] = $available;
+		$this->revoke_constructions();
+	}
+
+	/**
 	 * Enables a module.
 	 *
 	 * @param string $id Identifier of the module.
 	 */
 	public function enable($id)
 	{
-		$this->index;
-
-		if (empty($this->descriptors[$id]))
-		{
-			return;
-		}
-
-		$this->descriptors[$id][Descriptor::DISABLED] = false;
-		$this->revoke_constructions();
+		$this->change_module_availability($id, false);
 	}
 
 	/**
@@ -141,15 +152,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function disable($id)
 	{
-		$this->index;
-
-		if (empty($this->descriptors[$id]))
-		{
-			return;
-		}
-
-		$this->descriptors[$id][Descriptor::DISABLED] = true;
-		$this->revoke_constructions();
+		$this->change_module_availability($id, true);
 	}
 
 	/**
@@ -403,7 +406,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param array $paths
 	 *
-	 * @return array[string]array
+	 * @return array
 	 */
 	protected function index_descriptors(array $paths)
 	{
@@ -702,7 +705,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Returns the paths of the enabled modules which have a `locale` folder.
 	 *
-	 * @return array[]string
+	 * @return array
 	 */
 	protected function lazy_get_locale_paths()
 	{
@@ -724,7 +727,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Returns the paths of the enabled modules which have a `config` folder.
 	 *
-	 * @return array[]string
+	 * @return array
 	 */
 	protected function lazy_get_config_paths()
 	{

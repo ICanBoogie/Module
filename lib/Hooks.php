@@ -13,9 +13,9 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\Autoconfig\Config;
-use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Core;
+use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\HTTP\Request;
 use ICanBoogie\HTTP\RequestDispatcher;
@@ -33,25 +33,6 @@ use ICanBoogie\View\View;
  */
 class Hooks
 {
-	/**
-	 * Returns the application's module collection.
-	 *
-	 * @return ModuleCollection
-	 */
-	static private function get_app_modules()
-	{
-		static $modules;
-
-		if ($modules === null)
-		{
-			/* @var $app CoreBindings */
-			$app = \ICanBoogie\app();
-			$modules = $app->modules;
-		}
-
-		return $modules;
-	}
-
 	/*
 	 * Config
 	 */
@@ -340,6 +321,27 @@ class Hooks
 	/*
 	 * Support
 	 */
+
+	/**
+	 * @return \ICanBoogie\Core|CoreBindings
+	 */
+	static private function app()
+	{
+		return \ICanBoogie\app();
+	}
+
+	/**
+	 * Returns the application's module collection.
+	 *
+	 * @return ModuleCollection
+	 */
+	static private function get_app_modules()
+	{
+		static $modules;
+
+		return $modules
+			?: $modules = self::app()->modules;
+	}
 
 	/**
 	 * Asserts that a dispatcher is an instance of {@link \ICanBoogie\Routing\RouteDispacther}.
