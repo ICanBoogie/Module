@@ -16,6 +16,7 @@ use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Errors;
 use ICanBoogie\Module;
 use ICanBoogie\Storage\Storage;
+use ICanBoogie\Module\ModuleCollection\InstallableModulesFilter;
 
 /**
  * A module collection.
@@ -177,7 +178,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 		$descriptors = $this->descriptors;
 
-		return (isset($descriptors[$module_id]) && empty($descriptors[$module_id][Descriptor::DISABLED]));
+		return isset($descriptors[$module_id])
+		&& empty($descriptors[$module_id][Descriptor::DISABLED]);
 	}
 
 	/**
@@ -210,7 +212,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Returns an iterator for the modules.
+	 * Returns an iterator for instantiated modules.
 	 *
 	 * @return \ArrayIterator
 	 */
@@ -219,6 +221,44 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		$this->ensure_modules_are_indexed();
 
 		return new \ArrayIterator($this->modules);
+	}
+
+	/**
+	 * Filter descriptors.
+	 *
+	 * @param callable $filter
+	 *
+	 * @return array
+	 */
+	public function filter_descriptors(callable $filter)
+	{
+		return array_filter($this->descriptors, $filter);
+	}
+
+	/**
+	 * Returns the modules using a module.
+	 *
+	 * @param string $module_id Used module identifier.
+	 * @param bool $all One of {@link ONLY_ENABLED_MODULES} or {@link ALL_MODULES}.
+	 * Default: {@link ONLY_ENABLED_MODULES}.
+	 *
+	 * @return array A array of filtered descriptors.
+	 */
+	public function filter_descriptors_by_users($module_id, $all = self::ONLY_ENABLED_MODULES)
+	{
+		$users = [];
+		$descriptors = $all ? $this->descriptors : $this->enabled_modules_descriptors;
+
+		foreach ($descriptors as $user_id => $descriptor)
+		{
+			if ($descriptor[Descriptor::INHERITS] == $module_id
+			|| in_array($module_id, $descriptor[Descriptor::REQUIRES]))
+			{
+				$users[$user_id] = $descriptor;
+			}
+		}
+
+		return $users;
 	}
 
 	/**
@@ -243,27 +283,17 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 			if (!$index)
 			{
-				$index = $this->index_construct();
+				$index = $this->index_modules();
 				$cache->store($key, $index);
 			}
 		}
 		else
 		{
-			$index = $this->index_construct();
+			$index = $this->index_modules();
 		}
 
-		$this->descriptors = $index['descriptors'];
-
-		foreach ($this->descriptors as $descriptor)
-		{
-			$namespace = $descriptor[Descriptor::NS];
-			$constant = $namespace . '\DIR';
-
-			if (!defined($constant))
-			{
-				define($constant, $descriptor[Descriptor::PATH]);
-			}
-		}
+		$this->descriptors = $descriptors = $index['descriptors'];
+		$this->define_constants($descriptors);
 
 		return $index;
 	}
@@ -281,7 +311,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array
 	 */
-	protected function index_construct()
+	protected function index_modules()
 	{
 		$descriptors = $this->paths ? $this->index_descriptors($this->paths) : [];
 		$catalogs = [];
@@ -744,32 +774,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Returns the modules using a module.
-	 *
-	 * @param string $module_id Used module identifier.
-	 * @param bool $all One of {@link ONLY_ENABLED_MODULES} or {@link ALL_MODULES}.
-	 * Default: {@link ONLY_ENABLED_MODULES}.
-	 *
-	 * @return array A array of filtered descriptors.
-	 */
-	public function filter_descriptors_by_users($module_id, $all = self::ONLY_ENABLED_MODULES)
-	{
-		$users = [];
-		$descriptors = $all ? $this->descriptors : $this->enabled_modules_descriptors;
-
-		foreach ($descriptors as $user_id => $descriptor)
-		{
-			if ($descriptor[Descriptor::INHERITS] == $module_id
-			|| in_array($module_id, $descriptor[Descriptor::REQUIRES]))
-			{
-				$users[$user_id] = $descriptor;
-			}
-		}
-
-		return $users;
-	}
-
-	/**
 	 * Returns the usage of a module by other modules.
 	 *
 	 * @param string $module_id The identifier of the module.
@@ -824,19 +828,11 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			$errors = new Errors;
 		}
 
-		foreach (array_keys($this->enabled_modules_descriptors) as $module_id)
+		foreach (array_keys($this->filter_descriptors(new InstallableModulesFilter($this))) as $module_id)
 		{
 			try
 			{
-				$module = $this[$module_id];
-				$is_installed_errors = new Errors;
-
-				if ($module->is_installed($is_installed_errors))
-				{
-					continue;
-				}
-
-				$module->install($errors);
+				$this[$module_id]->install($errors);
 			}
 			catch (\Exception $e)
 			{
@@ -989,5 +985,24 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		}
 
 		return new $class($this, $descriptor);
+	}
+
+	/**
+	 * Defines module constants.
+	 *
+	 * @param array $descriptors
+	 */
+	protected function define_constants(array $descriptors)
+	{
+		foreach ($descriptors as $descriptor)
+		{
+			$namespace = $descriptor[Descriptor::NS];
+			$constant = $namespace . '\DIR';
+
+			if (!defined($constant))
+			{
+				define($constant, $descriptor[Descriptor::PATH]);
+			}
+		}
 	}
 }

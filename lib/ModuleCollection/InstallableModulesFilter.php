@@ -1,0 +1,56 @@
+<?php
+
+/*
+ * This file is part of the ICanBoogie package.
+ *
+ * (c) Olivier Laviale <olivier.laviale@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace ICanBoogie\Module\ModuleCollection;
+
+use ICanBoogie\Errors;
+use ICanBoogie\Module\Descriptor;
+use ICanBoogie\Module\ModuleCollection;
+
+/**
+ * Filters installable module descriptors.
+ */
+class InstallableModulesFilter
+{
+	/**
+	 * @var ModuleCollection
+	 */
+	private $modules;
+
+	/**
+	 * InstallableModulesFilter constructor.
+	 *
+	 * @param ModuleCollection $modules
+	 */
+	public function __construct(ModuleCollection $modules)
+	{
+		$this->modules = $modules;
+	}
+
+	/**
+	 * @param array $descriptor An array of {@link Descriptor::*} keys.
+	 *
+	 * @return bool `true` if the module may be installed, `false` otherwise.
+	 */
+	public function __invoke(array $descriptor)
+	{
+		if ($descriptor[Descriptor::DISABLED])
+		{
+			return false;
+		}
+
+		$module = $this->modules[$descriptor[Descriptor::ID]];
+		$is_installed_errors = new Errors;
+		$is_installed = $module->is_installed($is_installed_errors);
+
+		return $is_installed !== false && !$is_installed_errors->count();
+	}
+}
