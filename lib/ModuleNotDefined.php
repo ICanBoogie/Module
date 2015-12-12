@@ -30,11 +30,19 @@ class ModuleNotDefined extends \RuntimeException
 	 */
 	private $module_id;
 
+	/**
+	 * @return string
+	 */
 	protected function get_module_id()
 	{
 		return $this->module_id;
 	}
 
+	/**
+	 * @param string $module_id
+	 * @param int $code
+	 * @param \Exception|null $previous
+	 */
 	public function __construct($module_id, $code = Status::INTERNAL_SERVER_ERROR, \Exception $previous = null)
 	{
 		$this->module_id = $module_id;

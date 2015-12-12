@@ -31,6 +31,9 @@ class ModuleConstructorMissing extends \RuntimeException
 	 */
 	private $module_id;
 
+	/**
+	 * @return string
+	 */
 	protected function get_module_id()
 	{
 		return $this->module_id;
@@ -43,11 +46,20 @@ class ModuleConstructorMissing extends \RuntimeException
 	 */
 	private $class;
 
+	/**
+	 * @return string
+	 */
 	protected function get_class()
 	{
 		return $this->class;
 	}
 
+	/**
+	 * @param string $module_id
+	 * @param string $class
+	 * @param \Exception|int $code
+	 * @param \Exception|null $previous
+	 */
 	public function __construct($module_id, $class, $code = Status::INTERNAL_SERVER_ERROR, \Exception $previous = null)
 	{
 		$this->module_id = $module_id;

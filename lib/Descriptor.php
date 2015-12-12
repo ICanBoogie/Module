@@ -54,7 +54,7 @@ final class Descriptor
 	/**
 	 * Defines the parent module the module inherits from.
 	 */
-	const INHERITS = 'extends'; // TODO-20101017: change to 'inherits' once the transition is over
+	const INHERITS = 'inherits';
 
 	/**
 	 * Defines the identifier of the module.

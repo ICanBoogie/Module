@@ -38,6 +38,9 @@ class DeleteOperation extends Operation
 		] + parent::get_controls();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function validate(Errors $errors)
 	{
 		return true;

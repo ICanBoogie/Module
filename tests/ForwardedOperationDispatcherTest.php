@@ -233,5 +233,4 @@ class ForwardedForwardedOperationDispatcherTest extends \PHPUnit_Framework_TestC
 
 		$this->fail('The Failure exception should have been raised.');
 	}
-
 }

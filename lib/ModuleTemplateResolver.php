@@ -32,6 +32,10 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 	 */
 	private $modules;
 
+	/**
+	 * @param TemplateResolver $template_resolver
+	 * @param ModuleCollection $modules
+	 */
 	public function __construct(TemplateResolver $template_resolver, ModuleCollection $modules)
 	{
 		$this->template_resolver = $template_resolver;

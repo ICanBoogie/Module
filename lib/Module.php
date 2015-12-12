@@ -395,6 +395,14 @@ class Module extends Prototyped
 		return $this->models[$which];
 	}
 
+	/**
+	 * Resolves model tags.
+	 *
+	 * @param array|string $tags
+	 * @param string $which
+	 *
+	 * @return array
+	 */
 	protected function resolve_model_tags($tags, $which)
 	{
 		$app = $this->app;

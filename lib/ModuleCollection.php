@@ -429,6 +429,13 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		return $descriptors;
 	}
 
+	/**
+	 * Collects descriptors from paths.
+	 *
+	 * @param array $paths
+	 *
+	 * @return array
+	 */
 	protected function collect_descriptors(array $paths)
 	{
 		$descriptors = [];

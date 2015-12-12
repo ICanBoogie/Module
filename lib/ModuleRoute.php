@@ -11,12 +11,12 @@
 
 namespace ICanBoogie\Module;
 
-use ICanBoogie\Routing\Route;
-
 /**
+ * A trait implemented by module routes.
+ *
  * @property-read string $module
  */
-class ModuleRoute extends Route
+trait ModuleRoute
 {
 	/**
 	 * @var string Module identifier.

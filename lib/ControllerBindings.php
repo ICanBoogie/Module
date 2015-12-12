@@ -17,6 +17,7 @@ use ICanBoogie\Core;
 use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\Module;
+use ICanBoogie\Routing\Route;
 
 /**
  * {@link \ICanBoogie\Routing\Controller} prototype bindings.
@@ -32,7 +33,7 @@ use ICanBoogie\Module;
  * @property-read Core $app
  * @property-read Module $module
  * @property-read Model $model
- * @property-read ModuleRoute $route
+ * @property-read Route|ModuleRoute $route
  * @property Fetcher $records_fetcher
  */
 trait ControllerBindings

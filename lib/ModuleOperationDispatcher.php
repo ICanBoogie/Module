@@ -17,6 +17,9 @@ use ICanBoogie\Operation;
 use ICanBoogie\Routing\Route;
 use ICanBoogie\Routing\RouteCollection;
 
+/**
+ * A request dispatcher for module operations.
+ */
 class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 {
 	/**
@@ -24,6 +27,10 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 	 */
 	private $modules;
 
+	/**
+	 * @param RouteCollection $routes
+	 * @param ModuleCollection $modules
+	 */
 	public function __construct(RouteCollection $routes, ModuleCollection $modules)
 	{
 		$this->modules = $modules;
@@ -138,8 +145,8 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 	 */
 	protected function resolve_operation_class($operation_name, Module $module)
 	{
-		$unqualified_classname = 'Operation\\' . \ICanBoogie\camelize(strtr($operation_name, '-', '_')) . 'Operation';
+		$unqualified_class_name = 'Operation\\' . \ICanBoogie\camelize(strtr($operation_name, '-', '_')) . 'Operation';
 
-		return $this->modules->resolve_classname($unqualified_classname, $module);
+		return $this->modules->resolve_classname($unqualified_class_name, $module);
 	}
 }
