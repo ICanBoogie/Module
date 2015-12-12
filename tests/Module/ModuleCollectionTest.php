@@ -37,7 +37,7 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 
 	public function provide_test_resolve_classname()
 	{
-		$modules = new ModuleCollection([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$modules = $this->create_module_collection();
 		$modules->index;
 
 		return [
@@ -71,7 +71,7 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_module()
 	{
-		$modules = new ModuleCollection([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$modules = $this->create_module_collection();
 		$modules->index;
 
 		$c = $modules['c'];
@@ -84,10 +84,18 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 
 	public function test_modules_weight()
 	{
-		$modules = new ModuleCollection([ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$modules = $this->create_module_collection();
 		$modules->index;
 
 		$this->assertSame([ 'b' ], $modules->descriptors['d'][Descriptor::REQUIRES]);
 		$this->assertSame([ 'a', 'b', 'c', 'd', 'sample' ], array_keys($modules->descriptors));
+	}
+
+	/**
+	 * @return ModuleCollection
+	 */
+	private function create_module_collection()
+	{
+		return new ModuleCollection([ \ICanBoogie\DOCUMENT_ROOT . 'modules' ]);
 	}
 }

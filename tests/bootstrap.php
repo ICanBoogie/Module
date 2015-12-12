@@ -13,6 +13,8 @@ namespace ICanBoogie;
 
 use ICanBoogie\Autoconfig\Config;
 
+$_SERVER['DOCUMENT_ROOT'] = __DIR__;
+
 /* @var $autoload \Composer\Autoload\ClassLoader */
 
 $autoload = require __DIR__ . '/../vendor/autoload.php';

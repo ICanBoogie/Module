@@ -15,10 +15,10 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_filter_autoconfig()
 	{
-		$autoconfig = [ 'app-paths' => [ __DIR__ . DIRECTORY_SEPARATOR ] ];
+		$autoconfig = [ 'app-paths' => [ \ICanBoogie\DOCUMENT_ROOT ] ];
 		Hooks::filter_autoconfig($autoconfig);
 		$this->assertArrayHasKey('module-path', $autoconfig);
-		$this->assertEquals($autoconfig['module-path'], [ __DIR__ . DIRECTORY_SEPARATOR . 'modules' ]);
+		$this->assertEquals($autoconfig['module-path'], [ \ICanBoogie\DOCUMENT_ROOT . 'modules' ]);
 	}
 
 	public function test_on_core_configure()

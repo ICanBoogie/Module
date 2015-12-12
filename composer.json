@@ -44,7 +44,8 @@
 
 	"autoload": {
 		"psr-4": {
-			"ICanBoogie\\Module\\": "lib"
+			"ICanBoogie\\": "lib",
+			"ICanBoogie\\Module\\": "lib/Module"
 		},
 		"classmap": [ "lib/Module.php" ]
 	},
