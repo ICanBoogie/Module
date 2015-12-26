@@ -30,7 +30,7 @@
 		"icanboogie/icanboogie": "^3.0.0",
 		"icanboogie/bind-activerecord": "^2.3.0",
 		"icanboogie/bind-view": "^1.0.0",
-		"icanboogie/bind-routing": "^1.0.0",
+		"icanboogie/bind-routing": "^3.0.0",
 		"icanboogie/bind-facets": "^1.0.0",
 		"icanboogie/bind-event": "^2.0.0",
 		"icanboogie/i18n": "^2.0.8",
