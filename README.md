@@ -486,7 +486,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 [Errors]:                        http://api.icanboogie.org/errors/1.0/class-ICanBoogie.Errors.html
 [Events]:                        http://api.icanboogie.org/event/1.4/class-ICanBoogie.Events.html
 [Controller]:                    http://api.icanboogie.org/routing/2.5/class-ICanBoogie.Routing.Controller.html
-[Fetcher]:                       http://api.icanboogie.org/facets/0.4/class-ICanBoogie.Facets.Fetcher.html
+[Fetcher]:                       http://api.icanboogie.org/facets/0.5/class-ICanBoogie.Facets.Fetcher.html
 [Module]:                        http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.html
 [ModelCollection]:               http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModelCollection.html
 [ModuleCollection]:              http://api.icanboogie.org/module/2.3/class-ICanBoogie.Module.ModuleCollection.html

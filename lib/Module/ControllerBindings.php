@@ -14,7 +14,7 @@ namespace ICanBoogie\Module;
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Core;
-use ICanBoogie\Facets\Fetcher;
+use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Routing\Route;
@@ -34,7 +34,7 @@ use ICanBoogie\Routing\Route;
  * @property-read Module $module
  * @property-read Model $model
  * @property-read Route|ModuleRoute $route
- * @property Fetcher $records_fetcher
+ * @property BasicFetcher $records_fetcher
  */
 trait ControllerBindings
 {

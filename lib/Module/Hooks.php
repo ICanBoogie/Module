@@ -16,6 +16,7 @@ use ICanBoogie\Autoconfig\Config;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Core;
 use ICanBoogie\Facets\Fetcher;
+use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\HTTP\Request;
 use ICanBoogie\HTTP\RequestDispatcher;
@@ -275,11 +276,11 @@ class Hooks
 	 *
 	 * @param Controller|ControllerBindings $controller
 	 *
-	 * @return Fetcher
+	 * @return BasicFetcher
 	 */
 	static public function controller_lazy_get_records_fetcher(Controller $controller)
 	{
-		return new Fetcher($controller->model);
+		return new BasicFetcher($controller->model);
 	}
 
 	/**
