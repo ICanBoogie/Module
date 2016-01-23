@@ -7,6 +7,7 @@ use ICanBoogie\Core;
 use ICanBoogie\EventCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Render\BasicTemplateResolver;
+use ICanBoogie\Render\Renderer;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\Routing\Route;
 use ICanBoogie\View\View;
@@ -201,7 +202,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 
 		$view = $this
 			->getMockBuilder(View::class)
-			->setConstructorArgs([ $controller ])
+			->setConstructorArgs([ $controller, \ICanBoogie\Render\get_renderer() ])
 			->setMethods([ 'offsetSet' ])
 			->getMock();
 		$view
@@ -217,22 +218,10 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 
 	public function test_on_alter_view()
 	{
-		$module_path = uniqid();
-		$module_descriptor = [
-
-			Descriptor::PATH => $module_path
-
-		];
-
 		$module = $this
 			->getMockBuilder(Module::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'get_descriptor' ])
 			->getMock();
-		$module
-			->expects($this->once())
-			->method('get_descriptor')
-			->willReturn($module_descriptor);
 
 		$controller = $this
 			->getMockBuilder(Controller::class)
@@ -249,29 +238,23 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$template_resolver = $this
-			->getMockBuilder(BasicTemplateResolver::class)
+		$renderer = $this
+			->getMockBuilder(Renderer::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'add_path' ])
 			->getMock();
-		$template_resolver
-			->expects($this->once())
-			->method('add_path')
-			->with($module_path . 'templates');
 
 		$view = $this
 			->getMockBuilder(View::class)
-			->setConstructorArgs([ $controller ])
-			->setMethods([ 'get_template_resolver' ])
+			->setConstructorArgs([ $controller, $renderer ])
+			->setMethods(null)
 			->getMock();
-		$view
-			->expects($this->once())
-			->method('get_template_resolver')
-			->willReturn($template_resolver);
 
 		/* @var $event View\AlterEvent */
 		/* @var $view View */
 
 		Hooks::on_view_alter($event, $view);
+
+		$this->assertArrayHasKey('module', $view);
+		$this->assertSame($module, $view['module']);
 	}
 }

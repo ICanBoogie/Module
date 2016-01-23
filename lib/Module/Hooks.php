@@ -173,11 +173,7 @@ class Hooks
 			return;
 		}
 
-		/* @var $template_resolver \ICanBoogie\Render\BasicTemplateResolver */
-
 		$target['module'] = $module;
-		$template_resolver = $target->template_resolver;
-		$template_resolver->add_path($module->descriptor[Descriptor::PATH] . 'templates');
 	}
 
 	/**

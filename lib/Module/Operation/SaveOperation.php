@@ -40,7 +40,7 @@ class SaveOperation extends Operation
 			self::CONTROL_PERMISSION => Module::PERMISSION_CREATE,
 			self::CONTROL_RECORD => true,
 			self::CONTROL_OWNERSHIP => true,
-			self::CONTROL_FORM => true
+//			self::CONTROL_FORM => true
 
 		] + parent::get_controls();
 	}
