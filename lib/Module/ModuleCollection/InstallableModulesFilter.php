@@ -48,9 +48,9 @@ class InstallableModulesFilter
 		}
 
 		$module = $this->modules[$descriptor[Descriptor::ID]];
-		$is_installed_errors = new Errors;
-		$is_installed = $module->is_installed($is_installed_errors);
+		$errors = new Errors;
+		$is_installed = $module->is_installed($errors);
 
-		return $is_installed !== false && !$is_installed_errors->count();
+		return $is_installed === false || $errors->count();
 	}
 }
