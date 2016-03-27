@@ -13,7 +13,7 @@ namespace ICanBoogie\Module\Operation;
 
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\ActiveRecord\SchemaColumn;
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Operation;
 
@@ -130,11 +130,11 @@ class SaveOperation extends Operation
 	/**
 	 * The method simply returns true.
 	 *
-	 * @param Errors $errors
+	 * @param ErrorCollection $errors
 	 *
 	 * @return bool
 	 */
-	protected function validate(Errors $errors)
+	protected function validate(ErrorCollection $errors)
 	{
 		return true;
 	}

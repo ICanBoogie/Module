@@ -209,12 +209,12 @@ class Module extends Prototyped
 	/**
 	 * Checks if the module is installed.
 	 *
-	 * @param Errors $errors Error collection.
+	 * @param ErrorCollection $errors Error collection.
 	 *
 	 * @return mixed `true` if the module is installed, `false` if the module
 	 * (or parts of) is not installed, `null` if the module has no installation.
 	 */
-	public function is_installed(Errors $errors)
+	public function is_installed(ErrorCollection $errors)
 	{
 		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
@@ -245,13 +245,13 @@ class Module extends Prototyped
 	 *
 	 * If the module has models they are installed.
 	 *
-	 * @param Errors $errors Error collection.
+	 * @param ErrorCollection $errors Error collection.
 	 *
 	 * @return boolean|null true if the module has successfully been installed, false if the
 	 * module (or parts of the module) fails to install or null if the module has
 	 * no installation process.
 	 */
-	public function install(Errors $errors)
+	public function install(ErrorCollection $errors)
 	{
 		if (empty($this->descriptor[Descriptor::MODELS]))
 		{

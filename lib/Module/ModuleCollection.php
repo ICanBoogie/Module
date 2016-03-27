@@ -13,7 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\ActiveRecord\Model;
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Storage\Storage;
 use ICanBoogie\Module\ModuleCollection\InstallableModulesFilter;
@@ -822,17 +822,17 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Install all the enabled modules.
 	 *
-	 * @param Errors|null $errors
+	 * @param ErrorCollection|null $errors
 	 *
-	 * @return Errors
+	 * @return ErrorCollection
 	 *
 	 * @throws ModuleCollectionInstallFailed if an error occurs.
 	 */
-	public function install(Errors $errors = null)
+	public function install(ErrorCollection $errors = null)
 	{
 		if (!$errors)
 		{
-			$errors = new Errors;
+			$errors = new ErrorCollection;
 		}
 
 		foreach (array_keys($this->filter_descriptors(new InstallableModulesFilter($this))) as $module_id)

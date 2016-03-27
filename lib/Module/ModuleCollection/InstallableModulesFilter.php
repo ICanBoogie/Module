@@ -11,7 +11,7 @@
 
 namespace ICanBoogie\Module\ModuleCollection;
 
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleCollection;
 
@@ -48,7 +48,7 @@ class InstallableModulesFilter
 		}
 
 		$module = $this->modules[$descriptor[Descriptor::ID]];
-		$errors = new Errors;
+		$errors = new ErrorCollection;
 		$is_installed = $module->is_installed($errors);
 
 		return $is_installed === false || $errors->count();

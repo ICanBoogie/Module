@@ -12,25 +12,25 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Accessor\AccessorTrait;
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
 use ICanBoogie\HTTP\Status;
 
 /**
  * Exception thrown when the installation of a module collection fails.
  *
- * @property-read Errors $errors
+ * @property-read ErrorCollection $errors
  */
 class ModuleCollectionInstallFailed extends \Exception
 {
 	use AccessorTrait;
 
 	/**
-	 * @var Errors
+	 * @var ErrorCollection
 	 */
 	private $errors;
 
 	/**
-	 * @return Errors
+	 * @return ErrorCollection
 	 */
 	protected function get_errors()
 	{
@@ -40,9 +40,9 @@ class ModuleCollectionInstallFailed extends \Exception
 	/**
 	 * @inheritdoc
 	 *
-	 * @param Errors $errors Module collection installation errors.
+	 * @param ErrorCollection $errors Module collection installation errors.
 	 */
-	public function __construct(Errors $errors, $message = null, $code = Status::INTERNAL_SERVER_ERROR, \Exception $previous = null)
+	public function __construct(ErrorCollection $errors, $message = null, $code = Status::INTERNAL_SERVER_ERROR, \Exception $previous = null)
 	{
 		$this->errors = $errors;
 
@@ -57,17 +57,19 @@ class ModuleCollectionInstallFailed extends \Exception
 	/**
 	 * Formats exception message given errors.
 	 *
-	 * @param Errors $errors
+	 * @param ErrorCollection $errors
 	 *
 	 * @return string
 	 */
-	protected function format_message(Errors $errors)
+	protected function format_message(ErrorCollection $errors)
 	{
 		$message = "Module collection installation failed:\n";
 
-		foreach ($errors as $module_id => $m)
+		/* @var $error \ICanBoogie\Error */
+
+		foreach ($errors as $module_id => $error)
 		{
-			$message .= "\n- $module_id: $m\n";
+			$message .= "\n- $module_id: $error\n";
 		}
 
 		return $message;
