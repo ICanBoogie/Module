@@ -123,7 +123,8 @@ class ForwardedOperationDispatcher implements Dispatcher
 		{
 			throw new \LogicException("The operation's destination is required.");
 		}
-		else if (!$request[Operation::NAME])
+
+		if (!$request[Operation::NAME])
 		{
 			throw new \LogicException("The operation's name is required.");
 		}

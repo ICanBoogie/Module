@@ -25,7 +25,7 @@ class ModelCollection extends ActiveRecord\ModelCollection
 	/**
 	 * @var ModuleCollection
 	 */
-	protected $modules;
+	private $modules;
 
 	/**
 	 * @param ConnectionCollection $connections Connections manager.
@@ -34,9 +34,9 @@ class ModelCollection extends ActiveRecord\ModelCollection
 	 */
 	public function __construct(ConnectionCollection $connections, ModuleCollection $modules, array $definitions = [])
 	{
-		$this->modules = $modules;
-
 		parent::__construct($connections, $definitions);
+
+		$this->modules = $modules;
 	}
 
 	/**
