@@ -40,7 +40,7 @@ class SaveOperation extends Operation
 			self::CONTROL_PERMISSION => Module::PERMISSION_CREATE,
 			self::CONTROL_RECORD => true,
 			self::CONTROL_OWNERSHIP => true,
-//			self::CONTROL_FORM => true
+			self::CONTROL_FORM => true
 
 		] + parent::get_controls();
 	}
@@ -158,9 +158,19 @@ class SaveOperation extends Operation
 		$key = $this->key;
 		$properties = $this->properties;
 		$log_params = [ 'key' => $key, 'module' => $this->module->title ];
-		$record_key = $key
-			? $this->update_record($properties)
-			: $this->create_record($properties, $this->record);
+
+		try
+		{
+			$record_key = $key
+				? $this->update_record($properties)
+				: $this->create_record($properties, $this->record);
+		}
+		catch (ActiveRecord\RecordNotValid $e)
+		{
+			$this->response->errors->merge($e->errors->to_error_collection());
+
+			throw $e;
+		}
 
 		if (!$record_key)
 		{
