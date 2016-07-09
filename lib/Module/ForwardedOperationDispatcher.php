@@ -90,6 +90,15 @@ class ForwardedOperationDispatcher implements Dispatcher
 			return $exception->operation->response;
 		}
 
+		$response = null;
+
+		new Operation\RescueEvent($exception->operation, $exception, $request, $response);
+
+		if ($response)
+		{
+			return $response;
+		}
+
 		$previous = $exception->previous;
 
 		if ($previous)
