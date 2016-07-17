@@ -274,6 +274,20 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	protected function lazy_get_index()
 	{
+		$index = $this->obtain_index();
+		$this->descriptors = $descriptors = $index['descriptors'];
+		$this->define_constants($descriptors);
+
+		return $index;
+	}
+
+	/**
+	 * Obtain index either from cache or by building it.
+	 *
+	 * @return array|mixed|null
+	 */
+	private function obtain_index()
+	{
 		$cache = $this->cache;
 
 		if ($cache)
@@ -281,21 +295,18 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			$key = 'cached_modules_' . substr(sha1(implode('#', $this->paths)), 0, 8);
 			$index = $cache->retrieve($key);
 
-			if (!$index)
+			if ($index)
 			{
-				$index = $this->index_modules();
-				$cache->store($key, $index);
+				return $index;
 			}
-		}
-		else
-		{
+
 			$index = $this->index_modules();
+			$cache->store($key, $index);
+
+			return $index;
 		}
 
-		$this->descriptors = $descriptors = $index['descriptors'];
-		$this->define_constants($descriptors);
-
-		return $index;
+		return $this->index_modules();
 	}
 
 	/**
