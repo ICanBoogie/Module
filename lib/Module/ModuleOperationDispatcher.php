@@ -17,6 +17,8 @@ use ICanBoogie\Operation;
 use ICanBoogie\Routing\Route;
 use ICanBoogie\Routing\RouteCollection;
 
+use function ICanBoogie\camelize;
+
 /**
  * A request dispatcher for module operations.
  */
@@ -145,7 +147,7 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 	 */
 	protected function resolve_operation_class($operation_name, Module $module)
 	{
-		$unqualified_class_name = 'Operation\\' . \ICanBoogie\camelize(strtr($operation_name, '-', '_')) . 'Operation';
+		$unqualified_class_name = 'Operation\\' . camelize(strtr($operation_name, '-', '_')) . 'Operation';
 
 		return $this->modules->resolve_classname($unqualified_class_name, $module);
 	}

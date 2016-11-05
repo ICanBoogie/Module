@@ -14,7 +14,7 @@ namespace ICanBoogie\Module;
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\Autoconfig\Config;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
-use ICanBoogie\Core;
+use ICanBoogie\Application;
 use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
@@ -26,6 +26,9 @@ use ICanBoogie\Prototype;
 use ICanBoogie\Render\TemplateResolver;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\View\View;
+
+use function ICanBoogie\app;
+use function ICanBoogie\format;
 
 /**
  * Hook callbacks.
@@ -62,10 +65,10 @@ class Hooks
 	 * The method may extend the `locale-path` configuration value and the configuration paths
 	 * according to the modules features.
 	 *
-	 * @param Core\ConfigureEvent $event
-	 * @param Core|CoreBindings $app
+	 * @param Application\ConfigureEvent $event
+	 * @param Application $app
 	 */
-	static public function on_core_configure(Core\ConfigureEvent $event, Core $app)
+	static public function on_app_configure(Application\ConfigureEvent $event, Application $app)
 	{
 		$modules = $app->modules;
 		$modules->index;
@@ -94,12 +97,12 @@ class Hooks
 	 * Before the modules are actually booted up, their index is used to alter the I18n load
 	 * paths and the config paths.
 	 *
-	 * @param Core\BootEvent $event
-	 * @param Core|CoreBindings $app
+	 * @param Application\BootEvent $event
+	 * @param Application $app
 	 */
-	static public function on_core_boot(Core\BootEvent $event, Core $app)
+	static public function on_app_boot(Application\BootEvent $event, Application $app)
 	{
-		Prototype::configure($app->configs['prototype']);
+		Prototype::bind($app->configs['prototype']);
 
 		$app->events->attach_many($app->configs['event']);
 	}
@@ -193,10 +196,10 @@ class Hooks
 	/**
 	 * Clears modules cache.
 	 *
-	 * @param Core\ClearCacheEvent $event
-	 * @param Core $app
+	 * @param Application\ClearCacheEvent $event
+	 * @param Application $app
 	 */
-	static public function on_core_clear_cache(Core\ClearCacheEvent $event, Core $app)
+	static public function on_app_clear_cache(Application\ClearCacheEvent $event, Application $app)
 	{
 		$vars = $app->vars;
 		$iterator = new \RegexIterator($vars->getIterator(), '/^cached_modules_/');
@@ -214,11 +217,11 @@ class Hooks
 	/**
 	 * Return the {@link ModuleCollection} instance used to manage the modules attached to the _core_.
 	 *
-	 * @param Core $app
+	 * @param Application $app
 	 *
 	 * @return ModuleCollection The modules provider.
 	 */
-	static public function get_modules(Core $app)
+	static public function get_modules(Application $app)
 	{
 		$config = $app->config;
 
@@ -228,11 +231,11 @@ class Hooks
 	/**
 	 * Returns the {@link ModelCollection} instance used to obtain the models defined by the modules.
 	 *
-	 * @param Core|CoreBindings|\ICanBoogie\Binding\ActiveRecord\CoreBindings $app
+	 * @param Application $app
 	 *
 	 * @return ModelCollection The models accessor.
 	 */
-	static public function get_models(Core $app)
+	static public function get_models(Application $app)
 	{
 		return new ModelCollection($app->connections, $app->modules);
 	}
@@ -318,14 +321,6 @@ class Hooks
 	 */
 
 	/**
-	 * @return \ICanBoogie\Core|CoreBindings
-	 */
-	static private function app()
-	{
-		return \ICanBoogie\app();
-	}
-
-	/**
 	 * Returns the application's module collection.
 	 *
 	 * @return ModuleCollection
@@ -335,7 +330,7 @@ class Hooks
 		static $modules;
 
 		return $modules
-			?: $modules = self::app()->modules;
+			?: $modules = app()->modules;
 	}
 
 	/**
@@ -350,7 +345,7 @@ class Hooks
 	{
 		if (!$dispatcher instanceof OperationRouteDispatcher)
 		{
-			throw new \LogicException(\ICanBoogie\format("Expected `routing` dispatcher to be an instance of %expected, got %actual instead.", [
+			throw new \LogicException(format("Expected `routing` dispatcher to be an instance of %expected, got %actual instead.", [
 
 				'expected' => OperationRouteDispatcher::class,
 				'actual' => get_class($dispatcher)

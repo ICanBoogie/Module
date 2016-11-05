@@ -13,7 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\ActiveRecord\Model;
-use ICanBoogie\Core;
+use ICanBoogie\Application;
 use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\Module;
@@ -30,7 +30,7 @@ use ICanBoogie\Routing\Route;
  *     Fetches a record using the controller `records_fetcher`.
  *     @see \ICanBoogie\Module\Hooks::controller_fetch_record
  *
- * @property-read Core $app
+ * @property-read Application $app
  * @property-read Module $module
  * @property-read Model $model
  * @property-read Route|ModuleRoute $route

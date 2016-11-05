@@ -14,6 +14,8 @@ namespace ICanBoogie\Module;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\HTTP\Status;
 
+use function ICanBoogie\format;
+
 /**
  * Exception thrown when a requested module is not defined.
  *
@@ -47,7 +49,7 @@ class ModuleNotDefined extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(\ICanBoogie\format('Module is not defined: %module_id', [
+		parent::__construct(format('Module is not defined: %module_id', [
 
 			'module_id' => $module_id
 

@@ -3,7 +3,7 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Config;
-use ICanBoogie\Core;
+use ICanBoogie\Application;
 use ICanBoogie\EventCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Render\BasicTemplateResolver;
@@ -84,7 +84,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->with($modules_config_paths, \ICanBoogie\Autoconfig\Config::CONFIG_WEIGHT_MODULE);
 
 		$app = $this
-			->getMockBuilder(Core::class)
+			->getMockBuilder(Application::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'lazy_get_config', 'lazy_get_configs', 'lazy_get_modules' ])
 			->getMock();
@@ -102,14 +102,14 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->willReturn($modules);
 
 		$event = $this
-			->getMockBuilder(Core\ConfigureEvent::class)
+			->getMockBuilder(Application\ConfigureEvent::class)
 			->disableOriginalConstructor()
 			->getMock();
 
-		/* @var $event Core\ConfigureEvent */
-		/* @var $app Core */
+		/* @var $event Application\ConfigureEvent */
+		/* @var $app Application */
 
-		Hooks::on_core_configure($event, $app);
+		Hooks::on_app_configure($event, $app);
 	}
 
 	public function test_on_core_boot()
@@ -154,7 +154,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->with($event_config);
 
 		$app = $this
-			->getMockBuilder(Core::class)
+			->getMockBuilder(Application::class)
 			->disableOriginalConstructor()
 			->setMethods([ 'lazy_get_configs', 'lazy_get_events' ])
 			->getMock();
@@ -168,14 +168,14 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->willReturn($events);
 
 		$event = $this
-			->getMockBuilder(Core\BootEvent::class)
+			->getMockBuilder(Application\BootEvent::class)
 			->disableOriginalConstructor()
 			->getMock();
 
-		/* @var $event Core\BootEvent */
-		/* @var $app Core */
+		/* @var $event Application\BootEvent */
+		/* @var $app Application */
 
-		Hooks::on_core_boot($event, $app);
+		Hooks::on_app_boot($event, $app);
 	}
 
 	public function test_on_alter_view_no_module()

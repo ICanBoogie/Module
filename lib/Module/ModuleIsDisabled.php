@@ -14,6 +14,8 @@ namespace ICanBoogie\Module;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\HTTP\Status;
 
+use function ICanBoogie\format;
+
 /**
  * Exception thrown when a disabled module is requested.
  *
@@ -45,7 +47,7 @@ class ModuleIsDisabled extends \RuntimeException
 	{
 		$this->module_id = $module_id;
 
-		parent::__construct(\ICanBoogie\format('Module is disabled: %module_id', [
+		parent::__construct(format('Module is disabled: %module_id', [
 
 			'module_id' => $module_id
 

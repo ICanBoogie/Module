@@ -18,6 +18,11 @@ use ICanBoogie\Module;
 use ICanBoogie\Storage\Storage;
 use ICanBoogie\Module\ModuleCollection\InstallableModulesFilter;
 
+use function ICanBoogie\format;
+use function ICanBoogie\camelize;
+use function ICanBoogie\singularize;
+use function ICanBoogie\stable_sort;
+
 /**
  * A module collection.
  *
@@ -471,7 +476,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 				}
 				catch (\Exception $e)
 				{
-					throw new \RuntimeException(\ICanBoogie\format('Unable to open directory %root', [
+					throw new \RuntimeException(format('Unable to open directory %root', [
 
 						'root' => $root
 
@@ -519,7 +524,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 		if (!is_array($descriptor))
 		{
-			throw new \InvalidArgumentException(\ICanBoogie\format
+			throw new \InvalidArgumentException(format
 			(
 				'%var should be an array: %type given instead in %path', [
 
@@ -533,7 +538,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 		if (empty($descriptor[Descriptor::TITLE]))
 		{
-			throw new \InvalidArgumentException(\ICanBoogie\format
+			throw new \InvalidArgumentException(format
 			(
 				'The %name value of the %id module descriptor is empty in %path.', [
 
@@ -547,7 +552,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 		if (empty($descriptor[Descriptor::NS]))
 		{
-			throw new \InvalidArgumentException(\ICanBoogie\format
+			throw new \InvalidArgumentException(format
 			(
 				'%name is required. Invalid descriptor for module %id in %path.', [
 
@@ -589,7 +594,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		{
 			if (!is_array($definition))
 			{
-				throw new \InvalidArgumentException(\ICanBoogie\format('Model definition must be array, given: %value.', [
+				throw new \InvalidArgumentException(format('Model definition must be array, given: %value.', [
 
 					'value' => $definition
 
@@ -611,7 +616,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 			if (empty($definition[Model::ACTIVERECORD_CLASS]))
 			{
-				$definition[Model::ACTIVERECORD_CLASS] = $namespace . '\\' . \ICanBoogie\camelize(\ICanBoogie\singularize($model_id == 'primary' ? $basename : $model_id));
+				$definition[Model::ACTIVERECORD_CLASS] = $namespace . '\\' . camelize(singularize($model_id == 'primary' ? $basename : $model_id));
 			}
 
 			if (empty($definition[Model::CLASSNAME]))
@@ -786,7 +791,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
  			$ordered[$module_id] = -$extends_weight[$module_id] -$count_required($module_id) + $descriptors[$module_id][Descriptor::WEIGHT];
 		}
 
-		\ICanBoogie\stable_sort($ordered);
+		stable_sort($ordered);
 
 		return array_keys($ordered);
 	}

@@ -14,6 +14,8 @@ namespace ICanBoogie\Module;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\HTTP\Status;
 
+use function ICanBoogie\format;
+
 /**
  * Exception thrown when a class is missing to instantiate a module.
  *
@@ -65,7 +67,7 @@ class ModuleConstructorMissing extends \RuntimeException
 		$this->module_id = $module_id;
 		$this->class = $class;
 
-		parent::__construct(\ICanBoogie\format('Missing class %class to instantiate module %id.', [
+		parent::__construct(format('Missing class %class to instantiate module %id.', [
 
 			'class' => $class,
 			'id' => $module_id
