@@ -1,7 +1,7 @@
 # customization
 
 PACKAGE_NAME = ICanBoogie/Module
-PACKAGE_VERSION = 3.0
+PACKAGE_VERSION = 4.0
 COMPOSER_ENV = COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION)
 
 # do not edit the following lines

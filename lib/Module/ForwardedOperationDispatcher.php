@@ -16,6 +16,10 @@ use ICanBoogie\HTTP\Request;
 use ICanBoogie\Module;
 use ICanBoogie\Operation;
 
+use function ICanBoogie\camelize;
+use function ICanBoogie\log_error;
+use function ICanBoogie\format;
+
 /**
  * A dispatcher for forwarded operations.
  */
@@ -30,7 +34,7 @@ class ForwardedOperationDispatcher implements Dispatcher
 	 */
 	static private function format_class_name($operation_name)
 	{
-		return \ICanBoogie\camelize(strtr($operation_name, '-', '_')) . 'Operation';
+		return camelize(strtr($operation_name, '-', '_')) . 'Operation';
 	}
 
 	/**
@@ -103,7 +107,7 @@ class ForwardedOperationDispatcher implements Dispatcher
 
 		if ($previous)
 		{
-			\ICanBoogie\log_error($previous->getMessage());
+			log_error($previous->getMessage());
 		}
 
 		return null;
@@ -169,7 +173,7 @@ class ForwardedOperationDispatcher implements Dispatcher
 
 		if (!$operation_class)
 		{
-			throw new \LogicException(\ICanBoogie\format
+			throw new \LogicException(format
 			(
 				'The operation %operation is not supported by the module %module.', [
 

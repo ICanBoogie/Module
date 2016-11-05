@@ -29,7 +29,7 @@ use ICanBoogie\Module\ModuleCollection;
  * @property-read string $path The path to the module, defined by {@link Descriptor::PATH}.
  * @property-read string $title The localized title of the module.
  * @property-read ModuleCollection $collection
- * @property-read Core|Module\CoreBindings|Binding\ActiveRecord\CoreBindings|Binding\I18n\CoreBindings $app
+ * @property-read Application $app
  */
 class Module extends Prototyped
 {
@@ -377,7 +377,7 @@ class Module extends Prototyped
 
 			if (!class_exists($class))
 			{
-				throw new \RuntimeException(\ICanBoogie\format("Unable to instantiate model %model, the class %class does not exists.", [
+				throw new \RuntimeException(format("Unable to instantiate model %model, the class %class does not exists.", [
 
 					'model' => "$this->id/$which",
 					'class' => $class
@@ -490,7 +490,7 @@ class Module extends Prototyped
 
 					if ($id == $implement_id && $which == $implement_which)
 					{
-						throw new \RuntimeException(\ICanBoogie\format('Model %module/%model implements itself !', [
+						throw new \RuntimeException(format('Model %module/%model implements itself !', [
 
 							'%module' => $id,
 							'%model' => $which
@@ -498,13 +498,13 @@ class Module extends Prototyped
 						]));
 					}
 
-					$module = ($implement_id == $id) ? $this : \ICanBoogie\app()->modules[$implement_id];
+					$module = ($implement_id == $id) ? $this : app()->modules[$implement_id];
 
 					$implement['table'] = $module->model($implement_which);
 				}
 				else if (is_string($implement['table']))
 				{
-					throw new \RuntimeException(\ICanBoogie\format('Model %model of module %module implements a table: %table', [
+					throw new \RuntimeException(format('Model %model of module %module implements a table: %table', [
 
 						'%model' => $which,
 						'%module' => $id,
@@ -558,7 +558,7 @@ class Module extends Prototyped
 
 		if (!method_exists($this, $callback))
 		{
-			throw new \RuntimeException(\ICanBoogie\format('The %method method is missing from the %module module to create block %type.', [
+			throw new \RuntimeException(format('The %method method is missing from the %module module to create block %type.', [
 
 				'%method' => $callback,
 				'%module' => $this->id,
@@ -567,6 +567,6 @@ class Module extends Prototyped
 			]));
 		}
 
-		return call_user_func_array([ $this, $callback ], $args);
+		return $this->$callback(...$args);
 	}
 }

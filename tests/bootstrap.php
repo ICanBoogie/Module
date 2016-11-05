@@ -23,7 +23,13 @@ $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleB\\', __DIR__ . '/module
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleC\\', __DIR__ . '/modules/c/lib');
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\Sample\\', __DIR__ . '/modules/sample/lib');
 
-(new Core(array_merge_recursive(get_autoconfig(), [
+class Application extends Core
+{
+	use Module\ApplicationBindings;
+	use Binding\ActiveRecord\ApplicationBindings;
+}
+
+boot(array_merge_recursive(get_autoconfig(), [
 
 	'config-path' => [
 
@@ -38,4 +44,4 @@ $autoload->setPsr4('ICanBoogie\Module\ModulesTest\Sample\\', __DIR__ . '/modules
 
 	]
 
-])))->boot();
+]));

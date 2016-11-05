@@ -12,7 +12,7 @@
 namespace ICanBoogie\Module;
 
 /**
- * {@link \ICanBoogie\Core} prototype bindings.
+ * {@link \ICanBoogie\Application} prototype bindings.
  *
  * @property ModuleCollection $modules
  * @property ModelCollection $models
@@ -20,7 +20,7 @@ namespace ICanBoogie\Module;
  * @see \ICanBoogie\Module\Hooks::get_modules
  * @see \ICanBoogie\Module\Hooks::get_models
  */
-trait CoreBindings
+trait ApplicationBindings
 {
 
 }
