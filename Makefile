@@ -1,7 +1,7 @@
 # customization
 
 PACKAGE_NAME = ICanBoogie/Module
-PACKAGE_VERSION = 2.3.0
+PACKAGE_VERSION = 3.0
 COMPOSER_ENV = COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION)
 
 # do not edit the following lines
@@ -10,10 +10,10 @@ usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
-	@$(COMPOSER_ENV) composer install
+	@$(COMPOSER_ENV) composer install --prefer-dist
 
 update:
-	@$(COMPOSER_ENV) composer update
+	@$(COMPOSER_ENV) composer update --prefer-dist
 
 autoload: vendor
 	@$(COMPOSER_ENV) composer dump-autoload
