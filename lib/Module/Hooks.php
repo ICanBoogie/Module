@@ -18,14 +18,12 @@ use ICanBoogie\Core;
 use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
-use ICanBoogie\HTTP\Request;
 use ICanBoogie\HTTP\RequestDispatcher;
 use ICanBoogie\Module;
 use ICanBoogie\Operation\OperationRouteDispatcher;
 use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\Prototype;
 use ICanBoogie\Render\TemplateResolver;
-use ICanBoogie\Routing;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\View\View;
 
