@@ -161,9 +161,11 @@ class SaveOperation extends Operation
 
 		try
 		{
-			$record_key = $key
+			$record = $this->record = $key
 				? $this->update_record($properties)
-				: $this->create_record($properties, $this->record);
+				: $this->create_record($properties);
+
+			$record_key = $record->save();
 		}
 		catch (ActiveRecord\RecordNotValid $e)
 		{
@@ -188,25 +190,22 @@ class SaveOperation extends Operation
 	 *
 	 * @param array $properties
 	 *
-	 * @return bool|int
+	 * @return ActiveRecord
 	 */
 	protected function update_record(array $properties)
 	{
-		return $this->record->assign($properties)->save();
+		return $this->record->assign($properties);
 	}
 
 	/**
 	 * Creates a record from properties.
 	 *
 	 * @param array $properties
-	 * @param ActiveRecord $record The new record is saved in that variable.
 	 *
-	 * @return bool|int
+	 * @return ActiveRecord
 	 */
-	protected function create_record(array $properties, &$record)
+	protected function create_record(array $properties)
 	{
-		$record = $this->module->model->new($properties);
-
-		return $record->save();
+		return $this->module->model->new($properties);
 	}
 }
