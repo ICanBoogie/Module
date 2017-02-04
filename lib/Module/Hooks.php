@@ -87,6 +87,7 @@ class Hooks
 
 		if ($modules_config_paths)
 		{
+			$app->config['config-path'] = array_merge($app->config['config-path'], $modules_config_paths);
 			$app->configs->add($modules->config_paths, Config::CONFIG_WEIGHT_MODULE);
 		}
 	}
