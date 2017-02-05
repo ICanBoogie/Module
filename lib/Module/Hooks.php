@@ -12,7 +12,8 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
-use ICanBoogie\Autoconfig\Config;
+use ICanBoogie\AppConfig;
+use ICanBoogie\Autoconfig\Autoconfig;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Application;
 use ICanBoogie\Facets\Fetcher;
@@ -46,11 +47,11 @@ class Hooks
 	 */
 	static public function filter_autoconfig(array &$autoconfig)
 	{
-		foreach ($autoconfig['app-paths'] as $directory)
+		foreach ($autoconfig[Autoconfig::APP_PATHS] as $directory)
 		{
 			if (file_exists($directory . 'modules'))
 			{
-				$autoconfig['module-path'][] = $directory . 'modules';
+				$autoconfig[Autoconfig::MODULE_PATH][] = $directory . 'modules';
 			}
 		}
 	}
@@ -77,7 +78,10 @@ class Hooks
 		# Add locale paths
 		#
 
-		$app->config['locale-path'] = array_merge($app->config['locale-path'], $modules->locale_paths);
+		$app->config[Autoconfig::LOCALE_PATH] = array_merge(
+			$app->config[Autoconfig::LOCALE_PATH],
+			$modules->locale_paths
+		);
 
 		#
 		# Add modules config paths to the configs path.
@@ -87,8 +91,11 @@ class Hooks
 
 		if ($modules_config_paths)
 		{
-			$app->config['config-path'] = array_merge($app->config['config-path'], $modules_config_paths);
-			$app->configs->add($modules->config_paths, Config::CONFIG_WEIGHT_MODULE);
+			$app->config[Autoconfig::CONFIG_PATH] = array_merge(
+				$app->config[Autoconfig::CONFIG_PATH],
+				$modules_config_paths
+			);
+			$app->configs->add($modules->config_paths, Autoconfig::CONFIG_WEIGHT_MODULE);
 		}
 	}
 
@@ -226,7 +233,10 @@ class Hooks
 	{
 		$config = $app->config;
 
-		return new ModuleCollection($config['module-path'], $config['cache modules'] ? $app->vars : null);
+		return new ModuleCollection(
+			$config[Autoconfig::MODULE_PATH],
+			$config[AppConfig::CACHE_MODULES] ? $app->vars : null
+		);
 	}
 
 	/**
