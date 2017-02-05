@@ -11,11 +11,7 @@
 
 namespace ICanBoogie;
 
-use ICanBoogie\Autoconfig\Autoconfig;
-
 chdir(__DIR__);
-
-$_SERVER['DOCUMENT_ROOT'] = __DIR__;
 
 /* @var $autoload \Composer\Autoload\ClassLoader */
 
@@ -25,25 +21,4 @@ $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleB\\', __DIR__ . '/module
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleC\\', __DIR__ . '/modules/c/lib');
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\Sample\\', __DIR__ . '/modules/sample/lib');
 
-class Application extends Core
-{
-	use Module\ApplicationBindings;
-	use Binding\ActiveRecord\ApplicationBindings;
-}
-
-boot(array_merge_recursive(get_autoconfig(), [
-
-	Autoconfig::CONFIG_PATH => [
-
-		__DIR__ . '/../config' => Autoconfig::CONFIG_WEIGHT_APP,
-		__DIR__ . '/config' => Autoconfig::CONFIG_WEIGHT_APP,
-
-	],
-
-	Autoconfig::MODULE_PATH => [
-
-		__DIR__ . DIRECTORY_SEPARATOR . 'modules'
-
-	]
-
-]));
+boot();
