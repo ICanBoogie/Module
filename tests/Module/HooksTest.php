@@ -2,11 +2,11 @@
 
 namespace ICanBoogie\Module;
 
+use ICanBoogie\Autoconfig\Autoconfig;
 use ICanBoogie\Config;
 use ICanBoogie\Application;
 use ICanBoogie\EventCollection;
 use ICanBoogie\Module;
-use ICanBoogie\Render\BasicTemplateResolver;
 use ICanBoogie\Render\Renderer;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\Routing\Route;
@@ -16,10 +16,10 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_filter_autoconfig()
 	{
-		$autoconfig = [ 'app-paths' => [ \ICanBoogie\DOCUMENT_ROOT ] ];
+		$autoconfig = [ Autoconfig::APP_PATHS => [ \ICanBoogie\DOCUMENT_ROOT ] ];
 		Hooks::filter_autoconfig($autoconfig);
-		$this->assertArrayHasKey('module-path', $autoconfig);
-		$this->assertEquals($autoconfig['module-path'], [ \ICanBoogie\DOCUMENT_ROOT . 'modules' ]);
+		$this->assertArrayHasKey(Autoconfig::MODULE_PATH, $autoconfig);
+		$this->assertEquals($autoconfig[Autoconfig::MODULE_PATH], [ \ICanBoogie\DOCUMENT_ROOT . 'modules' ]);
 	}
 
 	public function test_on_core_configure()
@@ -58,20 +58,12 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->method('get_locale_paths')
 			->willReturn($module_locale_paths);
 
-		$config = $this
-			->getMockBuilder(Config::class)
-			->disableOriginalConstructor()
-			->setMethods([ 'offsetGet', 'offsetSet' ])
-			->getMock();
-		$config
-			->expects($this->once())
-			->method('offsetGet')
-			->with('locale-path')
-			->willReturn([]);
-		$config
-			->expects($this->once())
-			->method('offsetSet')
-			->with('locale-path', $module_locale_paths);
+		$config = new \ArrayObject([
+
+			Autoconfig::LOCALE_PATH => [],
+			Autoconfig::CONFIG_PATH => [],
+
+		]);
 
 		$configs = $this
 			->getMockBuilder(Config::class)
@@ -81,7 +73,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		$configs
 			->expects($this->once())
 			->method('add')
-			->with($modules_config_paths, \ICanBoogie\Autoconfig\Config::CONFIG_WEIGHT_MODULE);
+			->with($modules_config_paths, Autoconfig::CONFIG_WEIGHT_MODULE);
 
 		$app = $this
 			->getMockBuilder(Application::class)
@@ -110,6 +102,9 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		/* @var $app Application */
 
 		Hooks::on_app_configure($event, $app);
+
+		$this->assertSame($module_locale_paths, $config[Autoconfig::LOCALE_PATH]);
+		$this->assertSame($modules_config_paths, $config[Autoconfig::CONFIG_PATH]);
 	}
 
 	public function test_on_core_boot()

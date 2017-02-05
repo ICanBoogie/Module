@@ -11,7 +11,9 @@
 
 namespace ICanBoogie;
 
-use ICanBoogie\Autoconfig\Config;
+use ICanBoogie\Autoconfig\Autoconfig;
+
+chdir(__DIR__);
 
 $_SERVER['DOCUMENT_ROOT'] = __DIR__;
 
@@ -31,14 +33,14 @@ class Application extends Core
 
 boot(array_merge_recursive(get_autoconfig(), [
 
-	'config-path' => [
+	Autoconfig::CONFIG_PATH => [
 
-		__DIR__ . '/../config' => Config::CONFIG_WEIGHT_APP,
-		__DIR__ . '/config' => Config::CONFIG_WEIGHT_APP,
+		__DIR__ . '/../config' => Autoconfig::CONFIG_WEIGHT_APP,
+		__DIR__ . '/config' => Autoconfig::CONFIG_WEIGHT_APP,
 
 	],
 
-	'module-path' => [
+	Autoconfig::MODULE_PATH => [
 
 		__DIR__ . DIRECTORY_SEPARATOR . 'modules'
 
