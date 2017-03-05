@@ -10,10 +10,10 @@ usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
-	@$(COMPOSER_ENV) composer install --prefer-dist
+	@$(COMPOSER_ENV) composer install
 
 update:
-	@$(COMPOSER_ENV) composer update --prefer-dist
+	@$(COMPOSER_ENV) composer update
 
 autoload: vendor
 	@$(COMPOSER_ENV) composer dump-autoload
