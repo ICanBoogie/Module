@@ -27,7 +27,8 @@ $autoload->setPsr4('ICanBoogie\Module\ModulesTest\Sample\\', __DIR__ . '/modules
 
 	'config-path' => [
 
-		__DIR__ . '/../config' => Config::CONFIG_WEIGHT_APP
+		__DIR__ . '/../config' => Config::CONFIG_WEIGHT_APP,
+		__DIR__ . '/config' => Config::CONFIG_WEIGHT_APP,
 
 	],
 
