@@ -7,7 +7,7 @@
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Module.svg)](https://coveralls.io/r/ICanBoogie/Module)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
 
-This package provides support for modules to the framework [ICanBoogie](http://icanboogie.org).
+This package provides support for modules to the framework [ICanBoogie](https://icanboogie.org).
 
 A module is like a tiny application inside your application. It provides its own configurations,
 routes, operations, views, templates… it contains everything it needs to execute a desired
@@ -455,7 +455,7 @@ cloned with the following command line:
 ## Documentation
 
 The package is documented as part of the [ICanBoogie][] framework
-[documentation](http://icanboogie.org/docs/). You can generate the documentation for the package and its dependencies with the `make doc` command. The documentation is generated in the `build/docs` directory. [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with the `make clean` command.
+[documentation](https://icanboogie.org/docs/). You can generate the documentation for the package and its dependencies with the `make doc` command. The documentation is generated in the `build/docs` directory. [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with the `make clean` command.
 
 
 
@@ -482,20 +482,20 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-[ICanBoogie]:                    http://icanboogie.org/
-[Errors]:                        http://api.icanboogie.org/errors/2.0/class-ICanBoogie.Errors.html
-[Events]:                        http://api.icanboogie.org/event/3.0/class-ICanBoogie.Events.html
-[Controller]:                    http://api.icanboogie.org/routing/4.0/class-ICanBoogie.Routing.Controller.html
-[Fetcher]:                       http://api.icanboogie.org/facets/0.6/class-ICanBoogie.Facets.Fetcher.html
-[Module]:                        http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.html
-[ModelCollection]:               http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.ModelCollection.html
-[ModuleCollection]:              http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.ModuleCollection.html
-[ModuleNotDefined]:              http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.ModuleNotDefined.html
-[ModuleIsDisabled]:              http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.ModuleIsDisabled.html
-[ModuleCollectionInstallFailed]: http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
-[ModuleConstructorMissing]:      http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.ModuleConstructorMissing.html
-[ModuleTemplateResolver]:        http://api.icanboogie.org/module/4.0/class-ICanBoogie.Module.ModuleTemplateResolver.html
-[TemplateResolver\AlterEvent]:   http://api.icanboogie.org/module/4.0/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
+[ICanBoogie]:                    https://icanboogie.org/
+[Errors]:                        https://icanboogie.org/api/errors/2.0/class-ICanBoogie.Errors.html
+[Events]:                        https://icanboogie.org/api/event/3.0/class-ICanBoogie.Events.html
+[Controller]:                    https://icanboogie.org/api/routing/4.0/class-ICanBoogie.Routing.Controller.html
+[Fetcher]:                       https://icanboogie.org/api/facets/0.7/class-ICanBoogie.Facets.Fetcher.html
+[Module]:                        https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.html
+[ModelCollection]:               https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModelCollection.html
+[ModuleCollection]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleCollection.html
+[ModuleNotDefined]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleNotDefined.html
+[ModuleIsDisabled]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleIsDisabled.html
+[ModuleCollectionInstallFailed]: https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
+[ModuleConstructorMissing]:      https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleConstructorMissing.html
+[ModuleTemplateResolver]:        https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleTemplateResolver.html
+[TemplateResolver\AlterEvent]:   https://icanboogie.org/api/module/4.0/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
 [icanboogie/facets]:             https://github.com/ICanBoogie/Facets
 [icanboogie/i18n]:               https://github.com/ICanBoogie/I18n
 [ActiveRecord package]:          https://github.com/ICanBoogie/ActiveRecord
