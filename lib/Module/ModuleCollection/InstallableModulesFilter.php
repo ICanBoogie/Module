@@ -49,8 +49,21 @@ class InstallableModulesFilter
 
 		$module = $this->modules[$descriptor[Descriptor::ID]];
 		$errors = new ErrorCollection;
-		$is_installed = $module->is_installed($errors);
 
-		return $is_installed === false || $errors->count();
+		try
+		{
+			$is_installed = $module->is_installed($errors);
+
+			if ($is_installed && !count($errors))
+			{
+				return false;
+			}
+		}
+		catch (\Exception $e)
+		{
+			# there was an error, the module might not be properly installed.
+		}
+
+		return true;
 	}
 }
