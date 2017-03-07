@@ -36,7 +36,8 @@
 		"icanboogie/bind-routing": "^4.0",
 		"icanboogie/bind-facets": "^0.7",
 		"icanboogie/bind-event": "^3.0",
-		"icanboogie/i18n": "^3.0"
+		"icanboogie/i18n": "^3.0",
+		"icanboogie/bind-symfony-dependency-injection": "dev-master"
 	},
 	"suggest": {
 		"icanboogie/operation": "Required to use the 'delete' and 'save' operations.",
