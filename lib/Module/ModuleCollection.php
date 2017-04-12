@@ -28,7 +28,6 @@ use function ICanBoogie\stable_sort;
  *
  * @property-read array $disabled_modules_descriptors Descriptors of the disabled modules.
  * @property-read array $enabled_modules_descriptors Descriptors of the enabled modules.
- * @property-read array $index Index for the modules.
  * @property-read array $descriptors Modules descriptors.
  */
 class ModuleCollection implements \ArrayAccess, \IteratorAggregate
@@ -65,7 +64,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var array
 	 */
-	private $descriptors = [];
+	private $descriptors;
 
 	/**
 	 * @return array
@@ -272,75 +271,39 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Indexes the modules found in the paths specified during construct.
-	 *
-	 * The index is made of an array of descriptors, an array of catalogs paths, an array of
-	 * configs path, and finally an array of configs constructors.
-	 *
-	 * The method also creates a `DIR` constant for each module. The constant is defined in the
-	 * namespace of the module e.g. `Icybee\ModuleCollection\Nodes\DIR`.
-	 *
-	 * @return array
-	 */
-	protected function lazy_get_index()
-	{
-		$index = $this->obtain_index();
-		$this->descriptors = $descriptors = $index['descriptors'];
-		$this->define_constants($descriptors);
-
-		return $index;
-	}
-
-	/**
 	 * Obtain index either from cache or by building it.
 	 *
 	 * @return array|mixed|null
 	 */
-	private function obtain_index()
+	private function obtain_descriptors()
 	{
+		if (!$this->paths)
+		{
+			return [];
+		}
+
 		$cache = $this->cache;
+		$action = function () {
+			return $this->index_descriptors($this->paths);
+		};
 
 		if ($cache)
 		{
 			$key = 'cached_modules_' . substr(sha1(implode('#', $this->paths)), 0, 8);
-			$index = $cache->retrieve($key);
+			$descriptors = $cache->retrieve($key);
 
-			if ($index)
+			if ($descriptors)
 			{
-				return $index;
+				return $descriptors;
 			}
 
-			$index = $this->index_modules();
-			$cache->store($key, $index);
+			$descriptors = $action();
+			$cache->store($key, $descriptors);
 
-			return $index;
+			return $descriptors;
 		}
 
-		return $this->index_modules();
-	}
-
-	/**
-	 * Construct the index for the modules.
-	 *
-	 * The index contains the following values:
-	 *
-	 * - (array) descriptors: The descriptors of the modules, ordered by weight.
-	 * - (array) catalogs: Absolute paths to locale catalog directories.
-	 * - (array) configs: Absolute paths to config directories.
-	 * - (array) classes aliases: An array of _key/value_ pairs where _key_ is the alias of a class
-	 * and _value_ if the real class.
-	 *
-	 * @return array
-	 */
-	protected function index_modules()
-	{
-		$descriptors = $this->paths ? $this->index_descriptors($this->paths) : [];
-
-		return [
-
-			'descriptors' => $descriptors,
-
-		];
+		return $action();
 	}
 
 	/**
@@ -843,10 +806,20 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 	/**
 	 * Ensures that modules are indexed, index them if not.
+	 *
+	 * The method obtains modules descriptors and defined associated constants.
 	 */
 	protected function ensure_modules_are_indexed()
 	{
-		$this->index;
+		$descriptors = &$this->descriptors;
+
+		if ($descriptors !== null)
+		{
+			return;
+		}
+
+		$descriptors = $this->obtain_descriptors();
+		$this->define_constants($descriptors);
 	}
 
 	/**
