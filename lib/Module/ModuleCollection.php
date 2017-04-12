@@ -285,6 +285,11 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 		$find_parents = function($id, &$parents = []) use (&$find_parents, &$descriptors)
 		{
+			if (empty($descriptors[$id]))
+			{
+				throw new ModuleNotDefined($id);
+			}
+
 			$parent = $descriptors[$id][Descriptor::INHERITS];
 
 			if ($parent)
