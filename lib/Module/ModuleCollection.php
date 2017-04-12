@@ -31,6 +31,7 @@ use function ICanBoogie\stable_sort;
  * @property-read array $disabled_modules_descriptors Descriptors of the disabled modules.
  * @property-read array $enabled_modules_descriptors Descriptors of the enabled modules.
  * @property-read array $index Index for the modules.
+ * @property-read array $descriptors Modules descriptors.
  */
 class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 {
@@ -66,7 +67,17 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var array
 	 */
-	public $descriptors = [];
+	private $descriptors = [];
+
+	/**
+	 * @return array
+	 */
+	protected function get_descriptors()
+	{
+		$this->ensure_modules_are_indexed();
+
+		return $this->descriptors;
+	}
 
 	/**
 	 * The paths where modules can be found.
@@ -461,42 +472,14 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			$root = rtrim($root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 			$descriptor_path = $root . 'descriptor.php';
 
-			if (file_exists($descriptor_path))
+			if (!file_exists($descriptor_path))
 			{
-				$id = basename(realpath($root));
-				$descriptor = $this->read_descriptor($id, $root);
-
-				$descriptors[$descriptor[Descriptor::ID]] = $descriptor;
+				throw new \LogicException("Missing `descriptor.php` file in $root.");
 			}
-			else
-			{
-				try
-				{
-					$dir = new \DirectoryIterator($root);
-				}
-				catch (\Exception $e)
-				{
-					throw new \RuntimeException(format('Unable to open directory %root', [
 
-						'root' => $root
-
-					]));
-				}
-
-				foreach ($dir as $file)
-				{
-					if ($file->isDot() || !$file->isDir())
-					{
-						continue;
-					}
-
-					$id = $file->getFilename();
-					$path = $root . $id . DIRECTORY_SEPARATOR;
-					$descriptor = $this->read_descriptor($id, $path);
-
-					$descriptors[$descriptor[Descriptor::ID]] = $descriptor;
-				}
-			}
+			$id = basename(realpath($root));
+			$descriptor = $this->read_descriptor($id, $root);
+			$descriptors[$descriptor[Descriptor::ID]] = $descriptor;
 		}
 
 		return $descriptors;
@@ -540,10 +523,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		{
 			throw new \InvalidArgumentException(format
 			(
-				'The %name value of the %id module descriptor is empty in %path.', [
+				'%name is required. Invalid descriptor in %path.', [
 
 					'name' => Descriptor::TITLE,
-					'id' => $module_id,
 					'path' => $descriptor_path
 
 				]
@@ -554,10 +536,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		{
 			throw new \InvalidArgumentException(format
 			(
-				'%name is required. Invalid descriptor for module %id in %path.', [
+				'%name is required. Invalid descriptor in %path.', [
 
 					'name' => Descriptor::NS,
-					'id' => $module_id,
 					'path' => $descriptor_path
 
 				]

@@ -96,6 +96,14 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 	 */
 	private function create_module_collection()
 	{
-		return new ModuleCollection([ \ICanBoogie\DOCUMENT_ROOT . 'modules' ]);
+		return new ModuleCollection([
+
+			getcwd() . '/modules/a',
+			getcwd() . '/modules/b',
+			getcwd() . '/modules/c',
+			getcwd() . '/modules/d',
+			getcwd() . '/modules/sample',
+
+		]);
 	}
 }

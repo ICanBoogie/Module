@@ -214,7 +214,7 @@ class Hooks
 		$config = $app->config;
 
 		return new ModuleCollection(
-			$config[Autoconfig::MODULE_PATH],
+			$config[ModuleAutoconfig::MODULES],
 			$config[AppConfig::CACHE_MODULES] ? $app->vars : null
 		);
 	}
