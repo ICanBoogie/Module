@@ -26,25 +26,11 @@ use function ICanBoogie\stable_sort;
 /**
  * A module collection.
  *
- * @property-read array $disabled_modules_descriptors Descriptors of the disabled modules.
- * @property-read array $enabled_modules_descriptors Descriptors of the enabled modules.
  * @property-read array $descriptors Modules descriptors.
  */
 class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 {
 	use AccessorTrait;
-
-	/**
-	 * May be used with the {@link filter_descriptors_by_users()} method to filter the descriptors
-	 * of enabled modules.
-	 */
-	const ONLY_ENABLED_MODULES = false;
-
-	/**
-	 * May be used with the {@link filter_descriptors_by_users()} method to filter the descriptors
-	 * of all modules, enabled or not.
-	 */
-	const ALL_MODULES = true;
 
 	/**
 	 * Formats a SQL table name given the module id and the model id.
@@ -110,68 +96,27 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Revokes constructions.
+	 * The method is not supported.
 	 *
-	 * The following properties are revoked:
-	 *
-	 * - {@link $enabled_modules_descriptors}
-	 * - {@link $disabled_modules_descriptors}
-	 *
-	 * The method is usually invoked when modules state changes, in order to reflect these
-	 * changes.
+	 * @inheritdoc
 	 */
-	protected function revoke_constructions()
+	public function offsetSet($offset, $value)
 	{
-		unset($this->enabled_modules_descriptors);
-		unset($this->disabled_modules_descriptors);
+		throw new \BadMethodCallException();
 	}
 
 	/**
-	 * Enables a module.
+	 * The method is not supported.
 	 *
-	 * @param string $module_id Module identifier.
+	 * @inheritdoc
 	 */
-	public function enable($module_id)
+	public function offsetUnset($offset)
 	{
-		$this->change_module_availability($module_id, false);
+		throw new \BadMethodCallException();
 	}
 
 	/**
-	 * Disables a module.
-	 *
-	 * @param string $module_id Module identifier.
-	 */
-	public function disable($module_id)
-	{
-		$this->change_module_availability($module_id, true);
-	}
-
-	/**
-	 * Used to enable or disable a module using the specified offset as a module identifier.
-	 *
-	 * @param string $module_id Identifier of the module.
-	 * @param bool $enable Status of the module: `true` for enabled, `false` for disabled.
-	 */
-	public function offsetSet($module_id, $enable)
-	{
-		$this->change_module_availability($module_id, $enable);
-	}
-
-	/**
-	 * Disables a module by setting the {@link Descriptor::DISABLED} key of its descriptor to `true`.
-	 *
-	 * @param string $module_id Module identifier.
-	 */
-	public function offsetUnset($module_id)
-	{
-		$this->change_module_availability($module_id, false);
-	}
-
-	/**
-	 * Checks the availability of a module.
-	 *
-	 * A module is considered available when its descriptor is defined, and the
-	 * {@link Descriptor::DISABLED} key of its descriptor is empty.
+	 * Checks if a module exists.
 	 *
 	 * Note: `empty()` will call {@link offsetGet()} to check if the value is not empty. So, unless
 	 * you want to use the module you check, better check using `!isset()`, otherwise the module
@@ -185,10 +130,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	{
 		$this->ensure_modules_are_indexed();
 
-		$descriptors = $this->descriptors;
-
-		return isset($descriptors[$module_id])
-		&& empty($descriptors[$module_id][Descriptor::DISABLED]);
+		return isset($this->descriptors[$module_id]);
 	}
 
 	/**
@@ -200,8 +142,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @param string $module_id Module identifier.
 	 *
 	 * @throws ModuleNotDefined when the requested module is not defined.
-	 *
-	 * @throws ModuleIsDisabled when the module is disabled.
 	 *
 	 * @throws ModuleConstructorMissing when the class that should be used to create its instance
 	 * is not defined.
@@ -248,15 +188,13 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * Returns the modules using a module.
 	 *
 	 * @param string $module_id Used module identifier.
-	 * @param bool $all One of {@link ONLY_ENABLED_MODULES} or {@link ALL_MODULES}.
-	 * Default: {@link ONLY_ENABLED_MODULES}.
 	 *
 	 * @return array A array of filtered descriptors.
 	 */
-	public function filter_descriptors_by_users($module_id, $all = self::ONLY_ENABLED_MODULES)
+	public function filter_descriptors_by_users($module_id)
 	{
 		$users = [];
-		$descriptors = $all ? $this->descriptors : $this->enabled_modules_descriptors;
+		$descriptors = $this->descriptors;
 
 		foreach ($descriptors as $user_id => $descriptor)
 		{
@@ -546,63 +484,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Traverses the descriptors and create two array of descriptors: one for the disabled modules
-	 * and the other for enabled modules. The {@link $disabled_modules_descriptors} magic property
-	 * receives the descriptors of the disabled modules, while the {@link $enabled_modules_descriptors}
-	 * magic property receives the descriptors of the enabled modules.
-	 */
-	private function sort_modules_descriptors()
-	{
-		$enabled = [];
-		$disabled = [];
-
-		$this->ensure_modules_are_indexed();
-
-		foreach ($this->descriptors as $module_id => &$descriptor)
-		{
-			if (isset($this[$module_id]))
-			{
-				$enabled[$module_id] = $descriptor;
-			}
-			else
-			{
-				$disabled[$module_id] = $descriptor;
-			}
-		}
-
-		$this->enabled_modules_descriptors = $enabled;
-		$this->disabled_modules_descriptors = $disabled;
-	}
-
-	/**
-	 * Returns the descriptors of the disabled modules.
-	 *
-	 * This method is the getter for the {@link $disabled_modules_descriptors} magic property.
-	 *
-	 * @return array
-	 */
-	protected function lazy_get_disabled_modules_descriptors()
-	{
-		$this->sort_modules_descriptors();
-
-		return $this->disabled_modules_descriptors;
-	}
-
-	/**
-	 * Returns the descriptors of the enabled modules.
-	 *
-	 * This method is the getter for the {@link $enabled_modules_descriptors} magic property.
-	 *
-	 * @return array
-	 */
-	protected function lazy_get_enabled_modules_descriptors()
-	{
-		$this->sort_modules_descriptors();
-
-		return $this->enabled_modules_descriptors;
-	}
-
-	/**
 	 * Orders the module ids provided according to module inheritance and weight.
 	 *
 	 * @param array $ids The module ids to order.
@@ -673,14 +554,12 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * Returns the usage of a module by other modules.
 	 *
 	 * @param string $module_id The identifier of the module.
-	 * @param bool $all One of {@link ONLY_ENABLED_MODULES} or {@link ALL_MODULES}.
-	 * Default: {@link ONLY_ENABLED_MODULES}.
 	 *
 	 * @return int
 	 */
-	public function usage($module_id, $all = self::ONLY_ENABLED_MODULES)
+	public function usage($module_id)
 	{
-		return count($this->filter_descriptors_by_users($module_id, $all));
+		return count($this->filter_descriptors_by_users($module_id));
 	}
 
 	/**
@@ -786,25 +665,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Changes a module availability.
-	 *
-	 * @param string $module_id
-	 * @param bool $available
-	 */
-	protected function change_module_availability($module_id, $available)
-	{
-		$this->ensure_modules_are_indexed();
-
-		if (empty($this->descriptors[$module_id]))
-		{
-			return;
-		}
-
-		$this->descriptors[$module_id][Descriptor::DISABLED] = $available;
-		$this->revoke_constructions();
-	}
-
-	/**
 	 * Ensures that modules are indexed, index them if not.
 	 *
 	 * The method obtains modules descriptors and defined associated constants.
@@ -838,21 +698,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Asserts that a module is enabled.
-	 *
-	 * @param string $module_id
-	 *
-	 * @throws ModuleIsDisabled if the module is disabled.
-	 */
-	protected function assert_module_is_enabled($module_id)
-	{
-		if (!empty($this->descriptors[$module_id][Descriptor::DISABLED]))
-		{
-			throw new ModuleIsDisabled($module_id);
-		}
-	}
-
-	/**
 	 * Asserts that a module constructor exists.
 	 *
 	 * @param string $module_id Module identifier.
@@ -876,7 +721,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	protected function instantiate_module($module_id)
 	{
 		$this->assert_module_is_defined($module_id);
-		$this->assert_module_is_enabled($module_id);
 
 		$descriptor = $this->descriptors[$module_id];
 		$class = $descriptor[Descriptor::CLASSNAME];

@@ -42,11 +42,6 @@ final class Descriptor
 	const DESCRIPTION = 'description';
 
 	/**
-	 * Defines the state of the module.
-	 */
-	const DISABLED = 'disabled';
-
-	/**
 	 * Defines extra values.
 	 */
 	const EXTRA = 'extra';
@@ -62,13 +57,6 @@ final class Descriptor
 	 * If the identifier is not defined the name of the module directory is used instead.
 	 */
 	const ID = 'id';
-
-	/**
-	 * Defines the state of the module.
-	 *
-	 * Required modules are always enabled.
-	 */
-	const REQUIRED = 'required';
 
 	/**
 	 * Defines the modules that the module requires.
@@ -135,7 +123,6 @@ final class Descriptor
 			Descriptor::CATEGORY => null,
 			Descriptor::CLASSNAME => $descriptor[Descriptor::NS] . '\Module',
 			Descriptor::DESCRIPTION => null,
-			Descriptor::DISABLED => false,
 			Descriptor::EXTRA => [],
 			Descriptor::INHERITS => null,
 			Descriptor::ID => null,
@@ -143,7 +130,6 @@ final class Descriptor
 			Descriptor::PATH => null,
 			Descriptor::PERMISSION => null,
 			Descriptor::PERMISSIONS => [],
-			Descriptor::REQUIRED => false,
 			Descriptor::REQUIRES => [],
 			Descriptor::WEIGHT => 0
 

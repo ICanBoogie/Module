@@ -24,19 +24,17 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider provide_test_filter
 	 *
-	 * @param bool $disabled
 	 * @param bool $is_installed
 	 * @param bool $has_errors
 	 * @param $expected
 	 */
-	public function test_filter($disabled, $is_installed, $has_errors, $expected)
+	public function test_filter($is_installed, $has_errors, $expected)
 	{
 		$module_id = uniqid();
 
 		$descriptor = [
 
 			Descriptor::ID => $module_id,
-			Descriptor::DISABLED => $disabled
 
 		];
 
@@ -54,11 +52,10 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 
-			[ false, false, false, true ],
-			[ false, false, true, true ],
-			[ false, true, true, true ],
-			[ false, true, false, false ],
-			[ true, false, false, false ],
+			[ false, false, true ],
+			[ false, true, true ],
+			[ true, true, true ],
+			[ true, false, false ],
 
 		];
 	}
@@ -90,6 +87,8 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 
 			});
 
+		/* @var Module $module */
+
 		return $module;
 	}
 
@@ -111,6 +110,8 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 			->method('offsetGet')
 			->with($module_id)
 			->willReturn($module);
+
+		/* @var ModuleCollection $modules */
 
 		return $modules;
 	}

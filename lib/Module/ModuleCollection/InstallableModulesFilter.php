@@ -42,11 +42,6 @@ class InstallableModulesFilter
 	 */
 	public function __invoke(array $descriptor)
 	{
-		if ($descriptor[Descriptor::DISABLED])
-		{
-			return false;
-		}
-
 		$module = $this->modules[$descriptor[Descriptor::ID]];
 		$errors = new ErrorCollection;
 
