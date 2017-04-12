@@ -51,17 +51,6 @@ class Hooks
 	 */
 	static public function on_app_configure(Application\ConfigureEvent $event, Application $app)
 	{
-		$modules = $app->modules;
-		$modules->index;
-
-		#
-		# Add locale paths
-		#
-
-		$app->config[Autoconfig::LOCALE_PATH] = array_merge(
-			$app->config[Autoconfig::LOCALE_PATH],
-			$modules->locale_paths
-		);
 	}
 
 	/**

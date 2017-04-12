@@ -14,63 +14,6 @@ use ICanBoogie\View\View;
 
 class HooksTest extends \PHPUnit_Framework_TestCase
 {
-	public function test_on_core_configure()
-	{
-		$module_locale_paths = [
-
-			uniqid(),
-			uniqid(),
-			uniqid()
-
-		];
-
-		$modules = $this
-			->getMockBuilder(ModuleCollection::class)
-			->disableOriginalConstructor()
-			->setMethods([ 'lazy_get_index', 'get_locale_paths' ])
-			->getMock();
-		$modules
-			->expects($this->once())
-			->method('lazy_get_index')
-			->willReturn([]);
-		$modules
-			->expects($this->once())
-			->method('get_locale_paths')
-			->willReturn($module_locale_paths);
-
-		$config = new \ArrayObject([
-
-			Autoconfig::LOCALE_PATH => [],
-
-		]);
-
-		$app = $this
-			->getMockBuilder(Application::class)
-			->disableOriginalConstructor()
-			->setMethods([ 'lazy_get_config', 'lazy_get_modules' ])
-			->getMock();
-		$app
-			->expects($this->once())
-			->method('lazy_get_config')
-			->willReturn($config);
-		$app
-			->expects($this->once())
-			->method('lazy_get_modules')
-			->willReturn($modules);
-
-		$event = $this
-			->getMockBuilder(Application\ConfigureEvent::class)
-			->disableOriginalConstructor()
-			->getMock();
-
-		/* @var $event Application\ConfigureEvent */
-		/* @var $app Application */
-
-		Hooks::on_app_configure($event, $app);
-
-		$this->assertSame($module_locale_paths, $config[Autoconfig::LOCALE_PATH]);
-	}
-
 	public function test_on_core_boot()
 	{
 		$prototype_config = [];
