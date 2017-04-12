@@ -16,14 +16,6 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_on_core_configure()
 	{
-		$modules_config_paths = [
-
-			uniqid(),
-			uniqid(),
-			uniqid()
-
-		];
-
 		$module_locale_paths = [
 
 			uniqid(),
@@ -35,16 +27,12 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		$modules = $this
 			->getMockBuilder(ModuleCollection::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'lazy_get_index', 'lazy_get_config_paths', 'get_locale_paths' ])
+			->setMethods([ 'lazy_get_index', 'get_locale_paths' ])
 			->getMock();
 		$modules
 			->expects($this->once())
 			->method('lazy_get_index')
 			->willReturn([]);
-		$modules
-			->expects($this->once())
-			->method('lazy_get_config_paths')
-			->willReturn($modules_config_paths);
 		$modules
 			->expects($this->once())
 			->method('get_locale_paths')
@@ -53,33 +41,18 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		$config = new \ArrayObject([
 
 			Autoconfig::LOCALE_PATH => [],
-			Autoconfig::CONFIG_PATH => [],
 
 		]);
-
-		$configs = $this
-			->getMockBuilder(Config::class)
-			->disableOriginalConstructor()
-			->setMethods([ 'add' ])
-			->getMock();
-		$configs
-			->expects($this->once())
-			->method('add')
-			->with($modules_config_paths, Autoconfig::CONFIG_WEIGHT_MODULE);
 
 		$app = $this
 			->getMockBuilder(Application::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'lazy_get_config', 'lazy_get_configs', 'lazy_get_modules' ])
+			->setMethods([ 'lazy_get_config', 'lazy_get_modules' ])
 			->getMock();
 		$app
 			->expects($this->once())
 			->method('lazy_get_config')
 			->willReturn($config);
-		$app
-			->expects($this->once())
-			->method('lazy_get_configs')
-			->willReturn($configs);
 		$app
 			->expects($this->once())
 			->method('lazy_get_modules')
@@ -96,7 +69,6 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		Hooks::on_app_configure($event, $app);
 
 		$this->assertSame($module_locale_paths, $config[Autoconfig::LOCALE_PATH]);
-		$this->assertSame($modules_config_paths, $config[Autoconfig::CONFIG_PATH]);
 	}
 
 	public function test_on_core_boot()

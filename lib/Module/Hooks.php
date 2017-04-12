@@ -62,21 +62,6 @@ class Hooks
 			$app->config[Autoconfig::LOCALE_PATH],
 			$modules->locale_paths
 		);
-
-		#
-		# Add modules config paths to the configs path.
-		#
-
-		$modules_config_paths = $modules->config_paths;
-
-		if ($modules_config_paths)
-		{
-			$app->config[Autoconfig::CONFIG_PATH] = array_merge(
-				$app->config[Autoconfig::CONFIG_PATH],
-				$modules_config_paths
-			);
-			$app->configs->add($modules->config_paths, Autoconfig::CONFIG_WEIGHT_MODULE);
-		}
 	}
 
 	/**
