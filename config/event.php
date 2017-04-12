@@ -8,7 +8,6 @@ $hooks = Hooks::class . '::';
 
 return [
 
-	ICanBoogie\Application::class . '::boot' => $hooks . 'on_app_boot',
 	ICanBoogie\Application::class . '::clear_cache' => $hooks . 'on_app_clear_cache',
 	ICanBoogie\Render\BasicTemplateResolver::class . '::alter' => $hooks . 'on_template_resolver_alter',
 	ICanBoogie\View\View::class . '::alter' => $hooks . 'on_view_alter',
