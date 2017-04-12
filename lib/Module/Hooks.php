@@ -13,7 +13,6 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\AppConfig;
-use ICanBoogie\Autoconfig\Autoconfig;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Application;
 use ICanBoogie\Facets\Fetcher;
@@ -23,7 +22,6 @@ use ICanBoogie\HTTP\RequestDispatcher;
 use ICanBoogie\Module;
 use ICanBoogie\Operation\OperationRouteDispatcher;
 use ICanBoogie\PropertyNotDefined;
-use ICanBoogie\Prototype;
 use ICanBoogie\Render\TemplateResolver;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\View\View;

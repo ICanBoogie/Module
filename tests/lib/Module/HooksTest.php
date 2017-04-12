@@ -2,10 +2,6 @@
 
 namespace ICanBoogie\Module;
 
-use ICanBoogie\Autoconfig\Autoconfig;
-use ICanBoogie\Config;
-use ICanBoogie\Application;
-use ICanBoogie\EventCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Render\Renderer;
 use ICanBoogie\Routing\Controller;
