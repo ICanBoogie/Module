@@ -67,10 +67,7 @@
 	"extra": {
 		"icanboogie": {
 			"config-path": "config",
-			"autoconfig-extension": "ICanBoogie\\Module\\ModuleAutoconfigExtension",
-			"autoconfig-filters": [
-				"ICanBoogie\\Module\\Hooks::filter_autoconfig"
-			]
+			"autoconfig-extension": "ICanBoogie\\Module\\ModuleAutoconfigExtension"
 		}
 	}
 }

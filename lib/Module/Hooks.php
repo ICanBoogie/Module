@@ -37,26 +37,6 @@ use function ICanBoogie\format;
 class Hooks
 {
 	/*
-	 * Config
-	 */
-
-	/**
-	 * Adds "modules" directories found in the app directories to `module-path`.
-	 *
-	 * @param array $autoconfig
-	 */
-	static public function filter_autoconfig(array &$autoconfig)
-	{
-		foreach ($autoconfig[Autoconfig::APP_PATHS] as $directory)
-		{
-			if (file_exists($directory . 'modules'))
-			{
-				$autoconfig[Autoconfig::MODULE_PATH][] = $directory . 'modules';
-			}
-		}
-	}
-
-	/*
 	 * Events
 	 */
 
