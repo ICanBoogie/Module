@@ -37,7 +37,8 @@
 		"icanboogie/bind-facets": "^0.7",
 		"icanboogie/bind-event": "^3.0",
 		"icanboogie/i18n": "^3.0",
-		"icanboogie/bind-symfony-dependency-injection": "dev-master"
+		"icanboogie/bind-symfony-dependency-injection": "dev-master",
+		"composer/composer": "^1.4"
 	},
 	"suggest": {
 		"icanboogie/operation": "Required to use the 'delete' and 'save' operations.",
@@ -66,6 +67,7 @@
 	"extra": {
 		"icanboogie": {
 			"config-path": "config",
+			"autoconfig-extension": "ICanBoogie\\Module\\ModuleAutoconfigExtension",
 			"autoconfig-filters": [
 				"ICanBoogie\\Module\\Hooks::filter_autoconfig"
 			]
