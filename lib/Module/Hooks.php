@@ -41,19 +41,6 @@ class Hooks
 	 */
 
 	/**
-	 * Extends application configuration according to modules features.
-	 *
-	 * The method may extend the `locale-path` configuration value and the configuration paths
-	 * according to the modules features.
-	 *
-	 * @param Application\ConfigureEvent $event
-	 * @param Application $app
-	 */
-	static public function on_app_configure(Application\ConfigureEvent $event, Application $app)
-	{
-	}
-
-	/**
 	 * Boot enabled modules.
 	 *
 	 * Before the modules are actually booted up, their index is used to alter the I18n load
