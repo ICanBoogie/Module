@@ -14,14 +14,6 @@ use ICanBoogie\View\View;
 
 class HooksTest extends \PHPUnit_Framework_TestCase
 {
-	public function test_filter_autoconfig()
-	{
-		$autoconfig = [ Autoconfig::APP_PATHS => [ \ICanBoogie\DOCUMENT_ROOT ] ];
-		Hooks::filter_autoconfig($autoconfig);
-		$this->assertArrayHasKey(Autoconfig::MODULE_PATH, $autoconfig);
-		$this->assertEquals($autoconfig[Autoconfig::MODULE_PATH], [ \ICanBoogie\DOCUMENT_ROOT . 'modules' ]);
-	}
-
 	public function test_on_core_configure()
 	{
 		$modules_config_paths = [
