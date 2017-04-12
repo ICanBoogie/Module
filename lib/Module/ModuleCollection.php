@@ -26,7 +26,6 @@ use function ICanBoogie\stable_sort;
 /**
  * A module collection.
  *
- * @property-read array $locale_paths Paths of the enabled modules having a `locale` directory.
  * @property-read array $disabled_modules_descriptors Descriptors of the disabled modules.
  * @property-read array $enabled_modules_descriptors Descriptors of the enabled modules.
  * @property-read array $index Index for the modules.
@@ -118,7 +117,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * - {@link $enabled_modules_descriptors}
 	 * - {@link $disabled_modules_descriptors}
-	 * - {@link $catalog_paths}
 	 *
 	 * The method is usually invoked when modules state changes, in order to reflect these
 	 * changes.
@@ -127,7 +125,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	{
 		unset($this->enabled_modules_descriptors);
 		unset($this->disabled_modules_descriptors);
-		unset($this->catalog_paths);
 	}
 
 	/**
@@ -338,22 +335,10 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	protected function index_modules()
 	{
 		$descriptors = $this->paths ? $this->index_descriptors($this->paths) : [];
-		$catalogs = [];
-
-		foreach ($descriptors as $id => $descriptor)
-		{
-			$path = $descriptor[Descriptor::PATH];
-
-			if ($descriptor['__has_locale'])
-			{
-				$catalogs[] = $path . 'locale';
-			}
-		}
 
 		return [
 
 			'descriptors' => $descriptors,
-			'catalogs' => $catalogs,
 
 		];
 	}
@@ -540,7 +525,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			Descriptor::ID => $module_id,
 			Descriptor::PATH => $path,
 
-			'__has_locale' => is_dir($path . 'locale'),
 			'__parents' => []
 
 		]);
@@ -653,28 +637,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		$this->sort_modules_descriptors();
 
 		return $this->enabled_modules_descriptors;
-	}
-
-	/**
-	 * Returns the paths of the enabled modules which have a `locale` folder.
-	 *
-	 * @return array
-	 */
-	protected function lazy_get_locale_paths()
-	{
-		$paths = [];
-
-		foreach ($this->enabled_modules_descriptors as $module_id => $descriptor)
-		{
-			if (!$descriptor['__has_locale'])
-			{
-				continue;
-			}
-
-			$paths[] = $descriptor[Descriptor::PATH] . 'locale';
-		}
-
-		return $paths;
 	}
 
 	/**
