@@ -41,22 +41,6 @@ class Hooks
 	 */
 
 	/**
-	 * Boot enabled modules.
-	 *
-	 * Before the modules are actually booted up, their index is used to alter the I18n load
-	 * paths and the config paths.
-	 *
-	 * @param Application\BootEvent $event
-	 * @param Application $app
-	 */
-	static public function on_app_boot(Application\BootEvent $event, Application $app)
-	{
-		Prototype::bind($app->configs['prototype']);
-
-		$app->events->attach_many($app->configs['event']);
-	}
-
-	/**
 	 * Alter routes defined by modules by adding a `module` key that holds the identifier of the
 	 * module that defines the route.
 	 *
