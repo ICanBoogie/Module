@@ -105,7 +105,6 @@ return [
 
 	],
 
-	Descriptor::REQUIRED => true,
 	Descriptor::REQUIRES => [ 'sites', 'users' ],
 	Descriptor::TITLE => 'Nodes'
 
@@ -125,7 +124,6 @@ Here are the tags (`Descriptor::<tag>`) that can be used to define the module's 
 - `DESCRIPTION`: Defines a short description of the module.
 - `INHERITS`: Defines the module that the module extends.
 - `ID`: Defines the identifier of the module. Defaults to its directory name.
-- `REQUIRED`: Defines that the module is required and cannot be disabled.
 - `REQUIRES`: Defines the modules required, used to compute modules weight.
 - `MODELS`: Defines the models of the module. Take a look at the [ActiveRecord package][] for
 more information about ActiveRecords and models.
@@ -158,13 +156,13 @@ extends:
 
 ## Module collection
 
-Modules are accessed and managed through a module collection. The collection indexes modules and
-the resources they provide. It is used to enabled/disable and load modules. The collection also
-takes care of the dependencies between the modules and sorts them accordingly.
+Modules are loaded through a module collection. The collection indexes modules and provide access to
+their descriptors. The dependencies between the modules is respected and they are sorted
+accordingly.
 
-A module collection is represented by a [ModuleCollection][] instance, constructed from an array of paths
-and an optional cache. The paths array defined where the modules are located, while
-the cache is used to store and retrieve the collection index.
+A module collection is represented by a [ModuleCollection][] instance, constructed from an array of
+paths and an optional cache. The paths array defined where the modules are located, while the cache
+is used to store and retrieve the collection index.
 
 The following example demonstrates how a module collection can be created from two separate
 module locations and the single location of a module, a cache is also provided:
@@ -172,7 +170,7 @@ module locations and the single location of a module, a cache is also provided:
 ```php
 <?php
 
-use ICanBoogie\ModuleCollection;
+use ICanBoogie\Module\ModuleCollection;
 use ICanBoogie\Storage\FileStorage;
 
 $vars = new FileStorage(__DIR__ . '/repository/vars');
@@ -198,24 +196,21 @@ the `nodes` module is accessed.
 ```php
 <?php
 
+/* @var \ICanBoogie\Module\ModuleCollection $modules */
+
 $node_module = $modules['nodes'];
 ```
 
-The [ModuleNotDefined][] exception is thrown if the module is not defined. The [ModuleIsDisabled][]
-exception is thrown if the module is disabled. Finally, the [ModuleConstructorMissing][] is thrown
-when the class used to instantiate the module is missing.
-
-Modules are considered _accessible_ when their descriptor is registered and they are not
-disabled. `isset()` is used to check if a module is accessible:
+`isset()` is used to check if a module is defined. The [ModuleNotDefined][] exception is thrown if
+the module is not defined, and [ModuleConstructorMissing][] is thrown when the class used to
+instantiate the module is missing.
 
 ```php
 <?php
 
+/* @var \ICanBoogie\Module\ModuleCollection $modules */
+
 isset($modules['nodes']); // true
-
-$modules->disable('nodes');
-
-isset($modules['nodes']); // false
 isset($modules['undefined_module']); // false
 ```
 
@@ -232,10 +227,12 @@ module and also collects the reasons why the module is not installed.
 ```php
 <?php
 
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
+
+/* @var \ICanBoogie\Module\ModuleCollection $modules */
 
 $nodes = $modules['nodes'];
-$errors = new Errors;
+$errors = new ErrorCollection;
 
 if (!$nodes->is_installed($errors))
 {
@@ -243,7 +240,7 @@ if (!$nodes->is_installed($errors))
 	# $errors might contain messages about why the module is not installed
 	#
 
-	$errors->clean();
+	$errors->clear();
 
 	if (!$nodes->install($errors))
 	{
@@ -256,14 +253,16 @@ if (!$nodes->is_installed($errors))
 $nodes->uninstall();
 ```
 
-Enabled modules can be installed at once using a [ModuleCollection][] instance.
-The [ModuleCollectionInstallFailed][] exception is thrown with all the errors and
-exceptions collected in a [Errors][] instance if the installation fails.
+Modules can be installed all at once using a [ModuleCollection][] instance. The
+[ModuleCollectionInstallFailed][] exception is thrown with all the errors and exceptions collected
+in a [ErrorCollection][] instance if the installation fails.
 
 ```php
 <?php
 
 use ICanBoogie\Module\ModuleCollectionInstallFailed;
+
+/* @var \ICanBoogie\Module\ModuleCollection $modules */
 
 try
 {
@@ -271,7 +270,7 @@ try
 }
 catch (ModuleCollectionInstallFailed $e)
 {
-	echo get_class($e->errors); // ICanBoogie\Errors
+	echo get_class($e->errors); // ICanBoogie\ErrorCollection
 }
 ```
 
@@ -290,6 +289,8 @@ instance configured to provide the models defined by the modules.
 
 ```php
 <?php
+
+/* @var \ICanBoogie\Application $app */
 
 $app->modules['nodes'];
 $app->models['nodes'];
@@ -310,6 +311,8 @@ as follows:
 ```php
 <?php
 
+/* @var \ICanBoogie\Application $app */
+
 $nodes_model = $app->models['nodes'];
 ```
 
@@ -317,6 +320,8 @@ And if the [Nodes][] module was defining an `attachments` model:
 
 ```php
 <?php
+
+/* @var \ICanBoogie\Application $app */
 
 $nodes_attachments_model = $app->models['nodes/attachments'];
 ```
@@ -352,10 +357,10 @@ options is automatically added, so it doesn't need to be defined:
 return [
 
 	'articles/show' => [
-	
+
 		'pattern' => '/<year:\d{4}>-<month:\d{2}>-:slug.html',
 		'controller' => "ArticlesController#show"
-	
+
 	]
 
 ];
@@ -368,10 +373,14 @@ the module associated with a route:
 ```php
 <?php
 
-use ICanBoogie\Routing\ActionController;
+use ICanBoogie\Routing\Controller;
 
-class ArticlesController extends ActionController
+class ArticlesController extends Controller
 {
+	use Controller\ActionTrait;
+	use \ICanBoogie\Module\ControllerBindings;
+	use \ICanBoogie\View\ControllerBindings;
+
 	protected function any_index()
 	{
 		$this->view->content = $this->fetch_records([ 'limit' => 10 ] + $this->request->params);
@@ -392,18 +401,17 @@ class ArticlesController extends ActionController
 
 ## Template resolver decorator
 
-A [ModuleTemplateResolver][] instance is used to decorate the template resolver instance defined when the `ICanBoogie\Render\BasicTemplateResolver::alter` event of class [TemplateResolver\AlterEvent][] is fired, adding support for module defined templates. When the _path part_ of the template name matches an activated module identifier, the template pathname is resolved using the module and its parents.
+A [ModuleTemplateResolver][] instance is used to decorate the template resolver instance defined
+when the `ICanBoogie\Render\BasicTemplateResolver::alter` event of class
+[TemplateResolver\AlterEvent][] is fired, adding support for module defined templates. When the
+_path part_ of the template name matches an activated module identifier, the template pathname is
+resolved using the module and its parents.
 
 
 
 
 
 ## Event hooks
-
-- `ICanBoogie\Application::boot`: Boot enabled modules. Before the modules are actually booted up,
-their index is used to alter the I18n load paths (if the [icanboogie/i18n][] package is available)
-and the config paths. Note that prototypes are reset and the [Events][] instance associated
-with the core revoked.
 
 - `ICanBoogie\View\View::alter`: If the view renders a module's route, the "template" directory
 of that module is added to the list of template locations.
@@ -433,9 +441,7 @@ The package requires PHP 5.6 or later.
 
 The recommended way to install this package is through [Composer](http://getcomposer.org/):
 
-```
-$ composer require icanboogie/module
-```
+	$ composer require icanboogie/module
 
 
 
@@ -455,7 +461,10 @@ cloned with the following command line:
 ## Documentation
 
 The package is documented as part of the [ICanBoogie][] framework
-[documentation](https://icanboogie.org/docs/). You can generate the documentation for the package and its dependencies with the `make doc` command. The documentation is generated in the `build/docs` directory. [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with the `make clean` command.
+[documentation](https://icanboogie.org/docs/). You can generate the documentation for the package
+and its dependencies with the `make doc` command. The documentation is generated in the `build/docs`
+directory. [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with the
+`make clean` command.
 
 
 
@@ -463,7 +472,11 @@ The package is documented as part of the [ICanBoogie][] framework
 
 ## Testing
 
-The test suite is ran with the `make test` command. [PHPUnit](https://phpunit.de/) and [Composer](http://getcomposer.org/) need to be globally available to run the suite. The command installs dependencies as required. The `make test-coverage` command runs test suite and also creates an HTML coverage report in "build/coverage". The directory can later be cleaned with the `make clean` command.
+The test suite is ran with the `make test` command. [PHPUnit](https://phpunit.de/) and
+[Composer](http://getcomposer.org/) need to be globally available to run the suite. The command
+installs dependencies as required. The `make test-coverage` command runs test suite and also creates
+an HTML coverage report in "build/coverage". The directory can later be cleaned with the `make
+clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
@@ -483,7 +496,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 [ICanBoogie]:                    https://icanboogie.org/
-[Errors]:                        https://icanboogie.org/api/errors/2.0/class-ICanBoogie.Errors.html
+[ErrorCollection]:               https://icanboogie.org/api/errors/2.0/class-ICanBoogie.Errors.html
 [Events]:                        https://icanboogie.org/api/event/3.0/class-ICanBoogie.Events.html
 [Controller]:                    https://icanboogie.org/api/routing/4.0/class-ICanBoogie.Routing.Controller.html
 [Fetcher]:                       https://icanboogie.org/api/facets/0.7/class-ICanBoogie.Facets.Fetcher.html
@@ -491,7 +504,6 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 [ModelCollection]:               https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModelCollection.html
 [ModuleCollection]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleCollection.html
 [ModuleNotDefined]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleNotDefined.html
-[ModuleIsDisabled]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleIsDisabled.html
 [ModuleCollectionInstallFailed]: https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
 [ModuleConstructorMissing]:      https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleConstructorMissing.html
 [ModuleTemplateResolver]:        https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleTemplateResolver.html
