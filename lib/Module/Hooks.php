@@ -20,6 +20,7 @@ use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\HTTP\RequestDispatcher;
 use ICanBoogie\Module;
+use ICanBoogie\Module\Autoconfig\ModuleAutoconfig;
 use ICanBoogie\Operation\OperationRouteDispatcher;
 use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\Render\TemplateResolver;

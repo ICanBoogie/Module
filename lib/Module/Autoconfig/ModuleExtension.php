@@ -1,16 +1,25 @@
 <?php
 
-namespace ICanBoogie\Module;
+/*
+ * This file is part of the ICanBoogie package.
+ *
+ * (c) Olivier Laviale <olivier.laviale@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace ICanBoogie\Module\Autoconfig;
 
 use Composer\Package\RootPackageInterface;
 use ICanBoogie\Autoconfig\Autoconfig;
-use ICanBoogie\Autoconfig\AutoconfigExtensionAbstract;
+use ICanBoogie\Autoconfig\ExtensionAbstract;
 use ICanBoogie\Autoconfig\ComposerExtra;
 
 /**
  * Autoconfig extension to handle modules, their config and locale messages.
  */
-class ModuleAutoconfigExtension extends AutoconfigExtensionAbstract
+class ModuleExtension extends ExtensionAbstract
 {
 	const TYPE_MODULE = "icanboogie-module";
 
