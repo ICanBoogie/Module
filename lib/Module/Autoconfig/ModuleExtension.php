@@ -61,21 +61,13 @@ class ModuleExtension extends ExtensionAbstract
 	 */
 	public function render()
 	{
-		$directories = array_map(function ($directory) {
-
-			return "\t\t" . $this->generator->findShortestPathCode($directory) . ",\n";
-
-		}, $this->modules_directories);
-
-		$key = ModuleAutoconfig::MODULES;
-		$directories = implode($directories);
-
-		return <<<EOT
-	'$key' => [
-
-$directories
-	],
-EOT;
+		return $this->generator->render_array_entry(
+			ModuleAutoconfig::MODULES,
+			$this->modules_directories,
+			function ($directory) {
+				return $this->generator->findShortestPathCode($directory);
+			}
+		);
 	}
 
 	/**
