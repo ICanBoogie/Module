@@ -46,7 +46,6 @@ class ModuleExtension extends ExtensionAbstract
 	 */
 	public function synthesize(array &$autoconfig)
 	{
-		$generator = $this->generator;
 		$modules_directories = $this->modules_directories = $this->collect_modules_directories();
 
 		foreach ($modules_directories as $pathname)
@@ -55,7 +54,7 @@ class ModuleExtension extends ExtensionAbstract
 			{
 				$autoconfig[Autoconfig::CONFIG_PATH][] = [
 
-					$generator->findShortestPathCode("$pathname/config"),
+					$this->findShortestPathCode("$pathname/config"),
 					Autoconfig::CONFIG_WEIGHT_MODULE
 
 				];
@@ -63,7 +62,7 @@ class ModuleExtension extends ExtensionAbstract
 
 			if (is_dir("$pathname/locale"))
 			{
-				$autoconfig[Autoconfig::LOCALE_PATH][] = $generator
+				$autoconfig[Autoconfig::LOCALE_PATH][] = $this
 					->findShortestPathCode("$pathname/locale");
 			}
 		}
@@ -74,11 +73,11 @@ class ModuleExtension extends ExtensionAbstract
 	 */
 	public function render()
 	{
-		return $this->generator->render_array_entry(
+		return $this->render_array_entry(
 			ModuleAutoconfig::MODULES,
 			$this->modules_directories,
 			function ($directory) {
-				return $this->generator->findShortestPathCode($directory);
+				return $this->findShortestPathCode($directory);
 			}
 		);
 	}
