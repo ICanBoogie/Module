@@ -11,7 +11,6 @@
 
 namespace ICanBoogie\Module\Autoconfig;
 
-use Composer\Package\RootPackageInterface;
 use ICanBoogie\Autoconfig\Autoconfig;
 use ICanBoogie\Autoconfig\ExtensionAbstract;
 
@@ -89,10 +88,20 @@ class ModuleExtension extends ExtensionAbstract
 	 */
 	private function collect_modules_directories()
 	{
-		$generator = $this->generator;
+		return array_merge(
+			$this->collect_modules_directories_from_packages(),
+			$this->collect_modules_directories_from_root_package()
+		);
+	}
+
+	/**
+	 * @return array
+	 */
+	private function collect_modules_directories_from_packages()
+	{
 		$directories = [];
 
-		foreach ($generator->packages as $pathname => $package)
+		foreach ($this->generator->packages as $pathname => $package)
 		{
 			if ($package->getType() != self::TYPE_MODULE)
 			{
@@ -102,31 +111,33 @@ class ModuleExtension extends ExtensionAbstract
 			$directories[] = $pathname;
 		}
 
-		foreach ($generator->packages as $package)
+		return $directories;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function collect_modules_directories_from_root_package()
+	{
+		$package = $this->generator->root_package;
+		$extra = $package->getExtra();
+
+		if (empty($extra['icanboogie'][self::OPTION_MODULES_PATH]))
 		{
-			if (!$package instanceof RootPackageInterface)
+			return [];
+		}
+
+		$directories = [];
+		$iterator = new \DirectoryIterator(getcwd() . DIRECTORY_SEPARATOR . $extra['icanboogie'][self::OPTION_MODULES_PATH]);
+
+		foreach ($iterator as $file)
+		{
+			if ($file->isDot() || $file->isFile())
 			{
 				continue;
 			}
 
-			$extra = $package->getExtra();
-
-			if (empty($extra['icanboogie'][self::OPTION_MODULES_PATH]))
-			{
-				continue;
-			}
-
-			$iterator = new \DirectoryIterator(getcwd() . DIRECTORY_SEPARATOR . $extra['icanboogie'][self::OPTION_MODULES_PATH]);
-
-			foreach ($iterator as $file)
-			{
-				if ($file->isDot() || $file->isFile())
-				{
-					continue;
-				}
-
-				$directories[] = $file->getPathname();
-			}
+			$directories[] = $file->getPathname();
 		}
 
 		return $directories;
