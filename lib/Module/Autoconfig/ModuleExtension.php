@@ -14,7 +14,6 @@ namespace ICanBoogie\Module\Autoconfig;
 use Composer\Package\RootPackageInterface;
 use ICanBoogie\Autoconfig\Autoconfig;
 use ICanBoogie\Autoconfig\ExtensionAbstract;
-use ICanBoogie\Autoconfig\ComposerExtra;
 
 /**
  * Autoconfig extension to handle modules, their config and locale messages.
@@ -22,11 +21,26 @@ use ICanBoogie\Autoconfig\ComposerExtra;
 class ModuleExtension extends ExtensionAbstract
 {
 	const TYPE_MODULE = "icanboogie-module";
+	const OPTION_MODULES_PATH = 'modules-path';
 
 	/**
 	 * @var array
 	 */
 	private $modules_directories;
+
+	/**
+	 * @inheritdoc
+	 */
+	public function alter_schema(callable $set_property)
+	{
+		$set_property(self::OPTION_MODULES_PATH, [
+
+			'type' => "string",
+			'description' => "(root-only) Path to application's custom modules.",
+			'required' => false,
+
+		]);
+	}
 
 	/**
 	 * @inheritdoc
@@ -97,12 +111,12 @@ class ModuleExtension extends ExtensionAbstract
 
 			$extra = $package->getExtra();
 
-			if (empty($extra['icanboogie'][ComposerExtra::MODULES_PATH]))
+			if (empty($extra['icanboogie'][self::OPTION_MODULES_PATH]))
 			{
 				continue;
 			}
 
-			$iterator = new \DirectoryIterator(getcwd() . DIRECTORY_SEPARATOR . $extra['icanboogie'][ComposerExtra::MODULES_PATH]);
+			$iterator = new \DirectoryIterator(getcwd() . DIRECTORY_SEPARATOR . $extra['icanboogie'][self::OPTION_MODULES_PATH]);
 
 			foreach ($iterator as $file)
 			{
