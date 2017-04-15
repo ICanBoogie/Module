@@ -181,6 +181,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function filter_descriptors(callable $filter)
 	{
+		$this->ensure_modules_are_indexed();
+
 		return array_filter($this->descriptors, $filter);
 	}
 
@@ -193,6 +195,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function filter_descriptors_by_users($module_id)
 	{
+		$this->ensure_modules_are_indexed();
+
 		$users = [];
 		$descriptors = $this->descriptors;
 
