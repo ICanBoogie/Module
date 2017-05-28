@@ -18,7 +18,7 @@ use ICanBoogie\Module\ModuleCollection;
 /**
  * Filters installable module descriptors.
  */
-class InstallableModulesFilter
+class InstallableFilter
 {
 	/**
 	 * @var ModuleCollection
@@ -26,8 +26,6 @@ class InstallableModulesFilter
 	private $modules;
 
 	/**
-	 * InstallableModulesFilter constructor.
-	 *
 	 * @param ModuleCollection $modules
 	 */
 	public function __construct(ModuleCollection $modules)

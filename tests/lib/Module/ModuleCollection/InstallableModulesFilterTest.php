@@ -41,7 +41,7 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 		$module = $this->mockModule($is_installed, $has_errors);
 		$modules = $this->mockModules($module_id, $module);
 
-		$filter = new InstallableModulesFilter($modules);
+		$filter = new InstallableFilter($modules);
 		$this->assertSame($expected, $filter($descriptor));
 	}
 

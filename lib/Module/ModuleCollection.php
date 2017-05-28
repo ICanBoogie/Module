@@ -16,7 +16,7 @@ use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Storage\Storage;
-use ICanBoogie\Module\ModuleCollection\InstallableModulesFilter;
+use ICanBoogie\Module\ModuleCollection\InstallableFilter;
 
 use function ICanBoogie\format;
 use function ICanBoogie\camelize;
@@ -163,7 +163,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Returns an iterator for instantiated modules.
 	 *
-	 * @return \ArrayIterator
+	 * @return Module[]|\ArrayIterator
 	 */
 	public function getIterator()
 	{
@@ -612,7 +612,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			$errors = new ErrorCollection;
 		}
 
-		foreach (array_keys($this->filter_descriptors(new InstallableModulesFilter($this))) as $module_id)
+		foreach (array_keys($this->filter_descriptors(new InstallableFilter($this))) as $module_id)
 		{
 			try
 			{
