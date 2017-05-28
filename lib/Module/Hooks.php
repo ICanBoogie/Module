@@ -13,6 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\AppConfig;
+use ICanBoogie\Binding\Module\ControllerBindings;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\Application;
 use ICanBoogie\Facets\Fetcher;

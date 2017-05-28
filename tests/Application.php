@@ -13,6 +13,6 @@ namespace ICanBoogie;
 
 class Application extends ApplicationAbstract
 {
-	use Module\ApplicationBindings;
+	use Binding\Module\ApplicationBindings;
 	use Binding\ActiveRecord\ApplicationBindings;
 }

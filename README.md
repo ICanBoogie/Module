@@ -377,7 +377,7 @@ use ICanBoogie\Routing\Controller;
 class ArticlesController extends Controller
 {
 	use Controller\ActionTrait;
-	use \ICanBoogie\Module\ControllerBindings;
+	use \ICanBoogie\Binding\Module\ControllerBindings;
 	use \ICanBoogie\View\ControllerBindings;
 
 	protected function any_index()

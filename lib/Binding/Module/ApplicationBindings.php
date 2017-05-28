@@ -9,7 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Module;
+namespace ICanBoogie\Binding\Module;
+
+use ICanBoogie\Module\ModelCollection;
+use ICanBoogie\Module\ModuleCollection;
 
 /**
  * {@link \ICanBoogie\Application} prototype bindings.

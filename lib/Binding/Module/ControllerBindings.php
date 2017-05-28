@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Module;
+namespace ICanBoogie\Binding\Module;
 
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\ActiveRecord\Model;
@@ -17,6 +17,7 @@ use ICanBoogie\Application;
 use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\Module;
+use ICanBoogie\Module\ModuleRoute;
 use ICanBoogie\Routing\Route;
 
 /**
