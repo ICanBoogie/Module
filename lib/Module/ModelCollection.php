@@ -13,7 +13,6 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord;
 use ICanBoogie\ActiveRecord\ConnectionCollection;
-use ICanBoogie\Module;
 
 /**
  * Model collection.
