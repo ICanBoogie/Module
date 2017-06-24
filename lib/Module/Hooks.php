@@ -116,14 +116,16 @@ class Hooks
 	 */
 	static public function on_alter_request_dispatcher(RequestDispatcher\AlterEvent $event, RequestDispatcher $target)
 	{
-		$routing = $target['routing'];
+		$event->chain(function () use ($event, $target) {
+			$routing = $target['routing'];
 
-		self::assert_routing_dispatcher_is_valid($routing);
+			self::assert_routing_dispatcher_is_valid($routing);
 
-		$modules = self::get_app_modules();
+			$modules = self::get_app_modules();
 
-		$target['routing'] = new ModuleOperationDispatcher($routing->routes, $modules);
-		$event->insert_before('forwarded_operation', new ForwardedOperationDispatcher($modules), 'routing');
+			$target['routing'] = new ModuleOperationDispatcher($routing->routes, $modules);
+			$event->insert_before('forwarded_operation', new ForwardedOperationDispatcher($modules), 'routing');
+		});
 	}
 
 	/**
