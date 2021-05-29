@@ -1,32 +1,25 @@
 # customization
 
 PACKAGE_NAME = icanboogie/module
-PACKAGE_VERSION = 5.0
-PHPUNIT_VERSION = phpunit-7-4.phar
-#PHPUNIT = build/$(PHPUNIT_VERSION)
 PHPUNIT = vendor/bin/phpunit
 
 # do not edit the following lines
 
+.PHONY: usage
 usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
-	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer install
+	@composer install
 
+.PHONY: update
 update:
-	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer update
+	@composer update
 
 # testing
 
-#test-dependencies: vendor $(PHPUNIT)
 test-dependencies: vendor
-	rm -f tests/repository/cache/container-compiled.php
-
-#$(PHPUNIT):
-#	mkdir -p build
-#	wget https://phar.phpunit.de/$(PHPUNIT_VERSION) -O $(PHPUNIT)
-#	chmod +x $(PHPUNIT)
+	@rm -f tests/repository/cache/container-compiled.php
 
 .PHONY: test
 test: test-dependencies
@@ -35,17 +28,17 @@ test: test-dependencies
 .PHONY: test-coverage
 test-coverage: test-dependencies
 	@mkdir -p build/coverage
-	@$(PHPUNIT) --coverage-html build/coverage --coverage-text
+	@$(PHPUNIT) --coverage-html ../build/coverage --coverage-text
 
 .PHONY: test-coveralls
 test-coveralls: test-dependencies
 	@mkdir -p build/logs
-	@$(PHPUNIT) --coverage-clover build/logs/clover.xml
+	@$(PHPUNIT) --coverage-clover ../build/logs/clover.xml
 
 .PHONY: test-container
 test-container:
-	@-docker-compose -f ./docker-compose.yml run --rm app bash
-	@docker-compose -f ./docker-compose.yml down -v
+	@-docker-compose run --rm app bash
+	@docker-compose down -v
 
 .PHONY: doc
 doc: vendor
@@ -53,7 +46,7 @@ doc: vendor
 	@apigen generate \
 	--source lib \
 	--destination build/docs/ \
-	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
+	--title "$(PACKAGE_NAME)" \
 	--template-theme "bootstrap"
 
 .PHONY: clean

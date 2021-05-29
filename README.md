@@ -1,7 +1,7 @@
 # Module
 
 [![Release](https://img.shields.io/packagist/v/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Module.svg)](http://travis-ci.org/ICanBoogie/Module)
+[![Build Status](https://img.shields.io/github/workflow/status/ICanBoogie/Module/test)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Atest)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Module.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Module)
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Module.svg)](https://coveralls.io/r/ICanBoogie/Module)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
@@ -428,7 +428,7 @@ holds the identifier of the module that defines the route.
 
 
 
-## Requirement
+## Requirements
 
 The package requires PHP 7.2 or later.
 
@@ -438,20 +438,9 @@ The package requires PHP 7.2 or later.
 
 ## Installation
 
-The recommended way to install this package is through [Composer](http://getcomposer.org/):
-
-    $ composer require icanboogie/module
-
-
-
-
-
-### Cloning the repository
-
-The package is [available on GitHub](https://github.com/ICanBoogie/Module), its repository can be
-cloned with the following command line:
-
-    $ git clone https://github.com/ICanBoogie/Module.git
+```bash
+composer require icanboogie/module
+```
 
 
 
@@ -471,16 +460,9 @@ directory. [ApiGen](http://apigen.org/) is required. The directory can later be 
 
 ## Testing
 
-The test suite is ran with the `make test` command. [PHPUnit](https://phpunit.de/) and
-[Composer](http://getcomposer.org/) need to be globally available to run the suite. The command
-installs dependencies as required. The `make test-coverage` command runs test suite and also creates
-an HTML coverage report in "build/coverage". The directory can later be cleaned with the `make
-clean` command.
-
-The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
-
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Module.svg)](https://travis-ci.org/ICanBoogie/Module)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Module.svg)](https://coveralls.io/r/ICanBoogie/Module)
+Run `make test-container` to create and log into the test container, then run `make test` to run the
+test suite. Alternatively, run `make test-coverage` to run the test suite with test coverage. Open
+`build/coverage/index.html` to see the breakdown of the code coverage.
 
 
 
@@ -488,25 +470,26 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 ## License
 
-**icanboogie/module** is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
+**icanboogie/module** is released under the [New BSD License](LICENSE).
+
 
 
 
 
 
 [ICanBoogie]:                    https://icanboogie.org/
-[ErrorCollection]:               https://icanboogie.org/api/errors/2.0/class-ICanBoogie.Errors.html
-[Events]:                        https://icanboogie.org/api/event/4.0/class-ICanBoogie.Events.html
-[Controller]:                    https://icanboogie.org/api/routing/5.0/class-ICanBoogie.Routing.Controller.html
-[Fetcher]:                       https://icanboogie.org/api/facets/0.7/class-ICanBoogie.Facets.Fetcher.html
-[Module]:                        https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.html
-[ModelCollection]:               https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModelCollection.html
-[ModuleCollection]:              https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleCollection.html
-[ModuleNotDefined]:              https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleNotDefined.html
-[ModuleCollectionInstallFailed]: https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
-[ModuleConstructorMissing]:      https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleConstructorMissing.html
-[ModuleTemplateResolver]:        https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleTemplateResolver.html
-[TemplateResolver\AlterEvent]:   https://icanboogie.org/api/module/5.0/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
+[ErrorCollection]:               https://icanboogie.org/api/errors/master/class-ICanBoogie.Errors.html
+[Events]:                        https://icanboogie.org/api/event/master/class-ICanBoogie.Events.html
+[Controller]:                    https://icanboogie.org/api/routing/master/class-ICanBoogie.Routing.Controller.html
+[Fetcher]:                       https://icanboogie.org/api/facets/master/class-ICanBoogie.Facets.Fetcher.html
+[Module]:                        https://icanboogie.org/api/module/master/class-ICanBoogie.Module.html
+[ModelCollection]:               https://icanboogie.org/api/module/master/class-ICanBoogie.Module.ModelCollection.html
+[ModuleCollection]:              https://icanboogie.org/api/module/master/class-ICanBoogie.Module.ModuleCollection.html
+[ModuleNotDefined]:              https://icanboogie.org/api/module/master/class-ICanBoogie.Module.ModuleNotDefined.html
+[ModuleCollectionInstallFailed]: https://icanboogie.org/api/module/master/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
+[ModuleConstructorMissing]:      https://icanboogie.org/api/module/master/class-ICanBoogie.Module.ModuleConstructorMissing.html
+[ModuleTemplateResolver]:        https://icanboogie.org/api/module/master/class-ICanBoogie.Module.ModuleTemplateResolver.html
+[TemplateResolver\AlterEvent]:   https://icanboogie.org/api/module/master/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
 [icanboogie/facets]:             https://github.com/ICanBoogie/Facets
 [icanboogie/i18n]:               https://github.com/ICanBoogie/I18n
 [ActiveRecord package]:          https://github.com/ICanBoogie/ActiveRecord

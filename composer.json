@@ -20,24 +20,27 @@
 		"issues": "https://github.com/ICanBoogie/Module/issues",
 		"source": "https://github.com/ICanBoogie/Module"
 	},
+	"config": {
+		"sort-packages": true
+	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"require": {
 		"php": ">=7.2",
-		"icanboogie/icanboogie": "^5.0",
 		"icanboogie/errors": "^2.0",
 		"icanboogie/event": "^4.0",
+		"icanboogie/icanboogie": "^5.0",
 		"icanboogie/operation": "^5.0"
 	},
 	"require-dev": {
-		"icanboogie/bind-activerecord": "^5.0",
-		"icanboogie/bind-view": "^5.0",
-		"icanboogie/bind-routing": "^5.0",
-		"icanboogie/bind-facets": "^5.0",
-		"icanboogie/bind-event": "^5.0",
-		"icanboogie/i18n": "^3.0",
-		"icanboogie/bind-symfony-dependency-injection": "^5.0",
 		"composer/composer": "^2.0",
+		"icanboogie/bind-activerecord": "^5.0",
+		"icanboogie/bind-event": "^5.0",
+		"icanboogie/bind-facets": "^5.0",
+		"icanboogie/bind-routing": "^5.0",
+		"icanboogie/bind-symfony-dependency-injection": "^5.0",
+		"icanboogie/bind-view": "^5.0",
+		"icanboogie/i18n": "^3.0",
 		"phpunit/phpunit": "^8.5"
 	},
 	"suggest": {
