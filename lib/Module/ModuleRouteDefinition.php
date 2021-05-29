@@ -21,5 +21,5 @@ class ModuleRouteDefinition extends RouteDefinition
 	/**
 	 * Module identifier
 	 */
-	const MODULE = 'module';
+	public const MODULE = 'module';
 }

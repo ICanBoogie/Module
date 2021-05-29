@@ -70,7 +70,7 @@ class SaveOperation extends Operation
 	{
 		$schema = $this->module->model->extended_schema;
 		$request = $this->request;
-		$properties = array_intersect_key($request->params, $schema->columns);
+		$properties = \array_intersect_key($request->params, $schema->columns);
 
 		foreach ($schema as $identifier => $column)
 		{
@@ -91,17 +91,17 @@ class SaveOperation extends Operation
 						continue;
 					}
 
-					$properties[$identifier] = filter_var($properties[$identifier], FILTER_VALIDATE_BOOLEAN);
+					$properties[$identifier] = \filter_var($properties[$identifier], FILTER_VALIDATE_BOOLEAN);
 				}
 			}
 			else if ($type == SchemaColumn::TYPE_VARCHAR)
 			{
-				if (empty($properties[$identifier]) || !is_string($properties[$identifier]))
+				if (empty($properties[$identifier]) || !\is_string($properties[$identifier]))
 				{
 					continue;
 				}
 
-				$properties[$identifier] = trim($properties[$identifier]);
+				$properties[$identifier] = \trim($properties[$identifier]);
 			}
 		}
 

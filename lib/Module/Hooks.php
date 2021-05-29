@@ -46,7 +46,7 @@ class Hooks
 	 *
 	 * @param BeforeSynthesizeRoutesEvent $event
 	 */
-	static public function before_synthesize_routes(BeforeSynthesizeRoutesEvent $event)
+	static public function before_synthesize_routes(BeforeSynthesizeRoutesEvent $event): void
 	{
 		$module_roots = [];
 
@@ -82,7 +82,7 @@ class Hooks
 	 *
 	 * @param TemplateResolver\AlterEvent $event
 	 */
-	static public function on_template_resolver_alter(TemplateResolver\AlterEvent $event)
+	static public function on_template_resolver_alter(TemplateResolver\AlterEvent $event): void
 	{
 		$event->instance = new ModuleTemplateResolver($event->instance, self::get_app_modules());
 	}
@@ -94,7 +94,7 @@ class Hooks
 	 * @param View\AlterEvent $event
 	 * @param View $target
 	 */
-	static public function on_view_alter(View\AlterEvent $event, View $target)
+	static public function on_view_alter(View\AlterEvent $event, View $target): void
 	{
 		try
 		{
@@ -114,7 +114,7 @@ class Hooks
 	 * @param RequestDispatcher\AlterEvent $event
 	 * @param RequestDispatcher $target
 	 */
-	static public function on_alter_request_dispatcher(RequestDispatcher\AlterEvent $event, RequestDispatcher $target)
+	static public function on_alter_request_dispatcher(RequestDispatcher\AlterEvent $event, RequestDispatcher $target): void
 	{
 		$event->chain(function () use ($event, $target) {
 			$routing = $target['routing'];
@@ -134,7 +134,7 @@ class Hooks
 	 * @param Application\ClearCacheEvent $event
 	 * @param Application $app
 	 */
-	static public function on_app_clear_cache(Application\ClearCacheEvent $event, Application $app)
+	static public function on_app_clear_cache(Application\ClearCacheEvent $event, Application $app): void
 	{
 		$vars = $app->vars;
 		$iterator = new \RegexIterator($vars->getIterator(), '/^cached_modules_/');
@@ -156,7 +156,7 @@ class Hooks
 	 *
 	 * @return ModuleCollection The modules provider.
 	 */
-	static public function get_modules(Application $app)
+	static public function get_modules(Application $app): ModuleCollection
 	{
 		$config = $app->config;
 
@@ -173,7 +173,7 @@ class Hooks
 	 *
 	 * @return ModelCollection The models accessor.
 	 */
-	static public function get_models(Application $app)
+	static public function get_models(Application $app): ModelCollection
 	{
 		return new ModelCollection($app->connections, $app->modules);
 	}
@@ -185,7 +185,7 @@ class Hooks
 	 *
 	 * @return Module
 	 */
-	static public function controller_get_module(Controller $controller)
+	static public function controller_get_module(Controller $controller): Module
 	{
 		return $controller->app->modules[$controller->route->module];
 	}
@@ -195,11 +195,11 @@ class Hooks
 	 *
 	 * @param Controller|ControllerBindings $controller
 	 *
-	 * @return \ICanBoogie\ActiveRecord\Model
+	 * @return ActiveRecord\Model
 	 *
 	 * @see controller_get_module()
 	 */
-	static public function controller_get_model(Controller $controller)
+	static public function controller_get_model(Controller $controller): ActiveRecord\Model
 	{
 		return $controller->module->model;
 	}
@@ -213,7 +213,7 @@ class Hooks
 	 *
 	 * @return BasicFetcher
 	 */
-	static public function controller_lazy_get_records_fetcher(Controller $controller)
+	static public function controller_lazy_get_records_fetcher(Controller $controller): BasicFetcher
 	{
 		return new BasicFetcher($controller->model);
 	}
@@ -226,7 +226,7 @@ class Hooks
 	 *
 	 * @return RecordCollection
 	 */
-	static public function controller_fetch_records(Controller $controller, array $modifiers)
+	static public function controller_fetch_records(Controller $controller, array $modifiers): RecordCollection
 	{
 		$fetcher = $controller->records_fetcher;
 
@@ -242,7 +242,7 @@ class Hooks
 	 *
 	 * @return ActiveRecord
 	 */
-	static public function controller_fetch_record(Controller $controller, array $modifiers, &$fetcher = null)
+	static public function controller_fetch_record(Controller $controller, array $modifiers, &$fetcher = null): ActiveRecord
 	{
 		$fetcher = $controller->records_fetcher;
 		$records = $fetcher($modifiers);
@@ -263,7 +263,7 @@ class Hooks
 	 *
 	 * @return ModuleCollection
 	 */
-	static private function get_app_modules()
+	static private function get_app_modules(): ModuleCollection
 	{
 		static $modules;
 
@@ -279,7 +279,7 @@ class Hooks
 	 * @throws \LogicException if the dispatcher is not an instance of
 	 * {@link \ICanBoogie\Routing\RouteDispacther}.
 	 */
-	static private function assert_routing_dispatcher_is_valid($dispatcher)
+	static private function assert_routing_dispatcher_is_valid($dispatcher): void
 	{
 		if (!$dispatcher instanceof OperationRouteDispatcher)
 		{

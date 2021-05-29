@@ -14,6 +14,8 @@ namespace ICanBoogie\Module;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\HTTP\Status;
 
+use Throwable;
+
 use function ICanBoogie\format;
 
 /**
@@ -21,8 +23,11 @@ use function ICanBoogie\format;
  *
  * @property-read string $module_id The identifier of the module that is not defined.
  */
-class ModuleNotDefined extends \RuntimeException
+final class ModuleNotDefined extends \RuntimeException
 {
+	/**
+	 * @uses get_module_id
+	 */
 	use AccessorTrait;
 
 	/**
@@ -32,20 +37,12 @@ class ModuleNotDefined extends \RuntimeException
 	 */
 	private $module_id;
 
-	/**
-	 * @return string
-	 */
-	protected function get_module_id()
+	private function get_module_id(): string
 	{
 		return $this->module_id;
 	}
 
-	/**
-	 * @param string $module_id
-	 * @param int $code
-	 * @param \Exception|null $previous
-	 */
-	public function __construct($module_id, $code = Status::INTERNAL_SERVER_ERROR, \Exception $previous = null)
+	public function __construct(string $module_id, Throwable $previous = null)
 	{
 		$this->module_id = $module_id;
 
@@ -53,6 +50,6 @@ class ModuleNotDefined extends \RuntimeException
 
 			'module_id' => $module_id
 
-		]), $code, $previous);
+		]), 0, $previous);
 	}
 }

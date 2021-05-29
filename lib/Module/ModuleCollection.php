@@ -11,12 +11,16 @@
 
 namespace ICanBoogie\Module;
 
+use ArrayIterator;
+use BadMethodCallException;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Storage\Storage;
 use ICanBoogie\Module\ModuleCollection\InstallableFilter;
+
+use LogicException;
 
 use function ICanBoogie\format;
 use function ICanBoogie\camelize;
@@ -30,17 +34,15 @@ use function ICanBoogie\stable_sort;
  */
 class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 {
+	/**
+	 * @uses get_descriptors
+	 */
 	use AccessorTrait;
 
 	/**
 	 * Formats a SQL table name given the module id and the model id.
-	 *
-	 * @param string $module_id
-	 * @param string $model_id
-	 *
-	 * @return string
 	 */
-	static public function format_model_name($module_id, $model_id = 'primary')
+	static public function format_model_name(string $module_id, string $model_id = 'primary'): string
 	{
 		return preg_replace('#[^0-9a-zA-Z$_]#', '_', $module_id) . ($model_id == 'primary' ? '' : '__' . $model_id);
 	}
@@ -52,10 +54,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	private $descriptors;
 
-	/**
-	 * @return array
-	 */
-	protected function get_descriptors()
+	protected function get_descriptors(): array
 	{
 		$this->ensure_modules_are_indexed();
 
@@ -87,9 +86,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * The index for the available modules is created with the accessor object.
 	 *
 	 * @param array $paths The paths to look for modules.
-	 * @param Storage $cache The cache to use for the module indexes.
+	 * @param Storage|null $cache The cache to use for the module indexes.
 	 */
-	public function __construct($paths, Storage $cache = null)
+	public function __construct(array $paths, Storage $cache = null)
 	{
 		$this->paths = $paths;
 		$this->cache = $cache;
@@ -102,17 +101,12 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetSet($offset, $value)
 	{
-		throw new \BadMethodCallException();
+		throw new BadMethodCallException();
 	}
 
-	/**
-	 * The method is not supported.
-	 *
-	 * @inheritdoc
-	 */
 	public function offsetUnset($offset)
 	{
-		throw new \BadMethodCallException();
+		throw new BadMethodCallException();
 	}
 
 	/**
@@ -124,9 +118,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param string $module_id Module identifier.
 	 *
-	 * @return boolean Whether or not the module is available.
+	 * @return bool Whether or not the module is available.
 	 */
-	public function offsetExists($module_id)
+	public function offsetExists($module_id): bool
 	{
 		$this->ensure_modules_are_indexed();
 
@@ -163,37 +157,23 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Returns an iterator for instantiated modules.
 	 *
-	 * @return Module[]|\ArrayIterator
+	 * @return ArrayIterator<string, Module>
 	 */
-	public function getIterator()
+	public function getIterator(): ArrayIterator
 	{
 		$this->ensure_modules_are_indexed();
 
-		return new \ArrayIterator($this->modules);
+		return new ArrayIterator($this->modules);
 	}
 
-	/**
-	 * Filter descriptors.
-	 *
-	 * @param callable $filter
-	 *
-	 * @return array
-	 */
-	public function filter_descriptors(callable $filter)
+	public function filter_descriptors(callable $filter): array
 	{
 		$this->ensure_modules_are_indexed();
 
 		return array_filter($this->descriptors, $filter);
 	}
 
-	/**
-	 * Returns the modules using a module.
-	 *
-	 * @param string $module_id Used module identifier.
-	 *
-	 * @return array A array of filtered descriptors.
-	 */
-	public function filter_descriptors_by_users($module_id)
+	public function filter_descriptors_by_users(string $module_id): array
 	{
 		$this->ensure_modules_are_indexed();
 
@@ -272,9 +252,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param array $paths
 	 *
-	 * @return array
+	 * @return array<string, array>
 	 */
-	protected function index_descriptors(array $paths)
+	private function index_descriptors(array $paths): array
 	{
 		$descriptors = $this->collect_descriptors($paths);
 
@@ -344,11 +324,11 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Collects descriptors from paths.
 	 *
-	 * @param array $paths
+	 * @param string[] $paths
 	 *
-	 * @return array
+	 * @return array<string, array>
 	 */
-	protected function collect_descriptors(array $paths)
+	protected function collect_descriptors(array $paths): array
 	{
 		$descriptors = [];
 
@@ -359,7 +339,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 
 			if (!file_exists($descriptor_path))
 			{
-				throw new \LogicException("Missing `descriptor.php` file in $root.");
+				throw new LogicException("Missing `descriptor.php` file in $root.");
 			}
 
 			$id = basename(realpath($root));
@@ -383,9 +363,9 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * - The {@link Descriptor::TITLE} key is empty.
 	 * - The {@link Descriptor::NS} key is empty.
 	 *
-	 * @return array
+	 * @return array A module descriptor
 	 */
-	protected function read_descriptor($module_id, $path)
+	protected function read_descriptor(string $module_id, string $path): array
 	{
 		$descriptor_path = $path . 'descriptor.php';
 		$descriptor = require $descriptor_path;
@@ -447,7 +427,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return array The altered descriptor.
 	 */
-	protected function alter_descriptor(array $descriptor)
+	protected function alter_descriptor(array $descriptor): array
 	{
 		$id = $descriptor[Descriptor::ID];
 		$namespace = $descriptor[Descriptor::NS];
@@ -495,12 +475,12 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Orders the module ids provided according to module inheritance and weight.
 	 *
-	 * @param array $ids The module ids to order.
-	 * @param array $descriptors Module descriptors.
+	 * @param string[] $ids The module ids to order.
+	 * @param array<string, array>|null $descriptors Module descriptors.
 	 *
 	 * @return array
 	 */
-	public function order_ids(array $ids, array $descriptors = null)
+	public function order_ids(array $ids, array $descriptors = null): array
 	{
 		$ordered = [];
 		$extends_weight = [];
@@ -566,7 +546,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return int
 	 */
-	public function usage($module_id)
+	public function usage(string $module_id): int
 	{
 		return count($this->filter_descriptors_by_users($module_id));
 	}
@@ -579,7 +559,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return boolean `true` if the module inherits from the other.
 	 */
-	public function is_inheriting($module_id, $parent_id)
+	public function is_inheriting(string $module_id, string $parent_id): bool
 	{
 		while ($module_id)
 		{
@@ -605,7 +585,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @throws ModuleCollectionInstallFailed if an error occurs.
 	 */
-	public function install(ErrorCollection $errors = null)
+	public function install(ErrorCollection $errors = null): ErrorCollection
 	{
 		if (!$errors)
 		{
@@ -618,7 +598,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			{
 				$this[$module_id]->install($errors);
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				$errors[$module_id] = $e;
 			}
@@ -647,7 +627,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @throws ModuleNotDefined if the specified module, or the module specified by
 	 * {@link Descriptor::INHERITS} is not defined.
 	 */
-	public function resolve_classname($unqualified_classname, $module_id, array &$tried = [])
+	public function resolve_classname(string $unqualified_classname, string $module_id, array &$tried = [])
 	{
 		if ($module_id instanceof Module)
 		{
@@ -678,7 +658,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * The method obtains modules descriptors and defined associated constants.
 	 */
-	protected function ensure_modules_are_indexed()
+	protected function ensure_modules_are_indexed(): void
 	{
 		$descriptors = &$this->descriptors;
 
@@ -698,7 +678,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @throws ModuleNotDefined if the module is not defined.
 	 */
-	protected function assert_module_is_defined($module_id)
+	protected function assert_module_is_defined(string $module_id): void
 	{
 		if (empty($this->descriptors[$module_id]))
 		{
@@ -706,13 +686,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		}
 	}
 
-	/**
-	 * Asserts that a module constructor exists.
-	 *
-	 * @param string $module_id Module identifier.
-	 * @param string $class Constructor class.
-	 */
-	protected function assert_constructor_exists($module_id, $class)
+	protected function assert_constructor_exists(string $module_id, string $class): void
 	{
 		if (!class_exists($class, true))
 		{
@@ -720,14 +694,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		}
 	}
 
-	/**
-	 * Instantiate a module.
-	 *
-	 * @param string $module_id Module identifier.
-	 *
-	 * @return Module
-	 */
-	protected function instantiate_module($module_id)
+	protected function instantiate_module(string $module_id): Module
 	{
 		$this->assert_module_is_defined($module_id);
 
@@ -746,12 +713,7 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		return new $class($this, $descriptor);
 	}
 
-	/**
-	 * Defines module constants.
-	 *
-	 * @param array $descriptors
-	 */
-	protected function define_constants(array $descriptors)
+	protected function define_constants(array $descriptors): void
 	{
 		foreach ($descriptors as $descriptor)
 		{

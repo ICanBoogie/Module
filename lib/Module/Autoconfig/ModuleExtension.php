@@ -12,15 +12,31 @@
 namespace ICanBoogie\Module\Autoconfig;
 
 use ICanBoogie\Autoconfig\Autoconfig;
+use ICanBoogie\Autoconfig\AutoconfigGenerator;
 use ICanBoogie\Autoconfig\ExtensionAbstract;
+
+use function array_merge;
+use function is_dir;
 
 /**
  * Autoconfig extension to handle modules, their config and locale messages.
  */
-class ModuleExtension extends ExtensionAbstract
+final class ModuleExtension extends ExtensionAbstract
 {
 	const TYPE_MODULE = "icanboogie-module";
 	const OPTION_MODULES_PATH = 'modules-path';
+
+	/**
+	 * @var AutoconfigGenerator
+	 */
+	private $generator;
+
+	public function __construct(AutoconfigGenerator $generator)
+	{
+		$this->generator = $generator;
+
+		parent::__construct($generator);
+	}
 
 	/**
 	 * @var array
@@ -30,7 +46,7 @@ class ModuleExtension extends ExtensionAbstract
 	/**
 	 * @inheritdoc
 	 */
-	public function alter_schema(callable $set_property)
+	public function alter_schema(callable $set_property): void
 	{
 		$set_property(self::OPTION_MODULES_PATH, [
 
@@ -44,7 +60,7 @@ class ModuleExtension extends ExtensionAbstract
 	/**
 	 * @inheritdoc
 	 */
-	public function synthesize(array &$autoconfig)
+	public function synthesize(array &$autoconfig): void
 	{
 		$modules_directories = $this->modules_directories = $this->collect_modules_directories();
 
@@ -54,7 +70,7 @@ class ModuleExtension extends ExtensionAbstract
 			{
 				$autoconfig[Autoconfig::CONFIG_PATH][] = [
 
-					$this->findShortestPathCode("$pathname/config"),
+					$this->find_shortest_path_code("$pathname/config"),
 					Autoconfig::CONFIG_WEIGHT_MODULE
 
 				];
@@ -63,29 +79,23 @@ class ModuleExtension extends ExtensionAbstract
 			if (is_dir("$pathname/locale"))
 			{
 				$autoconfig[Autoconfig::LOCALE_PATH][] = $this
-					->findShortestPathCode("$pathname/locale");
+					->find_shortest_path_code("$pathname/locale");
 			}
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function render()
+	public function render(): string
 	{
 		return $this->render_array_entry(
 			ModuleAutoconfig::MODULES,
 			$this->modules_directories,
 			function ($directory) {
-				return $this->findShortestPathCode($directory);
+				return $this->find_shortest_path_code($directory);
 			}
 		);
 	}
 
-	/**
-	 * @return array
-	 */
-	private function collect_modules_directories()
+	private function collect_modules_directories(): array
 	{
 		return array_merge(
 			$this->collect_modules_directories_from_packages(),
@@ -93,10 +103,7 @@ class ModuleExtension extends ExtensionAbstract
 		);
 	}
 
-	/**
-	 * @return array
-	 */
-	private function collect_modules_directories_from_packages()
+	private function collect_modules_directories_from_packages(): array
 	{
 		$directories = [];
 
@@ -113,10 +120,7 @@ class ModuleExtension extends ExtensionAbstract
 		return $directories;
 	}
 
-	/**
-	 * @return array
-	 */
-	private function collect_modules_directories_from_root_package()
+	private function collect_modules_directories_from_root_package(): array
 	{
 		$package = $this->generator->root_package;
 		$extra = $package->getExtra();
@@ -127,7 +131,7 @@ class ModuleExtension extends ExtensionAbstract
 		}
 
 		$directories = [];
-		$iterator = new \DirectoryIterator(getcwd() . DIRECTORY_SEPARATOR . $extra['icanboogie'][self::OPTION_MODULES_PATH]);
+		$iterator = new \DirectoryIterator(\getcwd() . DIRECTORY_SEPARATOR . $extra['icanboogie'][self::OPTION_MODULES_PATH]);
 
 		foreach ($iterator as $file)
 		{

@@ -2,6 +2,7 @@
 
 namespace ICanBoogie\Module;
 
+use Exception;
 use ICanBoogie\EventCollection;
 use ICanBoogie\EventCollectionProvider;
 use ICanBoogie\HTTP\Request;
@@ -9,8 +10,12 @@ use ICanBoogie\HTTP\Status;
 use ICanBoogie\Operation;
 use ICanBoogie\Operation\Failure;
 use ICanBoogie\Operation\Response;
+use PHPUnit\Framework\TestCase;
+use Throwable;
 
-class ForwardedOperationDispatcherTest extends \PHPUnit_Framework_TestCase
+use function ICanBoogie\app;
+
+final class ForwardedOperationDispatcherTest extends TestCase
 {
 	/**
 	 * @var ForwardedOperationDispatcher
@@ -25,9 +30,9 @@ class ForwardedOperationDispatcherTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @inheritdoc
 	 */
-	public function setUp()
+	protected function setUp(): void
 	{
-		$this->dispatcher = new ForwardedOperationDispatcher(\ICanBoogie\app()->modules);
+		$this->dispatcher = new ForwardedOperationDispatcher(app()->modules);
 		$this->events = $events = new EventCollection;
 
 		EventCollectionProvider::define(function () use ($events) {
@@ -108,8 +113,8 @@ class ForwardedOperationDispatcherTest extends \PHPUnit_Framework_TestCase
 		}
 		catch (Failure $exception)
 		{
-			$response = $dispatcher->rescue($exception, $request);
-			$this->assertNull($response);
+			$this->expectExceptionObject($exception);
+			$dispatcher->rescue($exception, $request);
 
 			return;
 		}
@@ -138,8 +143,8 @@ class ForwardedOperationDispatcherTest extends \PHPUnit_Framework_TestCase
 		}
 		catch (Operation\Failure $exception)
 		{
-			$response = $dispatcher->rescue($exception, $request);
-			$this->assertNull($response);
+			$this->expectExceptionObject($exception);
+			$dispatcher->rescue($exception, $request);
 
 			return;
 		}
@@ -261,14 +266,14 @@ class ForwardedOperationDispatcherTest extends \PHPUnit_Framework_TestCase
 
 	public function test_rescue_just_throw_exceptions_which_are_not_failures()
 	{
-		$exception = new \Exception;
+		$exception = new Exception;
 		$request = Request::from();
 
 		try
 		{
 			$this->dispatcher->rescue($exception, $request);
 		}
-		catch (\Exception $e)
+		catch (Throwable $e)
 		{
 			$this->assertSame($exception, $e);
 		}
@@ -286,7 +291,7 @@ class ForwardedOperationDispatcherTest extends \PHPUnit_Framework_TestCase
 			->getMockForAbstractClass();
 		$operation->response = $operation_response;
 
-		$exception = new \Exception;
+		$exception = new Exception;
 		$failure = new Failure($operation, $exception);
 
 		$this->events->attach(function (Operation\RescueEvent $event, Operation $target) use ($operation, $failure, $response) {

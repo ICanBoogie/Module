@@ -11,7 +11,9 @@
 
 namespace ICanBoogie\Module;
 
-class ModuleNotDefinedTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+final class ModuleNotDefinedTest extends TestCase
 {
 	public function test_instance()
 	{

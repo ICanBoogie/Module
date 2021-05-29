@@ -14,21 +14,18 @@ namespace ICanBoogie\Module\ModuleCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleCollection;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @small
  * @group install
  */
-class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
+final class InstallableModulesFilterTest extends TestCase
 {
 	/**
 	 * @dataProvider provide_test_filter
-	 *
-	 * @param bool $is_installed
-	 * @param bool $has_errors
-	 * @param $expected
 	 */
-	public function test_filter($is_installed, $has_errors, $expected)
+	public function test_filter(bool $is_installed, bool $has_errors, bool $expected)
 	{
 		$module_id = uniqid();
 
@@ -45,10 +42,7 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($expected, $filter($descriptor));
 	}
 
-	/**
-	 * @return array
-	 */
-	public function provide_test_filter()
+	public function provide_test_filter(): array
 	{
 		return [
 
@@ -60,13 +54,7 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 		];
 	}
 
-	/**
-	 * @param bool $is_installed
-	 * @param bool $has_errors
-	 *
-	 * @return Module
-	 */
-	private function mockModule($is_installed, $has_errors)
+	private function mockModule(bool $is_installed, bool $has_errors): Module
 	{
 		$module = $this
 			->getMockBuilder(Module::class)
@@ -92,13 +80,7 @@ class InstallableModulesFilterTest extends \PHPUnit_Framework_TestCase
 		return $module;
 	}
 
-	/**
-	 * @param string $module_id
-	 * @param Module $module
-	 *
-	 * @return ModuleCollection
-	 */
-	private function mockModules($module_id, $module)
+	private function mockModules(string $module_id, Module $module): ModuleCollection
 	{
 		$modules = $this
 			->getMockBuilder(ModuleCollection::class)

@@ -12,18 +12,16 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Module;
+use PHPUnit\Framework\TestCase;
 
-class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
+final class ModuleCollectionTest extends TestCase
 {
 	/**
 	 * @dataProvider provide_test_resolve_classname
-	 *
-	 * @param ModuleCollection $modules
-	 * @param $classname
-	 * @param $module_id
-	 * @param $expected
+
+	 * @param string|bool $expected
 	 */
-	public function test_resolve_classname(ModuleCollection $modules, $classname, $module_id, $expected)
+	public function test_resolve_classname(ModuleCollection $modules, string $classname, string $module_id, $expected)
 	{
 		if ($expected === null)
 		{
@@ -35,7 +33,7 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 
-	public function provide_test_resolve_classname()
+	public function provide_test_resolve_classname(): array
 	{
 		$modules = $this->create_module_collection();
 		$modules->descriptors;
@@ -69,7 +67,7 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 		];
 	}
 
-	public function test_get_module()
+	public function test_get_module(): void
 	{
 		$modules = $this->create_module_collection();
 		$modules->descriptors;
@@ -82,7 +80,7 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame($b, $c->parent);
 	}
 
-	public function test_modules_weight()
+	public function test_modules_weight(): void
 	{
 		$modules = $this->create_module_collection();
 
@@ -90,10 +88,7 @@ class ModuleCollectionTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame([ 'a', 'b', 'c', 'd', 'sample' ], array_keys($modules->descriptors));
 	}
 
-	/**
-	 * @return ModuleCollection
-	 */
-	private function create_module_collection()
+	private function create_module_collection(): ModuleCollection
 	{
 		return new ModuleCollection([
 

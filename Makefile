@@ -1,10 +1,10 @@
 # customization
 
 PACKAGE_NAME = icanboogie/module
-PACKAGE_VERSION = 4.0
-PHPUNIT_VERSION = phpunit-5.7.phar
-PHPUNIT_FILENAME = build/$(PHPUNIT_VERSION)
-PHPUNIT = php $(PHPUNIT_FILENAME)
+PACKAGE_VERSION = 5.0
+PHPUNIT_VERSION = phpunit-7-4.phar
+#PHPUNIT = build/$(PHPUNIT_VERSION)
+PHPUNIT = vendor/bin/phpunit
 
 # do not edit the following lines
 
@@ -17,28 +17,37 @@ vendor:
 update:
 	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer update
 
-autoload: vendor
-	@composer dump-autoload
+# testing
 
-test-dependencies: vendor $(PHPUNIT_FILENAME)
+#test-dependencies: vendor $(PHPUNIT)
+test-dependencies: vendor
+	rm -f tests/repository/cache/container-compiled.php
 
-$(PHPUNIT_FILENAME):
-	mkdir -p build
-	wget https://phar.phpunit.de/$(PHPUNIT_VERSION) -O $(PHPUNIT_FILENAME)
+#$(PHPUNIT):
+#	mkdir -p build
+#	wget https://phar.phpunit.de/$(PHPUNIT_VERSION) -O $(PHPUNIT)
+#	chmod +x $(PHPUNIT)
 
+.PHONY: test
 test: test-dependencies
 	@$(PHPUNIT)
 
+.PHONY: test-coverage
 test-coverage: test-dependencies
 	@mkdir -p build/coverage
-	@$(PHPUNIT) --coverage-html ../build/coverage
+	@$(PHPUNIT) --coverage-html build/coverage --coverage-text
 
+.PHONY: test-coveralls
 test-coveralls: test-dependencies
 	@mkdir -p build/logs
-	COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer require satooshi/php-coveralls
-	@$(PHPUNIT) --coverage-clover ../build/logs/clover.xml
-	php vendor/bin/coveralls -v
+	@$(PHPUNIT) --coverage-clover build/logs/clover.xml
 
+.PHONY: test-container
+test-container:
+	@-docker-compose -f ./docker-compose.yml run --rm app bash
+	@docker-compose -f ./docker-compose.yml down -v
+
+.PHONY: doc
 doc: vendor
 	@mkdir -p build/docs
 	@apigen generate \
@@ -47,9 +56,9 @@ doc: vendor
 	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
 	--template-theme "bootstrap"
 
+.PHONY: clean
 clean:
 	@rm -fR build
 	@rm -fR vendor
 	@rm -f composer.lock
 
-.PHONY: all autoload doc clean test test-coverage test-coveralls update

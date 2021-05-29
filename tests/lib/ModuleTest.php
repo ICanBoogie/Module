@@ -15,15 +15,16 @@ use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\Connection;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleCollection;
+use PHPUnit\Framework\TestCase;
 
-class ModuleTest extends \PHPUnit_Framework_TestCase
+final class ModuleTest extends TestCase
 {
 	static private $connection;
 	static private $node_descriptor;
 	private $node_module;
 	private $content_module;
 
-	static public function setupBeforeClass()
+	static public function setupBeforeClass(): void
 	{
 		self::$connection = new Connection('sqlite::memory:');
 
@@ -49,7 +50,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 		];
 	}
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		/* @var $collection_stub ModuleCollection */
 		$collection_stub = $this
@@ -80,16 +81,14 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @dataProvider provide_test_write_readonly_property
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 *
-	 * @param $property
 	 */
-	public function test_write_readonly_property($property)
+	public function test_write_readonly_property(string $property): void
 	{
+		$this->expectException(PropertyNotWritable::class);
 		$this->node_module->$property = null;
 	}
 
-	public function provide_test_write_readonly_property()
+	public function provide_test_write_readonly_property(): array
 	{
 		$properties = 'descriptor|flat_id|id|model|parent|path|title';
 

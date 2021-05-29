@@ -116,7 +116,7 @@ final class Descriptor
 	 *
 	 * @return array
 	 */
-	static public function normalize(array $descriptor)
+	static public function normalize(array $descriptor): array
 	{
 		return $descriptor + [
 

@@ -11,6 +11,8 @@
 
 namespace ICanBoogie;
 
+use function ob_start;
+
 chdir(__DIR__);
 
 /* @var $autoload \Composer\Autoload\ClassLoader */
@@ -20,5 +22,7 @@ $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleA\\', __DIR__ . '/module
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleB\\', __DIR__ . '/modules/b/lib');
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleC\\', __DIR__ . '/modules/c/lib');
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\Sample\\', __DIR__ . '/modules/sample/lib');
+
+ob_start(); // Prevents PHPUnit from sending headers
 
 boot();

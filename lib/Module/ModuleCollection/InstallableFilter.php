@@ -25,9 +25,6 @@ class InstallableFilter
 	 */
 	private $modules;
 
-	/**
-	 * @param ModuleCollection $modules
-	 */
 	public function __construct(ModuleCollection $modules)
 	{
 		$this->modules = $modules;
@@ -38,7 +35,7 @@ class InstallableFilter
 	 *
 	 * @return bool `true` if the module may be installed, `false` otherwise.
 	 */
-	public function __invoke(array $descriptor)
+	public function __invoke(array $descriptor): bool
 	{
 		$module = $this->modules[$descriptor[Descriptor::ID]];
 		$errors = new ErrorCollection;
@@ -47,12 +44,12 @@ class InstallableFilter
 		{
 			$is_installed = $module->is_installed($errors);
 
-			if ($is_installed && !count($errors))
+			if ($is_installed && !\count($errors))
 			{
 				return false;
 			}
 		}
-		catch (\Exception $e)
+		catch (\Throwable $e)
 		{
 			# there was an error, the module might not be properly installed.
 		}

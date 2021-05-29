@@ -22,7 +22,7 @@ use ICanBoogie\Render\TemplateResolverTrait;
  *
  * Templates are inherited between modules.
  */
-class ModuleTemplateResolver implements TemplateResolverDecorator
+final class ModuleTemplateResolver implements TemplateResolverDecorator
 {
 	use TemplateResolverTrait;
 	use TemplateResolverDecoratorTrait;
@@ -32,10 +32,6 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 	 */
 	private $modules;
 
-	/**
-	 * @param TemplateResolver $template_resolver
-	 * @param ModuleCollection $modules
-	 */
 	public function __construct(TemplateResolver $template_resolver, ModuleCollection $modules)
 	{
 		$this->template_resolver = $template_resolver;
@@ -45,7 +41,7 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 	/**
 	 * @inheritdoc
 	 */
-	public function resolve($name, array $extensions, &$tried = [])
+	public function resolve(string $name, array $extensions, array &$tried = [])
 	{
 		$template_pathname = $this->template_resolver->resolve($name, $extensions, $tried);
 
@@ -68,11 +64,9 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 	/**
 	 * Resolves module identifier form a template name.
 	 *
-	 * @param string $name
-	 *
 	 * @return string|null The module identifier or `null` if it cannot be determined.
 	 */
-	protected function resolve_module_id($name)
+	private function resolve_module_id(string $name): ?string
 	{
 		if (!preg_match('#^([^/]+)#', $name, $matches))
 		{
@@ -84,15 +78,8 @@ class ModuleTemplateResolver implements TemplateResolverDecorator
 
 	/**
 	 * Resolves a template from a module and its parents.
-	 *
-	 * @param Module $module
-	 * @param string $name
-	 * @param array $extensions
-	 * @param array $tried
-	 *
-	 * @return string|null
 	 */
-	protected function resolve_from_module(Module $module, $name, array $extensions, &$tried = [])
+	private function resolve_from_module(Module $module, string $name, array $extensions, array &$tried = []): ?string
 	{
 		$paths = [];
 		$name = substr($name, strlen($module->id) + 1);

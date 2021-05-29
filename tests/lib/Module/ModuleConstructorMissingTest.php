@@ -11,7 +11,9 @@
 
 namespace ICanBoogie\Module;
 
-class ModuleConstructorMissingTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+final class ModuleConstructorMissingTest extends TestCase
 {
 	public function test_instance()
 	{

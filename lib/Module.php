@@ -14,9 +14,10 @@ namespace ICanBoogie;
 use ICanBoogie\ActiveRecord\Connection;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\ModelNotDefined;
-use ICanBoogie\I18n;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleCollection;
+use RuntimeException;
+use Throwable;
 
 /**
  * A module of the framework.
@@ -49,31 +50,29 @@ class Module extends Prototyped
 	 * ADMINISTER: You have complete control over the module
 	 *
 	 */
-	const PERMISSION_NONE = 0;
-	const PERMISSION_ACCESS = 1;
-	const PERMISSION_CREATE = 2;
-	const PERMISSION_MAINTAIN = 3;
-	const PERMISSION_MANAGE = 4;
-	const PERMISSION_ADMINISTER = 5;
+	public const PERMISSION_NONE = 0;
+	public const PERMISSION_ACCESS = 1;
+	public const PERMISSION_CREATE = 2;
+	public const PERMISSION_MAINTAIN = 3;
+	public const PERMISSION_MANAGE = 4;
+	public const PERMISSION_ADMINISTER = 5;
 
 	/**
 	 * Defines the name of the operation used to save the records of the module.
 	 */
-	const OPERATION_SAVE = 'save';
+	public const OPERATION_SAVE = 'save';
 
 	/**
 	 * Defines the name of the operation used to delete the records of the module.
 	 */
-	const OPERATION_DELETE = 'delete';
+	public const OPERATION_DELETE = 'delete';
 
 	/**
 	 * Returns the identifier of the module as defined by its descriptor.
 	 *
 	 * This method is the getter for the {@link $id} magic property.
-	 *
-	 * @return string
 	 */
-	protected function get_id()
+	protected function get_id(): string
 	{
 		return $this->descriptor[Descriptor::ID];
 	}
@@ -82,10 +81,8 @@ class Module extends Prototyped
 	 * Returns the path of the module as defined by its descriptor.
 	 *
 	 * This method is the getter for the {@link $path} magic property.
-	 *
-	 * @return string
 	 */
-	protected function get_path()
+	protected function get_path(): string
 	{
 		return $this->descriptor[Descriptor::PATH];
 	}
@@ -101,10 +98,8 @@ class Module extends Prototyped
 	 * Returns the descriptor of the module.
 	 *
 	 * This method is the getter for the {@link $descriptor} magic property.
-	 *
-	 * @return array
 	 */
-	protected function get_descriptor()
+	protected function get_descriptor(): array
 	{
 		return $this->descriptor;
 	}
@@ -121,22 +116,11 @@ class Module extends Prototyped
 	 */
 	private $collection;
 
-	/**
-	 * @return ModuleCollection
-	 */
-	protected function get_collection()
+	protected function get_collection(): ModuleCollection
 	{
 		return $this->collection;
 	}
 
-	/**
-	 * Constructor.
-	 *
-	 * Initializes the {@link $descriptor} property.
-	 *
-	 * @param ModuleCollection $collection
-	 * @param array $descriptor
-	 */
 	public function __construct(ModuleCollection $collection, array $descriptor)
 	{
 		$this->collection = $collection;
@@ -145,10 +129,8 @@ class Module extends Prototyped
 
 	/**
 	 * Returns the identifier of the module.
-	 *
-	 * @return string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->id;
 	}
@@ -157,10 +139,8 @@ class Module extends Prototyped
 	 * Returns the _flat_ version of the module's identifier.
 	 *
 	 * This method is the getter for the {@link $flat_id} magic property.
-	 *
-	 * @return string
 	 */
-	protected function get_flat_id()
+	protected function get_flat_id(): string
 	{
 		return strtr($this->id, [
 
@@ -174,10 +154,8 @@ class Module extends Prototyped
 	 * Returns the primary model of the module.
 	 *
 	 * This is the getter for the {@link $model} magic property.
-	 *
-	 * @return ActiveRecord\Model
 	 */
-	protected function get_model()
+	protected function get_model(): ActiveRecord\Model
 	{
 		return $this->model();
 	}
@@ -185,11 +163,9 @@ class Module extends Prototyped
 	/**
 	 * Returns the module title, translated to the current language.
 	 *
-	 * @return string
-	 *
 	 * @deprecated
 	 */
-	protected function get_title()
+	protected function get_title(): string
 	{
 		$default = isset($this->descriptor[Descriptor::TITLE]) ? $this->descriptor[Descriptor::TITLE] : 'Undefined';
 
@@ -198,10 +174,8 @@ class Module extends Prototyped
 
 	/**
 	 * Returns the parent module.
-	 *
-	 * @return Module|null
 	 */
-	protected function get_parent()
+	protected function get_parent(): ?Module
 	{
 		return $this->descriptor[Descriptor::INHERITS];
 	}
@@ -209,12 +183,10 @@ class Module extends Prototyped
 	/**
 	 * Checks if the module is installed.
 	 *
-	 * @param ErrorCollection $errors Error collection.
-	 *
 	 * @return mixed `true` if the module is installed, `false` if the module
 	 * (or parts of) is not installed, `null` if the module has no installation.
 	 */
-	public function is_installed(ErrorCollection $errors)
+	public function is_installed(ErrorCollection $errors): ?bool
 	{
 		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
@@ -245,13 +217,11 @@ class Module extends Prototyped
 	 *
 	 * If the module has models they are installed.
 	 *
-	 * @param ErrorCollection $errors Error collection.
-	 *
-	 * @return boolean|null true if the module has successfully been installed, false if the
+	 * @return bool|null true if the module has successfully been installed, false if the
 	 * module (or parts of the module) fails to install or null if the module has
 	 * no installation process.
 	 */
-	public function install(ErrorCollection $errors)
+	public function install(ErrorCollection $errors): ?bool
 	{
 		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
@@ -273,7 +243,7 @@ class Module extends Prototyped
 			{
 				$model->install();
 			}
-			catch (\Exception $e)
+			catch (Throwable $e)
 			{
 				$errors->add($this->id, "Unable to install model %model: !message", [
 
@@ -294,10 +264,12 @@ class Module extends Prototyped
 	 *
 	 * Basically it uninstall the models installed by the module.
 	 *
-	 * @return boolean|null `true` if the module was successfully uninstalled. `false` if the module
+	 * @return bool|null `true` if the module was successfully uninstalled. `false` if the module
 	 * (or parts of the module) failed to uninstall. `null` if there is no uninstall process.
+	 *
+	 * @throws Throwable
 	 */
-	public function uninstall()
+	public function uninstall(): ?bool
 	{
 		if (empty($this->descriptor[Descriptor::MODELS]))
 		{
@@ -315,10 +287,7 @@ class Module extends Prototyped
 				continue;
 			}
 
-			if (!$model->uninstall())
-			{
-				$rc = false;
-			}
+			$model->uninstall();
 		}
 
 		return $rc;
@@ -329,34 +298,30 @@ class Module extends Prototyped
 	 *
 	 * If the model has not been created yet, it is created on the fly.
 	 *
-	 * @param string $which The identifier of the model to get.
-	 *
-	 * @return Model The requested model.
-	 *
 	 * @throws ModelNotDefined when the model is not defined by the module.
-	 * @throws \RuntimeException when the class of the model does not exists.
+	 * @throws RuntimeException when the class of the model does not exists.
 	 */
-	public function model($which = 'primary')
+	public function model(string $model_id = 'primary'): Model
 	{
-		if (empty($this->models[$which]))
+		if (empty($this->models[$model_id]))
 		{
-			if (empty($this->descriptor[Descriptor::MODELS][$which]))
+			if (empty($this->descriptor[Descriptor::MODELS][$model_id]))
 			{
-				throw new ModelNotDefined($which);
+				throw new ModelNotDefined($model_id);
 			}
 
 			#
 			# resolve model tags
 			#
 
-			$callback = "resolve_{$which}_model_tags";
+			$callback = "resolve_{$model_id}_model_tags";
 
 			if (!method_exists($this, $callback))
 			{
 				$callback = 'resolve_model_tags';
 			}
 
-			$attributes = $this->$callback($this->descriptor[Descriptor::MODELS][$which], $which);
+			$attributes = $this->$callback($this->descriptor[Descriptor::MODELS][$model_id], $model_id);
 
 			#
 			# COMPATIBILITY WITH 'inherit'
@@ -364,7 +329,7 @@ class Module extends Prototyped
 
 			if ($attributes instanceof Model)
 			{
-				$this->models[$which] = $attributes;
+				$this->models[$model_id] = $attributes;
 
 				return $attributes;
 			}
@@ -377,33 +342,30 @@ class Module extends Prototyped
 
 			if (!class_exists($class))
 			{
-				throw new \RuntimeException(format("Unable to instantiate model %model, the class %class does not exists.", [
+				throw new RuntimeException(format("Unable to instantiate model %model, the class %class does not exists.", [
 
-					'model' => "$this->id/$which",
+					'model' => "$this->id/$model_id",
 					'class' => $class
 
 				]));
 			}
 
-			$this->models[$which] = new $class($this->app->models, $attributes);
+			$this->models[$model_id] = new $class($this->app->models, $attributes);
 		}
 
 		#
 		# return cached model
 		#
 
-		return $this->models[$which];
+		return $this->models[$model_id];
 	}
 
 	/**
 	 * Resolves model tags.
 	 *
 	 * @param array|string $tags
-	 * @param string $which
-	 *
-	 * @return array
 	 */
-	protected function resolve_model_tags($tags, $which)
+	protected function resolve_model_tags($tags, string $model_id): array
 	{
 		$app = $this->app;
 
@@ -445,14 +407,14 @@ class Module extends Prototyped
 		$tags += [
 
 			Model::CONNECTION => 'primary',
-			Model::ID => $which == 'primary' ? $id : $id . '/' . $which,
+			Model::ID => $model_id == 'primary' ? $id : $id . '/' . $model_id,
 			Model::EXTENDING => null
 
 		];
 
 		if (empty($tags[Model::NAME]))
 		{
-			$tags[Model::NAME] = ModuleCollection::format_model_name($id, $which);
+			$tags[Model::NAME] = ModuleCollection::format_model_name($id, $model_id);
 		}
 
 		#
@@ -488,12 +450,12 @@ class Module extends Prototyped
 				{
 					list($implement_id, $implement_which) = explode('/', $implement['model']) + [ 1 => 'primary' ];
 
-					if ($id == $implement_id && $which == $implement_which)
+					if ($id == $implement_id && $model_id == $implement_which)
 					{
-						throw new \RuntimeException(format('Model %module/%model implements itself !', [
+						throw new RuntimeException(format('Model %module/%model implements itself !', [
 
 							'%module' => $id,
-							'%model' => $which
+							'%model' => $model_id
 
 						]));
 					}
@@ -504,9 +466,9 @@ class Module extends Prototyped
 				}
 				else if (is_string($implement['table']))
 				{
-					throw new \RuntimeException(format('Model %model of module %module implements a table: %table', [
+					throw new RuntimeException(format('Model %model of module %module implements a table: %table', [
 
-						'%model' => $which,
+						'%model' => $model_id,
 						'%module' => $id,
 						'%table' => $implement['table']
 
@@ -541,14 +503,12 @@ class Module extends Prototyped
 	/**
 	 * Get a block.
 	 *
-	 * @param string $name The name of the block to get.
-	 *
 	 * @return mixed Depends on the implementation. Should return a string or an object
 	 * implementing `__toString`.
 	 *
-	 * @throws \RuntimeException if the block is not defined.
+	 * @throws RuntimeException if the block is not defined.
 	 */
-	public function getBlock($name)
+	public function getBlock(string $name)
 	{
 		$args = func_get_args();
 
@@ -558,7 +518,7 @@ class Module extends Prototyped
 
 		if (!method_exists($this, $callback))
 		{
-			throw new \RuntimeException(format('The %method method is missing from the %module module to create block %type.', [
+			throw new RuntimeException(format('The %method method is missing from the %module module to create block %type.', [
 
 				'%method' => $callback,
 				'%module' => $this->id,

@@ -4,8 +4,9 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\ConnectionCollection;
 use ICanBoogie\ActiveRecord\Model;
+use PHPUnit\Framework\TestCase;
 
-class ModelCollectionTest extends \PHPUnit_Framework_TestCase
+final class ModelCollectionTest extends TestCase
 {
 	public function test_should_return_true_if_model_exists_in_model_collection()
 	{

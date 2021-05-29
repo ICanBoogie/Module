@@ -26,11 +26,6 @@ class ModelCollection extends ActiveRecord\ModelCollection
 	 */
 	private $modules;
 
-	/**
-	 * @param ConnectionCollection $connections Connections manager.
-	 * @param ModuleCollection $modules ModuleCollection manager.
-	 * @param array $definitions Model definitions.
-	 */
 	public function __construct(ConnectionCollection $connections, ModuleCollection $modules, array $definitions = [])
 	{
 		parent::__construct($connections, $definitions);
@@ -48,9 +43,9 @@ class ModelCollection extends ActiveRecord\ModelCollection
 	 */
 	public function offsetExists($id)
 	{
-		list($module_id, $model_id) = explode('/', $id) + [ 1 => 'primary' ];
+		[ $module_id, $model_id ] = explode('/', $id) + [ 1 => 'primary' ];
 
-		if (!isset($this->modules[$module_id]))
+		if (empty($this->modules[$module_id]))
 		{
 			return parent::offsetExists($id);
 		}
@@ -73,18 +68,13 @@ class ModelCollection extends ActiveRecord\ModelCollection
 	 */
 	public function offsetGet($id)
 	{
-		if (isset($this->instances[$id]))
-		{
-			return $this->instances[$id];
-		}
-
-		list($module_id, $model_id) = explode('/', $id) + [ 1 => 'primary' ];
-
-		if (!isset($this->modules[$module_id]))
+		if (parent::offsetExists($id))
 		{
 			return parent::offsetGet($id);
 		}
 
-		return $this->instances[$id] = $this->modules[$module_id]->model($model_id);
+		[ $module_id, $model_id ] = explode('/', $id) + [ 1 => 'primary' ];
+
+		return $this->modules[$module_id]->model($model_id);
 	}
 }

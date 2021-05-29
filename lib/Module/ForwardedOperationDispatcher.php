@@ -13,6 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\HTTP\Dispatcher;
 use ICanBoogie\HTTP\Request;
+use ICanBoogie\HTTP\Response;
 use ICanBoogie\Module;
 use ICanBoogie\Operation;
 
@@ -23,7 +24,7 @@ use function ICanBoogie\format;
 /**
  * A dispatcher for forwarded operations.
  */
-class ForwardedOperationDispatcher implements Dispatcher
+final class ForwardedOperationDispatcher implements Dispatcher
 {
 	/**
 	 * Formats the specified namespace and operation name into an operation class.
@@ -32,9 +33,9 @@ class ForwardedOperationDispatcher implements Dispatcher
 	 *
 	 * @return string
 	 */
-	static private function format_class_name($operation_name)
+	static private function format_class_name(string $operation_name): string
 	{
-		return camelize(strtr($operation_name, '-', '_')) . 'Operation';
+		return camelize(\strtr($operation_name, '-', '_')) . 'Operation';
 	}
 
 	/**
@@ -42,9 +43,6 @@ class ForwardedOperationDispatcher implements Dispatcher
 	 */
 	private $modules;
 
-	/**
-	 * @param ModuleCollection $modules
-	 */
 	public function __construct(ModuleCollection $modules)
 	{
 		$this->modules = $modules;
@@ -55,7 +53,7 @@ class ForwardedOperationDispatcher implements Dispatcher
 	 *
 	 * @return Operation\Response
 	 */
-	public function __invoke(Request $request)
+	public function __invoke(Request $request): ?Response
 	{
 		if (!$request[Operation::DESTINATION] && !$request[Operation::NAME])
 		{
@@ -82,7 +80,7 @@ class ForwardedOperationDispatcher implements Dispatcher
 	 *
 	 * @inheritdoc
 	 */
-	public function rescue(\Exception $exception, Request $request)
+	public function rescue(\Throwable $exception, Request $request): Response
 	{
 		if (!$exception instanceof Operation\Failure)
 		{
@@ -110,7 +108,7 @@ class ForwardedOperationDispatcher implements Dispatcher
 			log_error($previous->getMessage());
 		}
 
-		return null;
+		throw $exception;
 	}
 
 	/**

@@ -12,7 +12,7 @@
 		{
 			"name": "Olivier Laviale",
 			"email": "olivier.laviale@gmail.com",
-			"homepage": "https://olvlv.com/",
+			"homepage": "https://olvlvl.com/",
 			"role": "Developer"
 		}
 	],
@@ -22,23 +22,23 @@
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
-	"prefer-dist": true,
 	"require": {
-		"php": ">=5.6",
+		"php": ">=7.2",
+		"icanboogie/icanboogie": "^5.0",
 		"icanboogie/errors": "^2.0",
-		"icanboogie/event": "^3.0",
-		"icanboogie/operation": "^4.0"
+		"icanboogie/event": "^4.0",
+		"icanboogie/operation": "^5.0"
 	},
 	"require-dev": {
-		"icanboogie/icanboogie": "^4.0",
-		"icanboogie/bind-activerecord": "^4.0",
-		"icanboogie/bind-view": "^0.9",
-		"icanboogie/bind-routing": "^4.0",
-		"icanboogie/bind-facets": "^0.7",
-		"icanboogie/bind-event": "^3.0",
+		"icanboogie/bind-activerecord": "^5.0",
+		"icanboogie/bind-view": "^5.0",
+		"icanboogie/bind-routing": "^5.0",
+		"icanboogie/bind-facets": "^5.0",
+		"icanboogie/bind-event": "^5.0",
 		"icanboogie/i18n": "^3.0",
-		"icanboogie/bind-symfony-dependency-injection": "dev-master",
-		"composer/composer": "^1.4"
+		"icanboogie/bind-symfony-dependency-injection": "^5.0",
+		"composer/composer": "^2.0",
+		"phpunit/phpunit": "^8.5"
 	},
 	"suggest": {
 		"icanboogie/operation": "Required to use the 'delete' and 'save' operations.",

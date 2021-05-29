@@ -7,8 +7,9 @@ use ICanBoogie\Render\Renderer;
 use ICanBoogie\Routing\Controller;
 use ICanBoogie\Routing\Route;
 use ICanBoogie\View\View;
+use PHPUnit\Framework\TestCase;
 
-class HooksTest extends \PHPUnit_Framework_TestCase
+final class HooksTest extends TestCase
 {
 	public function test_on_alter_view_no_module()
 	{
@@ -20,30 +21,24 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		$controller = $this
 			->getMockBuilder(Controller::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'get_route' ])
+			->onlyMethods([ 'get_route' ])
 			->getMockForAbstractClass();
 		$controller
 			->expects($this->once())
 			->method('get_route')
 			->willReturn($route);
 
-		$event = $this
-			->getMockBuilder(View\AlterEvent::class)
-			->disableOriginalConstructor()
-			->getMock();
-
 		$view = $this
 			->getMockBuilder(View::class)
 			->setConstructorArgs([ $controller, \ICanBoogie\Render\get_renderer() ])
-			->setMethods([ 'offsetSet' ])
+			->onlyMethods([ 'offsetSet' ])
 			->getMock();
 		$view
 			->expects($this->never())
 			->method('offsetSet');
 
-		/* @var $controller Controller */
 		/* @var $event View\AlterEvent */
-		/* @var $view View */
+		$event = View\AlterEvent::from([ 'target' => $view ]);
 
 		Hooks::on_view_alter($event, $view);
 	}
@@ -58,17 +53,12 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 		$controller = $this
 			->getMockBuilder(Controller::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'get_module' ])
+			->addMethods([ 'get_module' ])
 			->getMockForAbstractClass();
 		$controller
 			->expects($this->once())
 			->method('get_module')
 			->willReturn($module);
-
-		$event = $this
-			->getMockBuilder(View\AlterEvent::class)
-			->disableOriginalConstructor()
-			->getMock();
 
 		$renderer = $this
 			->getMockBuilder(Renderer::class)
@@ -82,7 +72,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 			->getMock();
 
 		/* @var $event View\AlterEvent */
-		/* @var $view View */
+		$event = View\AlterEvent::from([ 'target' => $view ]);
 
 		Hooks::on_view_alter($event, $view);
 

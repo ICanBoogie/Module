@@ -14,6 +14,10 @@ namespace ICanBoogie\Module;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\HTTP\Status;
 
+use RuntimeException;
+
+use Throwable;
+
 use function ICanBoogie\format;
 
 /**
@@ -22,8 +26,12 @@ use function ICanBoogie\format;
  * @property-read string $module_id The identifier of the module.
  * @property-read string $class The name of the missing class.
  */
-class ModuleConstructorMissing extends \RuntimeException
+final class ModuleConstructorMissing extends RuntimeException
 {
+	/**
+	 * @uses get_module_id
+	 * @uses get_class
+	 */
 	use AccessorTrait;
 
 	/**
@@ -33,10 +41,7 @@ class ModuleConstructorMissing extends \RuntimeException
 	 */
 	private $module_id;
 
-	/**
-	 * @return string
-	 */
-	protected function get_module_id()
+	private function get_module_id(): string
 	{
 		return $this->module_id;
 	}
@@ -48,21 +53,12 @@ class ModuleConstructorMissing extends \RuntimeException
 	 */
 	private $class;
 
-	/**
-	 * @return string
-	 */
-	protected function get_class()
+	private function get_class(): string
 	{
 		return $this->class;
 	}
 
-	/**
-	 * @param string $module_id
-	 * @param string $class
-	 * @param \Exception|int $code
-	 * @param \Exception|null $previous
-	 */
-	public function __construct($module_id, $class, $code = Status::INTERNAL_SERVER_ERROR, \Exception $previous = null)
+	public function __construct(string $module_id, string $class, Throwable $previous = null)
 	{
 		$this->module_id = $module_id;
 		$this->class = $class;
@@ -72,6 +68,6 @@ class ModuleConstructorMissing extends \RuntimeException
 			'class' => $class,
 			'id' => $module_id
 
-		]));
+		]), 0, $previous);
 	}
 }

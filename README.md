@@ -25,29 +25,29 @@ The module directory is usually named with the identifier of the module.
 
 The following directory structure demonstrates how a very basic `nodes` module could be defined:
 
-	nodes
-	├─ lib
-	│  └─ Module.php
-	└─ descriptor.php
+    nodes
+    ├─ lib
+    │  └─ Module.php
+    └─ descriptor.php
 
 The following directory structure demonstrates a more advanced module:
 
-	nodes
-	├─ config
-	|  └─ <configuration files>
-	├─ lib
-	|  ├─ Operation
-	|  |  └─ <operation classes>
-	|  └─ Module.php
-	├─ locale
-	|  └─ <message catalogs>
-	├─ public
-	|  └─ <public assets>
-	├─ tests
-	|  └─ <tests>
-	├─ templates
-	|  └─ <view templates>
-	└─ descriptor.php
+    nodes
+    ├─ config
+    |  └─ <configuration files>
+    ├─ lib
+    |  ├─ Operation
+    |  |  └─ <operation classes>
+    |  └─ Module.php
+    ├─ locale
+    |  └─ <message catalogs>
+    ├─ public
+    |  └─ <public assets>
+    ├─ tests
+    |  └─ <tests>
+    ├─ templates
+    |  └─ <view templates>
+    └─ descriptor.php
 
 
 
@@ -72,40 +72,40 @@ use ICanBoogie\Module\Descriptor;
 
 return [
 
-	Descriptor::CATEGORY => 'contents',
-	Descriptor::DESCRIPTION => 'Centralized node system base',
-	Descriptor::MODELS => [
+    Descriptor::CATEGORY => 'contents',
+    Descriptor::DESCRIPTION => 'Centralized node system base',
+    Descriptor::MODELS => [
 
-		'primary' => [
+        'primary' => [
 
-			Model::SCHEMA => [
+            Model::SCHEMA => [
 
-				'nid' => 'serial',
-				'uid' => 'foreign',
-				'site_id' => 'foreign',
-				'native_id' => 'foreign',
-				'constructor' => [ 'varchar', 64, 'indexed' => true ],
-				'title' => 'varchar',
-				'slug' => [ 'varchar', 80, 'indexed' => true ],
-				'language' => [ 'varchar', 8, 'indexed' => true ],
-				'created' => [ 'timestamp', 'default' => 'CURRENT_TIMESTAMP()' ],
-				'modified' => 'timestamp',
-				'is_online' => [ 'boolean', 'indexed' => true ]
+                'nid' => 'serial',
+                'uid' => 'foreign',
+                'site_id' => 'foreign',
+                'native_id' => 'foreign',
+                'constructor' => [ 'varchar', 64, 'indexed' => true ],
+                'title' => 'varchar',
+                'slug' => [ 'varchar', 80, 'indexed' => true ],
+                'language' => [ 'varchar', 8, 'indexed' => true ],
+                'created' => [ 'timestamp', 'default' => 'CURRENT_TIMESTAMP()' ],
+                'modified' => 'timestamp',
+                'is_online' => [ 'boolean', 'indexed' => true ]
 
-			]
-		]
-	],
+            ]
+        ]
+    ],
 
-	Descriptor::NS => __NAMESPACE__,
-	Descriptor::PERMISSION => false,
-	Descriptor::PERMISSIONS => [
+    Descriptor::NS => __NAMESPACE__,
+    Descriptor::PERMISSION => false,
+    Descriptor::PERMISSIONS => [
 
-		'modify belonging site'
+        'modify belonging site'
 
-	],
+    ],
 
-	Descriptor::REQUIRES => [ 'sites', 'users' ],
-	Descriptor::TITLE => 'Nodes'
+    Descriptor::REQUIRES => [ 'sites', 'users' ],
+    Descriptor::TITLE => 'Nodes'
 
 ];
 ```
@@ -176,9 +176,9 @@ $vars = new FileStorage(__DIR__ . '/repository/vars');
 
 $modules = new ModuleCollection([
 
-	__DIR__ . '/vendor/icanboogie-modules',
-	__DIR__ . '/protected/modules',
-	__DIR__ . '/path/to/my/module'
+    __DIR__ . '/vendor/icanboogie-modules',
+    __DIR__ . '/protected/modules',
+    __DIR__ . '/path/to/my/module'
 
 ], $vars);
 ```
@@ -235,18 +235,18 @@ $errors = new ErrorCollection;
 
 if (!$nodes->is_installed($errors))
 {
-	#
-	# $errors might contain messages about why the module is not installed
-	#
+    #
+    # $errors might contain messages about why the module is not installed
+    #
 
-	$errors->clear();
+    $errors->clear();
 
-	if (!$nodes->install($errors))
-	{
-		#
-		# $errors might contain the reasons why the module failed to install
-		#
-	}
+    if (!$nodes->install($errors))
+    {
+        #
+        # $errors might contain the reasons why the module failed to install
+        #
+    }
 }
 
 $nodes->uninstall();
@@ -265,11 +265,11 @@ use ICanBoogie\Module\ModuleCollectionInstallFailed;
 
 try
 {
-	$modules->install();
+    $modules->install();
 }
 catch (ModuleCollectionInstallFailed $e)
 {
-	echo get_class($e->errors); // ICanBoogie\ErrorCollection
+    echo get_class($e->errors); // ICanBoogie\ErrorCollection
 }
 ```
 
@@ -355,12 +355,12 @@ options is automatically added, so it doesn't need to be defined:
 
 return [
 
-	'articles/show' => [
+    'articles/show' => [
 
-		'pattern' => '/<year:\d{4}>-<month:\d{2}>-:slug.html',
-		'controller' => "ArticlesController#show"
+        'pattern' => '/<year:\d{4}>-<month:\d{2}>-:slug.html',
+        'controller' => "ArticlesController#show"
 
-	]
+    ]
 
 ];
 ```
@@ -376,19 +376,19 @@ use ICanBoogie\Routing\Controller;
 
 class ArticlesController extends Controller
 {
-	use Controller\ActionTrait;
-	use \ICanBoogie\Binding\Module\ControllerBindings;
-	use \ICanBoogie\View\ControllerBindings;
+    use Controller\ActionTrait;
+    use \ICanBoogie\Binding\Module\ControllerBindings;
+    use \ICanBoogie\View\ControllerBindings;
 
-	protected function any_index()
-	{
-		$this->view->content = $this->fetch_records([ 'limit' => 10 ] + $this->request->params);
-	}
+    protected function any_index()
+    {
+        $this->view->content = $this->fetch_records([ 'limit' => 10 ] + $this->request->params);
+    }
 
-	protected function any_show($year, $month, $slug)
-	{
-		$this->view->content = $this->model->filter_by_year_and_month_and_slug($year, $month, $slug)->one;
-	}
+    protected function any_show($year, $month, $slug)
+    {
+        $this->view->content = $this->model->filter_by_year_and_month_and_slug($year, $month, $slug)->one;
+    }
 }
 ```
 
@@ -430,7 +430,7 @@ holds the identifier of the module that defines the route.
 
 ## Requirement
 
-The package requires PHP 5.6 or later.
+The package requires PHP 7.2 or later.
 
 
 
@@ -440,7 +440,7 @@ The package requires PHP 5.6 or later.
 
 The recommended way to install this package is through [Composer](http://getcomposer.org/):
 
-	$ composer require icanboogie/module
+    $ composer require icanboogie/module
 
 
 
@@ -451,7 +451,7 @@ The recommended way to install this package is through [Composer](http://getcomp
 The package is [available on GitHub](https://github.com/ICanBoogie/Module), its repository can be
 cloned with the following command line:
 
-	$ git clone https://github.com/ICanBoogie/Module.git
+    $ git clone https://github.com/ICanBoogie/Module.git
 
 
 
@@ -496,17 +496,17 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 [ICanBoogie]:                    https://icanboogie.org/
 [ErrorCollection]:               https://icanboogie.org/api/errors/2.0/class-ICanBoogie.Errors.html
-[Events]:                        https://icanboogie.org/api/event/3.0/class-ICanBoogie.Events.html
-[Controller]:                    https://icanboogie.org/api/routing/4.0/class-ICanBoogie.Routing.Controller.html
+[Events]:                        https://icanboogie.org/api/event/4.0/class-ICanBoogie.Events.html
+[Controller]:                    https://icanboogie.org/api/routing/5.0/class-ICanBoogie.Routing.Controller.html
 [Fetcher]:                       https://icanboogie.org/api/facets/0.7/class-ICanBoogie.Facets.Fetcher.html
-[Module]:                        https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.html
-[ModelCollection]:               https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModelCollection.html
-[ModuleCollection]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleCollection.html
-[ModuleNotDefined]:              https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleNotDefined.html
-[ModuleCollectionInstallFailed]: https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
-[ModuleConstructorMissing]:      https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleConstructorMissing.html
-[ModuleTemplateResolver]:        https://icanboogie.org/api/module/4.0/class-ICanBoogie.Module.ModuleTemplateResolver.html
-[TemplateResolver\AlterEvent]:   https://icanboogie.org/api/module/4.0/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
+[Module]:                        https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.html
+[ModelCollection]:               https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModelCollection.html
+[ModuleCollection]:              https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleCollection.html
+[ModuleNotDefined]:              https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleNotDefined.html
+[ModuleCollectionInstallFailed]: https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleCollectionInstallFailed.html
+[ModuleConstructorMissing]:      https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleConstructorMissing.html
+[ModuleTemplateResolver]:        https://icanboogie.org/api/module/5.0/class-ICanBoogie.Module.ModuleTemplateResolver.html
+[TemplateResolver\AlterEvent]:   https://icanboogie.org/api/module/5.0/class-ICanBoogie.Render.TemplateResolver.AlterEvent.html
 [icanboogie/facets]:             https://github.com/ICanBoogie/Facets
 [icanboogie/i18n]:               https://github.com/ICanBoogie/I18n
 [ActiveRecord package]:          https://github.com/ICanBoogie/ActiveRecord

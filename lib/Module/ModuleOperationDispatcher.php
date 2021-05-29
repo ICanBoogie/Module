@@ -22,17 +22,13 @@ use function ICanBoogie\camelize;
 /**
  * A request dispatcher for module operations.
  */
-class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
+final class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 {
 	/**
 	 * @var ModuleCollection
 	 */
 	private $modules;
 
-	/**
-	 * @param RouteCollection $routes
-	 * @param ModuleCollection $modules
-	 */
 	public function __construct(RouteCollection $routes, ModuleCollection $modules)
 	{
 		$this->modules = $modules;
@@ -52,14 +48,10 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 	/**
 	 * Resolves module route.
 	 *
-	 * @param Request $request
-	 * @param $normalized_path
-	 * @param array $captured
-	 *
 	 * @return Route|null A made up {@link Route} instance or `null` if the route
 	 * cannot be resolved.
 	 */
-	protected function resolve_module_route(Request $request, $normalized_path, array &$captured)
+	private function resolve_module_route(Request $request, string $normalized_path, array &$captured): ?Route
 	{
 		$parsed_path = $this->parse_path($normalized_path);
 
@@ -68,7 +60,7 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 			return null;
 		}
 
-		list($module, $operation_name, $operation_key) = $parsed_path;
+		[ $module, $operation_name, $operation_key ] = $parsed_path;
 
 		$operation_class = $this->resolve_operation_class($operation_name, $module);
 
@@ -96,11 +88,9 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 	/**
 	 * Parse path to extract operation information.
 	 *
-	 * @param string $path
-	 *
 	 * @return array|bool The operation information or `false` if the path is not suitable.
 	 */
-	protected function parse_path($path)
+	private function parse_path(string $path)
 	{
 		if (strpos($path, Operation::RESTFUL_BASE) !== 0)
 		{
@@ -140,12 +130,9 @@ class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
 	/**
 	 * Resolves the operation class.
 	 *
-	 * @param string $operation_name
-	 * @param Module $module
-	 *
 	 * @return false|string
 	 */
-	protected function resolve_operation_class($operation_name, Module $module)
+	private function resolve_operation_class(string $operation_name, Module $module)
 	{
 		$unqualified_class_name = 'Operation\\' . camelize(strtr($operation_name, '-', '_')) . 'Operation';
 

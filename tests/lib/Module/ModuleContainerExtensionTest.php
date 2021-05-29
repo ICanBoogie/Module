@@ -11,46 +11,36 @@
 
 namespace ICanBoogie\Module;
 
+use PHPUnit\Framework\TestCase;
 use function ICanBoogie\app;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @group integration
  */
-class ModuleContainerExtensionTest extends \PHPUnit_Framework_TestCase
+final class ModuleContainerExtensionTest extends TestCase
 {
 	/**
 	 * @var Container
 	 */
 	private $container;
 
-	public function setUp()
+	protected function setUp(): void
 	{
-		$container = &$this->container;
-
-		if (!$container)
-		{
-			$container = app()->container;
-		}
+		$this->container = app()->container;
 	}
 
 	/**
 	 * @dataProvider provide_module
-	 *
-	 * @param string $module
-	 * @param string $class
 	 */
-	public function test_modules_should_be_defined($module, $class)
+	public function test_modules_should_be_defined(string $module, string $class): void
 	{
 		$service = "module.$module";
 		$this->assertTrue($this->container->has($service));
 		$this->assertInstanceOf($class, $this->container->get($service));
 	}
 
-	/**
-	 * @return array
-	 */
-	public function provide_module()
+	public function provide_module(): array
 	{
 		return [
 
