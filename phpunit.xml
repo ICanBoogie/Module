@@ -1,21 +1,18 @@
-<phpunit
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
-	colors="true"
-	bootstrap="./tests/bootstrap.php"
->
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd" colors="true"
+		 bootstrap="./tests/bootstrap.php">
+	<coverage>
+		<include>
+			<directory suffix=".php">./lib</directory>
+		</include>
+		<exclude>
+			<directory>./lib/operations</directory>
+		</exclude>
+	</coverage>
 	<testsuites>
-		<testsuite name="icanboogie/icanboogie">
+		<testsuite name="icanboogie/module">
 			<directory>./tests</directory>
 		</testsuite>
 	</testsuites>
-
-	<filter>
-		<whitelist>
-			<directory suffix=".php">./lib</directory>
-			<exclude>
-				<directory>./lib/operations</directory>
-			</exclude>
-		</whitelist>
-	</filter>
 </phpunit>

@@ -21,16 +21,12 @@ use ICanBoogie\ActiveRecord\ConnectionCollection;
  */
 class ModelCollection extends ActiveRecord\ModelCollection
 {
-	/**
-	 * @var ModuleCollection
-	 */
-	private $modules;
-
-	public function __construct(ConnectionCollection $connections, ModuleCollection $modules, array $definitions = [])
-	{
+	public function __construct(
+		ConnectionCollection $connections,
+		private readonly ModuleCollection $modules,
+		array $definitions = []
+	) {
 		parent::__construct($connections, $definitions);
-
-		$this->modules = $modules;
 	}
 
 	/**
@@ -38,10 +34,8 @@ class ModelCollection extends ActiveRecord\ModelCollection
 	 * it actually defines the model.
 	 *
 	 * @param string $id
-	 *
-	 * @return bool
 	 */
-	public function offsetExists($id)
+	public function offsetExists(mixed $id): bool
 	{
 		[ $module_id, $model_id ] = explode('/', $id) + [ 1 => 'primary' ];
 
@@ -66,7 +60,7 @@ class ModelCollection extends ActiveRecord\ModelCollection
 	 *
 	 * @return ActiveRecord\Model
 	 */
-	public function offsetGet($id)
+	public function offsetGet(mixed $id): ActiveRecord\Model
 	{
 		if (parent::offsetExists($id))
 		{

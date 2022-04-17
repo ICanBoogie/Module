@@ -4,22 +4,21 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\Module;
 use ICanBoogie\Render\Renderer;
-use ICanBoogie\Routing\Controller;
+use ICanBoogie\Routing\ControllerAbstract;
 use ICanBoogie\Routing\Route;
 use ICanBoogie\View\View;
 use PHPUnit\Framework\TestCase;
 
+use function ICanBoogie\Render\get_renderer;
+
 final class HooksTest extends TestCase
 {
-	public function test_on_alter_view_no_module()
+	public function test_on_alter_view_no_module(): void
 	{
-		$route = $this
-			->getMockBuilder(Route::class)
-			->disableOriginalConstructor()
-			->getMockForAbstractClass();
+		$route = new Route('/', 'action');
 
 		$controller = $this
-			->getMockBuilder(Controller::class)
+			->getMockBuilder(ControllerAbstract::class)
 			->disableOriginalConstructor()
 			->onlyMethods([ 'get_route' ])
 			->getMockForAbstractClass();
@@ -28,9 +27,12 @@ final class HooksTest extends TestCase
 			->method('get_route')
 			->willReturn($route);
 
+		$renderer = $this
+			->createMock(Renderer::class);
+
 		$view = $this
 			->getMockBuilder(View::class)
-			->setConstructorArgs([ $controller, \ICanBoogie\Render\get_renderer() ])
+			->setConstructorArgs([ $controller, $renderer ])
 			->onlyMethods([ 'offsetSet' ])
 			->getMock();
 		$view
@@ -51,7 +53,7 @@ final class HooksTest extends TestCase
 			->getMock();
 
 		$controller = $this
-			->getMockBuilder(Controller::class)
+			->getMockBuilder(ControllerAbstract::class)
 			->disableOriginalConstructor()
 			->addMethods([ 'get_module' ])
 			->getMockForAbstractClass();

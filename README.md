@@ -428,14 +428,6 @@ holds the identifier of the module that defines the route.
 
 
 
-## Requirements
-
-The package requires PHP 7.2 or later.
-
-
-
-
-
 ## Installation
 
 ```bash

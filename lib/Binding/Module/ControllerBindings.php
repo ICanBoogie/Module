@@ -21,7 +21,7 @@ use ICanBoogie\Module\ModuleRoute;
 use ICanBoogie\Routing\Route;
 
 /**
- * {@link \ICanBoogie\Routing\Controller} prototype bindings.
+ * {@link \ICanBoogie\Routing\ControllerAbstract} prototype bindings.
  *
  * @method RecordCollection fetch_records(array $modifiers)
  *     Fetches records using the controller `records_fetcher`.

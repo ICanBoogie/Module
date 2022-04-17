@@ -32,6 +32,8 @@ final class ForwardedOperationDispatcherTest extends TestCase
 	 */
 	protected function setUp(): void
 	{
+		$this->markTestSkipped();
+
 		$this->dispatcher = new ForwardedOperationDispatcher(app()->modules);
 		$this->events = $events = new EventCollection;
 

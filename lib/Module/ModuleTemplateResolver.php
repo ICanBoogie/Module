@@ -41,7 +41,7 @@ final class ModuleTemplateResolver implements TemplateResolverDecorator
 	/**
 	 * @inheritdoc
 	 */
-	public function resolve(string $name, array $extensions, array &$tried = [])
+	public function resolve(string $name, array $extensions, array &$tried = []): ?string
 	{
 		$template_pathname = $this->template_resolver->resolve($name, $extensions, $tried);
 

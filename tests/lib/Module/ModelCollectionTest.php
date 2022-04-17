@@ -4,6 +4,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\ConnectionCollection;
 use ICanBoogie\ActiveRecord\Model;
+use ICanBoogie\ActiveRecord\Schema;
 use PHPUnit\Framework\TestCase;
 
 final class ModelCollectionTest extends TestCase
@@ -24,7 +25,7 @@ final class ModelCollectionTest extends TestCase
 
 			$model_id => [
 
-				Model::SCHEMA => []
+				Model::SCHEMA => new Schema(),
 
 			]
 

@@ -3,6 +3,8 @@
 namespace ICanBoogie\Module\ModulesTest\ModuleA;
 
 use ICanBoogie\ActiveRecord\Model;
+use ICanBoogie\ActiveRecord\Schema;
+use ICanBoogie\ActiveRecord\SchemaColumn;
 use ICanBoogie\Module\Descriptor;
 
 return [
@@ -13,11 +15,11 @@ return [
 
 		'primary' => [
 
-			Model::SCHEMA => [
+			Model::SCHEMA => new Schema([
 
-				'id' => 'serial'
+				'id' => SchemaColumn::serial(),
 
-			]
+			])
 
 		]
 

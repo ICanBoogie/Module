@@ -17,13 +17,13 @@ use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
-use ICanBoogie\Storage\Storage;
 use ICanBoogie\Module\ModuleCollection\InstallableFilter;
-
+use ICanBoogie\Storage\Storage;
 use LogicException;
+use Traversable;
 
-use function ICanBoogie\format;
 use function ICanBoogie\camelize;
+use function ICanBoogie\format;
 use function ICanBoogie\singularize;
 use function ICanBoogie\stable_sort;
 
@@ -99,12 +99,12 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @inheritdoc
 	 */
-	public function offsetSet($offset, $value)
+	public function offsetSet(mixed $offset, mixed $value): void
 	{
 		throw new BadMethodCallException();
 	}
 
-	public function offsetUnset($offset)
+	public function offsetUnset(mixed $offset): void
 	{
 		throw new BadMethodCallException();
 	}
@@ -116,15 +116,15 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * you want to use the module you check, better check using `!isset()`, otherwise the module
 	 * you check is loaded too.
 	 *
-	 * @param string $module_id Module identifier.
+	 * @param string $offset Module identifier.
 	 *
 	 * @return bool Whether or not the module is available.
 	 */
-	public function offsetExists($module_id): bool
+	public function offsetExists(mixed $offset): bool
 	{
 		$this->ensure_modules_are_indexed();
 
-		return isset($this->descriptors[$module_id]);
+		return isset($this->descriptors[$offset]);
 	}
 
 	/**
@@ -133,33 +133,34 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * If the {@link autorun} property is `true`, the {@link Module::run()} method of the module
 	 * is invoked upon its first loading.
 	 *
-	 * @param string $module_id Module identifier.
+	 * @param string $offset Module identifier.
 	 *
-	 * @throws ModuleNotDefined when the requested module is not defined.
+	 * @return Module
 	 *
 	 * @throws ModuleConstructorMissing when the class that should be used to create its instance
 	 * is not defined.
 	 *
-	 * @return Module
+	 * @throws ModuleNotDefined when the requested module is not defined.
+	 *
 	 */
-	public function offsetGet($module_id)
+	public function offsetGet(mixed $offset): Module
 	{
 		$this->ensure_modules_are_indexed();
 
-		if (isset($this->modules[$module_id]))
+		if (isset($this->modules[$offset]))
 		{
-			return $this->modules[$module_id];
+			return $this->modules[$offset];
 		}
 
-		return $this->modules[$module_id] = $this->instantiate_module($module_id);
+		return $this->modules[$offset] = $this->instantiate_module($offset);
 	}
 
 	/**
 	 * Returns an iterator for instantiated modules.
 	 *
-	 * @return ArrayIterator<string, Module>
+	 * @return Traversable<string, Module>
 	 */
-	public function getIterator(): ArrayIterator
+	public function getIterator(): Traversable
 	{
 		$this->ensure_modules_are_indexed();
 

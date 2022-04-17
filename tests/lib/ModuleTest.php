@@ -13,6 +13,8 @@ namespace ICanBoogie;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\Connection;
+use ICanBoogie\ActiveRecord\Schema;
+use ICanBoogie\ActiveRecord\SchemaColumn;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleCollection;
 use PHPUnit\Framework\TestCase;
@@ -36,12 +38,12 @@ final class ModuleTest extends TestCase
 				'primary' => [
 
 					Model::CONNECTION => self::$connection,
-					Model::SCHEMA => [
+					Model::SCHEMA => new Schema([
 
-						'nid' => 'serial',
-						'title' => [ 'varchar', 80 ]
+						'nid' => SchemaColumn::serial(),
+						'title' => SchemaColumn::varchar(80),
 
-					]
+					])
 				]
 			],
 
@@ -70,10 +72,9 @@ final class ModuleTest extends TestCase
 				'primary' => [
 
 					Model::EXTENDING => 'nodes',
-					Model::SCHEMA => [
-
-						'date' => 'datetime'
-					]
+					Model::SCHEMA => new Schema([
+						'date' => SchemaColumn::datetime(),
+					])
 				]
 			]
 		]);
