@@ -30,6 +30,7 @@ use ICanBoogie\View\View;
 
 use function ICanBoogie\app;
 use function ICanBoogie\format;
+use function trigger_error;
 
 /**
  * Hook callbacks.
@@ -101,6 +102,8 @@ class Hooks
 	 */
 	static public function on_view_alter(View\AlterEvent $event, View $target): void
 	{
+		trigger_error("Too much magic for one's sake");
+
 		try {
 			/* @var $controller ControllerBindings */
 			$controller = $target->controller;
