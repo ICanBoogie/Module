@@ -1,6 +1,6 @@
 <?php
 
-namespace ICanBoogie\Module\ModulesTest\ModuleA;
+namespace Test\ICanBoogie\Module\ModulesTest\ModuleA;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\Schema;

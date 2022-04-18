@@ -9,22 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace Test\ICanBoogie;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\Connection;
 use ICanBoogie\ActiveRecord\Schema;
 use ICanBoogie\ActiveRecord\SchemaColumn;
+use ICanBoogie\Module;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleCollection;
+use ICanBoogie\PropertyNotWritable;
 use PHPUnit\Framework\TestCase;
 
 final class ModuleTest extends TestCase
 {
-	static private $connection;
-	static private $node_descriptor;
-	private $node_module;
-	private $content_module;
+	static private Connection $connection;
+	static private array $node_descriptor;
+	private Module $node_module;
+	private Module $content_module;
 
 	static public function setupBeforeClass(): void
 	{

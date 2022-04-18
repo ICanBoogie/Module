@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  test.modules:
+    alias: ICanBoogie\Module\ModuleCollection
+
+  test.template_resolver:
+    alias: ICanBoogie\Render\BasicTemplateResolver

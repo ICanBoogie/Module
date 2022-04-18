@@ -1,8 +1,8 @@
 <?php
 
-namespace ICanBoogie\Module\ModulesTest\ModuleC\Operation;
+namespace Test\ICanBoogie\Module\ModulesTest\ModuleC\Operation;
 
-class ABCOperation extends \ICanBoogie\Module\ModulesTest\ModuleB\Operation\ABCOperation
+class ABCOperation extends \Test\ICanBoogie\Module\ModulesTest\ModuleB\Operation\ABCOperation
 {
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace ICanBoogie\Module\ModulesTest\Sample\Operation;
+namespace Test\ICanBoogie\Module\ModulesTest\Sample\Operation;
 
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Operation;

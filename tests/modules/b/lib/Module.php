@@ -1,8 +1,8 @@
 <?php
 
-namespace ICanBoogie\Module\ModulesTest\ModuleB;
+namespace Test\ICanBoogie\Module\ModulesTest\ModuleB;
 
-class Module extends \ICanBoogie\Module\ModulesTest\ModuleA\Module
+class Module extends \Test\ICanBoogie\Module\ModulesTest\ModuleA\Module
 {
 
 }

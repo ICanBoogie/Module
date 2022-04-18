@@ -1,6 +1,15 @@
 <?php
 
-namespace ICanBoogie\Module;
+/*
+ * This file is part of the ICanBoogie package.
+ *
+ * (c) Olivier Laviale <olivier.laviale@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Test\ICanBoogie\Module;
 
 use ICanBoogie\Module;
 use ICanBoogie\Render\Renderer;
@@ -8,8 +17,6 @@ use ICanBoogie\Routing\ControllerAbstract;
 use ICanBoogie\Routing\Route;
 use ICanBoogie\View\View;
 use PHPUnit\Framework\TestCase;
-
-use function ICanBoogie\Render\get_renderer;
 
 final class HooksTest extends TestCase
 {

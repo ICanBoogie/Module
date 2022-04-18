@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Module;
+namespace Test\ICanBoogie\Module;
 
+use ICanBoogie\Module\ModuleConstructorMissing;
 use PHPUnit\Framework\TestCase;
 
 final class ModuleConstructorMissingTest extends TestCase
 {
-	public function test_instance()
+	public function test_instance(): void
 	{
 		$module_id = uniqid();
 		$class = uniqid();

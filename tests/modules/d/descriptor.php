@@ -1,6 +1,6 @@
 <?php
 
-namespace ICanBoogie\Module\ModulesTest\ModuleD;
+namespace Test\ICanBoogie\Module\ModulesTest\ModuleD;
 
 use ICanBoogie\Module\Descriptor;
 

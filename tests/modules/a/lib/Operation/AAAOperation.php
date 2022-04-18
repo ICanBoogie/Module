@@ -1,6 +1,6 @@
 <?php
 
-namespace ICanBoogie\Module\ModulesTest\ModuleA\Operation;
+namespace Test\ICanBoogie\Module\ModulesTest\ModuleA\Operation;
 
 class AAAOperation
 {

@@ -9,21 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Module;
+namespace Test\ICanBoogie\Module;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+
 use function ICanBoogie\app;
-use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @group integration
  */
 final class ModuleContainerExtensionTest extends TestCase
 {
-	/**
-	 * @var Container
-	 */
-	private $container;
+	private ContainerInterface $container;
 
 	protected function setUp(): void
 	{
@@ -52,12 +50,12 @@ final class ModuleContainerExtensionTest extends TestCase
 		];
 	}
 
-	public function test_models_should_be_defined()
+	public function test_models_should_be_defined(): void
 	{
 		$this->assertTrue($this->container->has("model.a"));
 	}
 
-	public function test_models_should_not_be_defined()
+	public function test_models_should_not_be_defined(): void
 	{
 		$this->assertFalse($this->container->has("model.b"));
 		$this->assertFalse($this->container->has("model.c"));

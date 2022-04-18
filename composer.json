@@ -60,10 +60,11 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"ICanBoogie\\": "tests/lib"
+			"Test\\ICanBoogie\\": "tests/lib"
 		},
 		"classmap": [
-			"tests/Application.php"
+			"tests/Application.php",
+			"tests/modules"
 		]
 	},
 	"scripts": {

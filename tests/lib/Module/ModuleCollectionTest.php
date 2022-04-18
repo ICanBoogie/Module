@@ -9,26 +9,28 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Module;
+namespace Test\ICanBoogie\Module;
 
 use ICanBoogie\Module;
+use ICanBoogie\Module\Descriptor;
+use ICanBoogie\Module\ModuleCollection;
 use PHPUnit\Framework\TestCase;
+use Test\ICanBoogie\Module\ModulesTest\ModuleA;
+use Test\ICanBoogie\Module\ModulesTest\ModuleB;
+use Test\ICanBoogie\Module\ModulesTest\ModuleC;
 
 final class ModuleCollectionTest extends TestCase
 {
 	/**
 	 * @dataProvider provide_test_resolve_classname
-
+	 *
 	 * @param string|bool $expected
 	 */
 	public function test_resolve_classname(ModuleCollection $modules, string $classname, string $module_id, $expected)
 	{
-		if ($expected === null)
-		{
+		if ($expected === null) {
 			$this->assertNull($modules->resolve_classname($classname, $module_id));
-		}
-		else
-		{
+		} else {
 			$this->assertEquals($expected, $modules->resolve_classname($classname, $module_id));
 		}
 	}
@@ -40,29 +42,29 @@ final class ModuleCollectionTest extends TestCase
 
 		return [
 
-			[ $modules, 'Operation\AAAOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AAAOperation' ],
-			[ $modules, 'Operation\AAAOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AAAOperation' ],
-			[ $modules, 'Operation\AAAOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AAAOperation' ],
+			[ $modules, 'Operation\AAAOperation', 'a', ModuleA\Operation\AAAOperation::class ],
+			[ $modules, 'Operation\AAAOperation', 'b', ModuleA\Operation\AAAOperation::class ],
+			[ $modules, 'Operation\AAAOperation', 'c', ModuleA\Operation\AAAOperation::class ],
 
 			[ $modules, 'Operation\BBBOperation', 'a', false ],
-			[ $modules, 'Operation\BBBOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\Operation\BBBOperation' ],
-			[ $modules, 'Operation\BBBOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleB\Operation\BBBOperation' ],
+			[ $modules, 'Operation\BBBOperation', 'b', ModuleB\Operation\BBBOperation::class ],
+			[ $modules, 'Operation\BBBOperation', 'c', ModuleB\Operation\BBBOperation::class ],
 
 			[ $modules, 'Operation\CCCOperation', 'a', false ],
 			[ $modules, 'Operation\CCCOperation', 'b', false ],
-			[ $modules, 'Operation\CCCOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\Operation\CCCOperation' ],
+			[ $modules, 'Operation\CCCOperation', 'c', ModuleC\Operation\CCCOperation::class ],
 
 			[ $modules, 'Operation\DDDOperation', 'a', false ],
 			[ $modules, 'Operation\DDDOperation', 'b', false ],
 			[ $modules, 'Operation\DDDOperation', 'c', false ],
 
-			[ $modules, 'Operation\ABCOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\ABCOperation' ],
-			[ $modules, 'Operation\ABCOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleB\Operation\ABCOperation' ],
-			[ $modules, 'Operation\ABCOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\Operation\ABCOperation' ],
+			[ $modules, 'Operation\ABCOperation', 'a', ModuleA\Operation\ABCOperation::class ],
+			[ $modules, 'Operation\ABCOperation', 'b', ModuleB\Operation\ABCOperation::class ],
+			[ $modules, 'Operation\ABCOperation', 'c', ModuleC\Operation\ABCOperation::class ],
 
-			[ $modules, 'Operation\AACOperation', 'a', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AACOperation' ],
-			[ $modules, 'Operation\AACOperation', 'b', 'ICanBoogie\Module\ModulesTest\ModuleA\Operation\AACOperation' ],
-			[ $modules, 'Operation\AACOperation', 'c', 'ICanBoogie\Module\ModulesTest\ModuleC\Operation\AACOperation' ]
+			[ $modules, 'Operation\AACOperation', 'a', ModuleA\Operation\AACOperation::class ],
+			[ $modules, 'Operation\AACOperation', 'b', ModuleA\Operation\AACOperation::class ],
+			[ $modules, 'Operation\AACOperation', 'c', ModuleC\Operation\AACOperation::class ]
 
 		];
 	}

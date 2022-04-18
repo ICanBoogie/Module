@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Module\ModuleCollection;
+namespace Test\ICanBoogie\Module\ModuleCollection;
 
 use ICanBoogie\Module;
 use ICanBoogie\Module\Descriptor;
@@ -38,7 +38,7 @@ final class InstallableModulesFilterTest extends TestCase
 		$module = $this->mockModule($is_installed, $has_errors);
 		$modules = $this->mockModules($module_id, $module);
 
-		$filter = new InstallableFilter($modules);
+		$filter = new ModuleCollection\InstallableFilter($modules);
 		$this->assertSame($expected, $filter($descriptor));
 	}
 
