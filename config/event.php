@@ -3,18 +3,20 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie;
+use ICanBoogie\Application;
+use ICanBoogie\Application\ClearCacheEvent;
+use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 
 $hooks = Hooks::class . '::';
 
 return [
 
-	ICanBoogie\Application::class . '::clear_cache' => $hooks . 'on_app_clear_cache',
-	ICanBoogie\Render\BasicTemplateResolver::class . '::alter' => $hooks . 'on_template_resolver_alter',
+	ClearCacheEvent::qualify(Application::class) => $hooks . 'on_app_clear_cache',
 	/* @deprecated */
 //	ICanBoogie\View\View::class . '::alter' => $hooks . 'on_view_alter',
 	/* @deprecated */
 //	ICanBoogie\HTTP\RequestDispatcher::class . '::alter' => $hooks . 'on_alter_request_dispatcher',
 
-	'routing.synthesize_routes:before' => $hooks . 'before_synthesize_routes'
+	BeforeSynthesizeRoutesEvent::TYPE => $hooks . 'before_synthesize_routes'
 
 ];

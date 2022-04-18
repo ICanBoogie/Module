@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+
+  ICanBoogie\Module\ModuleCollection:
+    factory: [ ICanBoogie\Binding\Module\PrototypeCallbacks, get_modules ]
+
+  ICanBoogie\Module\ModuleTemplateResolver:
+    decorates: ICanBoogie\Render\BasicTemplateResolver
