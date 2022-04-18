@@ -3,27 +3,18 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie;
-use ICanBoogie\Binding\Module\PrototypeCallbacks;
+use ICanBoogie\Application;
+use ICanBoogie\Binding\Module\Hooks;
+use ICanBoogie\Routing\ControllerAbstract;
 
-$p = PrototypeCallbacks::class . '::';
-
-/**
- * @uses PrototypeCallbacks::get_modules()
- * @uses PrototypeCallbacks::get_models()
- * @uses PrototypeCallbacks::controller_get_module()
- * @uses PrototypeCallbacks::controller_get_model()
- * @uses PrototypeCallbacks::controller_lazy_get_records_fetcher()
- * @uses PrototypeCallbacks::controller_fetch_records()
- * @uses PrototypeCallbacks::controller_fetch_record()
- */
 return [
 
-	ICanBoogie\Application::class . '::lazy_get_modules' => $p . 'get_modules',
-	ICanBoogie\Application::class . '::lazy_get_models' => $p . 'get_models',
-	ICanBoogie\Routing\ControllerAbstract::class . '::lazy_get_module' => $p . 'controller_get_module',
-	ICanBoogie\Routing\ControllerAbstract::class . '::get_model' => $p . 'controller_get_model',
-	ICanBoogie\Routing\ControllerAbstract::class . '::lazy_get_records_fetcher' => $p . 'controller_lazy_get_records_fetcher',
-	ICanBoogie\Routing\ControllerAbstract::class . '::fetch_records' => $p . 'controller_fetch_records',
-	ICanBoogie\Routing\ControllerAbstract::class . '::fetch_record' => $p . 'controller_fetch_record'
+	Application::class . '::lazy_get_modules' => [ Hooks::class, 'get_modules' ],
+	Application::class . '::lazy_get_models' => [ Hooks::class, 'get_models' ],
+	ControllerAbstract::class . '::lazy_get_module' => [ Hooks::class, 'controller_get_module' ],
+	ControllerAbstract::class . '::get_model' => [ Hooks::class, 'controller_get_model' ],
+	ControllerAbstract::class . '::lazy_get_records_fetcher' => [ Hooks::class, 'controller_lazy_get_records_fetcher' ],
+	ControllerAbstract::class . '::fetch_records' => [ Hooks::class, 'controller_fetch_records' ],
+	ControllerAbstract::class . '::fetch_record' => [ Hooks::class, 'controller_fetch_record' ],
 
 ];
