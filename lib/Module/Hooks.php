@@ -39,6 +39,8 @@ class Hooks
 	 *     Where _key_ is a route id (or action) and _value_ is a module identifier.
 	 *
 	 * @internal
+	 *
+	 * @deprecated
 	 */
 	static public array $route_module_mapping;
 
@@ -47,6 +49,8 @@ class Hooks
 	 * module that defines the route.
 	 *
 	 * @param BeforeSynthesizeRoutesEvent $event
+	 *
+	 * @deprecated
 	 */
 	static public function before_synthesize_routes(BeforeSynthesizeRoutesEvent $event): void
 	{

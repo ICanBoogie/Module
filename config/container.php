@@ -9,16 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Binding\SymfonyDependencyInjection;
-
+use ICanBoogie\Binding\SymfonyDependencyInjection\ConfigBuilder;
 use ICanBoogie\Module\ModuleContainerExtension;
 
-return [
-
-	ContainerConfig::EXTENSIONS => [
-
-		[ ModuleContainerExtension::class, 'from' ]
-
-	]
-
-];
+return function (ConfigBuilder $config): void {
+	$config->add_extension(ModuleContainerExtension::class);
+};

@@ -22,6 +22,7 @@ use ICanBoogie\Module\Autoconfig\ModuleAutoconfig;
 use ICanBoogie\Module\ModelCollection;
 use ICanBoogie\Module\ModuleCollection;
 use ICanBoogie\Routing\ControllerAbstract;
+use ICanBoogie\Routing\Route;
 
 final class Hooks
 {
@@ -54,14 +55,12 @@ final class Hooks
 	 * Return the {@link Module} instance associated with the route handled by the controller.
 	 *
 	 * @param ControllerAbstract|ControllerBindings $controller
-	 *
-	 * @return Module
 	 */
 	static public function controller_get_module(ControllerAbstract $controller): Module
 	{
-		$route_id = $controller->route->id ?? $controller->route->action;
+		[ $module_id ] = explode(Route::ACTION_SEPARATOR, $controller->route->action);
 
-		return $controller->app->modules[Module\Hooks::$route_module_mapping[$route_id]];
+		return $controller->app->modules[$module_id];
 	}
 
 	/**

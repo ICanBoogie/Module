@@ -13,6 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Application;
+use ICanBoogie\Binding\SymfonyDependencyInjection\ExtensionWithFactory;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -22,24 +23,16 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Define modules as services.
  */
-final class ModuleContainerExtension extends Extension
+final class ModuleContainerExtension extends Extension implements ExtensionWithFactory
 {
-	/**
-	 * Create a new instance.
-	 */
 	static public function from(Application $app): self
 	{
 		return new self($app);
 	}
 
-	/**
-	 * @var Application
-	 */
-	private $app;
-
-	public function __construct(Application $app)
-	{
-		$this->app = $app;
+	private function __construct(
+		private readonly Application $app
+	) {
 	}
 
 	/**
