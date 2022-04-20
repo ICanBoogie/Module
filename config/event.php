@@ -9,8 +9,8 @@ use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 
 return [
 
-	ClearCacheEvent::qualify(Application::class) => [ Hooks::class, 'on_app_clear_cache' ],
-	BeforeSynthesizeRoutesEvent::TYPE => [ Hooks::class, 'before_synthesize_routes' ]
+	ClearCacheEvent::for(Application::class) => [ Hooks::class, 'on_app_clear_cache' ],
+	BeforeSynthesizeRoutesEvent::class => [ Hooks::class, 'before_synthesize_routes' ]
 
 	/* @deprecated */
 //	ICanBoogie\View\View::class . '::alter' => $hooks . 'on_view_alter',
