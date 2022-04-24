@@ -10,7 +10,6 @@ use ICanBoogie\Routing\ControllerAbstract;
 
 return fn(ConfigBuilder $config) => $config
 	->bind(Application::class, 'lazy_get_modules', [ Hooks::class, 'get_modules' ])
-	->bind(Application::class, 'lazy_get_models', [ Hooks::class, 'get_models' ])
 	->bind(ControllerAbstract::class, 'lazy_get_module', [ Hooks::class, 'controller_get_module' ])
 	->bind(ControllerAbstract::class, 'get_model', [ Hooks::class, 'controller_get_model' ])
 	->bind(ControllerAbstract::class, 'lazy_get_records_fetcher', [ Hooks::class, 'controller_lazy_get_records_fetcher' ])

@@ -11,7 +11,6 @@
 
 namespace ICanBoogie\Module;
 
-use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Application;
 use ICanBoogie\Binding\SymfonyDependencyInjection\ExtensionWithFactory;
 use InvalidArgumentException;
@@ -55,32 +54,6 @@ final class ModuleContainerExtension extends Extension implements ExtensionWithF
 
 			$container->setDefinition($class, $definition);
 			$container->setAlias("module.$module_id", $class)->setPublic(true);
-
-			$this->register_models($module_id, $descriptor[Descriptor::MODELS], $container);
-		}
-	}
-
-	private function register_models(string $module_id, array $models, ContainerBuilder $container)
-	{
-		foreach ($models as $model_id => $definition)
-		{
-			if ($model_id === 'primary')
-			{
-				$model_id = $module_id;
-			}
-			else
-			{
-				$model_id = "$module_id/$model_id";
-			}
-
-			$class = $definition[Model::CLASSNAME];
-
-			$definition = (new Definition($class))
-				->setFactory([ new Reference('models'), 'offsetGet' ])
-				->setPublic(true)
-				->setArguments([ $model_id ]);
-
-			$container->setDefinition("model.$model_id", $definition);
 		}
 	}
 }

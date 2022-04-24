@@ -19,7 +19,6 @@ use ICanBoogie\Facets\Fetcher\BasicFetcher;
 use ICanBoogie\Facets\RecordCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Module\Autoconfig\ModuleAutoconfig;
-use ICanBoogie\Module\ModelCollection;
 use ICanBoogie\Module\ModuleCollection;
 use ICanBoogie\Routing\ControllerAbstract;
 use ICanBoogie\Routing\Route;
@@ -41,14 +40,6 @@ final class Hooks
 			$config[ModuleAutoconfig::MODULES],
 			$config[AppConfig::CACHE_MODULES] ? $app->vars : null
 		);
-	}
-
-	/**
-	 * Returns the {@link ModelCollection} instance used to obtain the models defined by the modules.
-	 */
-	static public function get_models(Application $app): ModelCollection
-	{
-		return new ModelCollection($app->connections, $app->modules);
 	}
 
 	/**

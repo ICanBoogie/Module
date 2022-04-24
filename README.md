@@ -67,35 +67,13 @@ is using the namespace `Icybee\Modules\Nodes`.
 
 namespace Icybee\Modules\Nodes;
 
-use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Module\Descriptor;
 
 return [
 
     Descriptor::CATEGORY => 'contents',
     Descriptor::DESCRIPTION => 'Centralized node system base',
-    Descriptor::MODELS => [
-
-        'primary' => [
-
-            Model::SCHEMA => [
-
-                'nid' => 'serial',
-                'uid' => 'foreign',
-                'site_id' => 'foreign',
-                'native_id' => 'foreign',
-                'constructor' => [ 'varchar', 64, 'indexed' => true ],
-                'title' => 'varchar',
-                'slug' => [ 'varchar', 80, 'indexed' => true ],
-                'language' => [ 'varchar', 8, 'indexed' => true ],
-                'created' => [ 'timestamp', 'default' => 'CURRENT_TIMESTAMP()' ],
-                'modified' => 'timestamp',
-                'is_online' => [ 'boolean', 'indexed' => true ]
-
-            ]
-        ]
-    ],
-
+    Descriptor::MODELS => [ 'contents' ], // references to models used by the module
     Descriptor::NS => __NAMESPACE__,
     Descriptor::PERMISSION => false,
     Descriptor::PERMISSIONS => [
@@ -103,7 +81,6 @@ return [
         'modify belonging site'
 
     ],
-
     Descriptor::REQUIRES => [ 'sites', 'users' ],
     Descriptor::TITLE => 'Nodes'
 
@@ -124,8 +101,7 @@ Here are the tags (`Descriptor::<tag>`) that can be used to define the module's 
 - `INHERITS`: Defines the module that the module extends.
 - `ID`: Defines the identifier of the module. Defaults to its directory name.
 - `REQUIRES`: Defines the modules required, used to compute modules weight.
-- `MODELS`: Defines the models of the module. Take a look at the [ActiveRecord package][] for
-more information about ActiveRecords and models.
+- `MODELS`: Defines the models used by the module.
 - `NS`: Defines the namespace of the module.
 - `PERMISSION`: Defines the general permission required to use this module.
 - `PERMISSIONS`: Defines module specific permissions.

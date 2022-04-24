@@ -11,17 +11,14 @@
 
 namespace ICanBoogie\Binding\Module;
 
-use ICanBoogie\Module\ModelCollection;
 use ICanBoogie\Module\ModuleCollection;
 
 /**
  * {@link \ICanBoogie\Application} prototype bindings.
  *
  * @property ModuleCollection $modules
- * @property ModelCollection $models
  *
  * @see \ICanBoogie\Module\Hooks::get_modules
- * @see \ICanBoogie\Module\Hooks::get_models
  */
 trait ApplicationBindings
 {

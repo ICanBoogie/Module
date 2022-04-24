@@ -49,16 +49,4 @@ final class ModuleContainerExtensionTest extends TestCase
 
 		];
 	}
-
-	public function test_models_should_be_defined(): void
-	{
-		$this->assertTrue($this->container->has("model.a"));
-	}
-
-	public function test_models_should_not_be_defined(): void
-	{
-		$this->assertFalse($this->container->has("model.b"));
-		$this->assertFalse($this->container->has("model.c"));
-		$this->assertFalse($this->container->has("model.sample"));
-	}
 }

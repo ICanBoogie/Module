@@ -14,7 +14,6 @@ namespace ICanBoogie\Module;
 use ArrayIterator;
 use BadMethodCallException;
 use ICanBoogie\Accessor\AccessorTrait;
-use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Module\ModuleCollection\InstallableFilter;
@@ -22,9 +21,7 @@ use ICanBoogie\Storage\Storage;
 use LogicException;
 use Traversable;
 
-use function ICanBoogie\camelize;
 use function ICanBoogie\format;
-use function ICanBoogie\singularize;
 use function ICanBoogie\stable_sort;
 
 /**
@@ -38,14 +35,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 	 * @uses get_descriptors
 	 */
 	use AccessorTrait;
-
-	/**
-	 * Formats a SQL table name given the module id and the model id.
-	 */
-	static public function format_model_name(string $module_id, string $model_id = 'primary'): string
-	{
-		return preg_replace('#[^0-9a-zA-Z$_]#', '_', $module_id) . ($model_id == 'primary' ? '' : '__' . $model_id);
-	}
 
 	/**
 	 * The descriptors for the modules.
@@ -297,29 +286,8 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 		#
 
 		$ordered_ids = $this->order_ids(array_keys($descriptors), $descriptors);
-		$descriptors = array_merge(array_combine($ordered_ids, $ordered_ids), $descriptors);
 
-		foreach ($descriptors as $id => &$descriptor)
-		{
-			foreach ($descriptor[Descriptor::MODELS] as $model_id => &$model_descriptor)
-			{
-				if ($model_descriptor != 'inherit')
-				{
-					continue;
-				}
-
-				$parent_descriptor = $descriptors[$descriptor[Descriptor::INHERITS]];
-				$model_descriptor = [
-
-					Model::EXTENDING => $parent_descriptor[Descriptor::ID] . '/' . $model_id
-
-				];
-			}
-
-			$descriptor = $this->alter_descriptor($descriptor);
-		}
-
-		return $descriptors;
+		return array_merge(array_combine($ordered_ids, $ordered_ids), $descriptors);
 	}
 
 	/**
@@ -419,58 +387,6 @@ class ModuleCollection implements \ArrayAccess, \IteratorAggregate
 			'__parents' => []
 
 		]);
-	}
-
-	/**
-	 * Alters the module descriptor.
-	 *
-	 * @param array $descriptor Descriptor of the module to index.
-	 *
-	 * @return array The altered descriptor.
-	 */
-	protected function alter_descriptor(array $descriptor): array
-	{
-		$id = $descriptor[Descriptor::ID];
-		$namespace = $descriptor[Descriptor::NS];
-
-		# models and active records
-
-		foreach ($descriptor[Descriptor::MODELS] as $model_id => &$definition)
-		{
-			if (!is_array($definition))
-			{
-				throw new \InvalidArgumentException(format('Model definition must be array, given: %value.', [
-
-					'value' => $definition
-
-				]));
-			}
-
-			$basename = $id;
-			$separator_position = strrpos($basename, '.');
-
-			if ($separator_position)
-			{
-				$basename = substr($basename, $separator_position + 1);
-			}
-
-			if (empty($definition[Model::NAME]))
-			{
-				$definition[Model::NAME] = self::format_model_name($id, $model_id);
-			}
-
-			if (empty($definition[Model::ACTIVERECORD_CLASS]))
-			{
-				$definition[Model::ACTIVERECORD_CLASS] = $namespace . '\\' . camelize(singularize($model_id == 'primary' ? $basename : $model_id));
-			}
-
-			if (empty($definition[Model::CLASSNAME]))
-			{
-				$definition[Model::CLASSNAME] = $definition[Model::ACTIVERECORD_CLASS] . 'Model';
-			}
-		}
-
-		return $descriptor;
 	}
 
 	/**
