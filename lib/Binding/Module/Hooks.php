@@ -12,7 +12,6 @@
 namespace ICanBoogie\Binding\Module;
 
 use ICanBoogie\ActiveRecord;
-use ICanBoogie\AppConfig;
 use ICanBoogie\Application;
 use ICanBoogie\Facets\Fetcher;
 use ICanBoogie\Facets\Fetcher\BasicFetcher;
@@ -34,11 +33,9 @@ final class Hooks
 
 	static private function build_modules(Application $app): ModuleCollection
 	{
-		$config = $app->config;
-
 		return new ModuleCollection(
-			$config[ModuleAutoconfig::MODULES],
-			$config[AppConfig::CACHE_MODULES] ? $app->vars : null
+			$app->auto_config[ModuleAutoconfig::MODULES],
+			$app->config->cache_modules ? $app->vars : null
 		);
 	}
 
