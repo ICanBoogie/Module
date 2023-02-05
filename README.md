@@ -1,10 +1,9 @@
 # Module
 
-[![Release](https://img.shields.io/packagist/v/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
-[![Build Status](https://img.shields.io/github/workflow/status/ICanBoogie/Module/test)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Atest)
+[![Packagist](https://img.shields.io/packagist/v/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Module.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Module)
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Module.svg)](https://coveralls.io/r/ICanBoogie/Module)
-[![Packagist](https://img.shields.io/packagist/dt/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
+[![Downloads](https://img.shields.io/packagist/dt/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
 
 This package provides support for modules to the framework [ICanBoogie](https://icanboogie.org).
 
@@ -12,6 +11,13 @@ A module is like a tiny application inside your application. It provides its own
 routes, operations, views, templates… it contains everything it needs to execute a desired
 functionality.
 
+
+
+#### Installation
+
+```bash
+composer require icanboogie/module
+```
 
 
 
@@ -402,43 +408,32 @@ holds the identifier of the module that defines the route.
 
 
 
+## Continuous Integration
 
+The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Module/actions).
 
-## Installation
-
-```bash
-composer require icanboogie/module
-```
-
-
-
-
-
-## Documentation
-
-The package is documented as part of the [ICanBoogie][] framework
-[documentation](https://icanboogie.org/docs/). You can generate the documentation for the package
-and its dependencies with the `make doc` command. The documentation is generated in the `build/docs`
-directory. [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with the
-`make clean` command.
+[![Tests](https://github.com/ICanBoogie/Module/workflows/test/badge.svg?branch=master)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Atest)
+[![Static Analysis](https://github.com/ICanBoogie/Module/workflows/static-analysis/badge.svg?branch=master)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Astatic-analysis)
+[![Code Style](https://github.com/ICanBoogie/Module/workflows/code-style/badge.svg?branch=master)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Acode-style)
 
 
 
+## Code of Conduct
+
+This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in
+this project and its community, you are expected to uphold this code.
 
 
-## Testing
 
-Run `make test-container` to create and log into the test container, then run `make test` to run the
-test suite. Alternatively, run `make test-coverage` to run the test suite with test coverage. Open
-`build/coverage/index.html` to see the breakdown of the code coverage.
+## Contributing
 
-
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
 
 ## License
 
-**icanboogie/module** is released under the [New BSD License](LICENSE).
+**icanboogie/module** is released under the [BSD-3-Clause](LICENSE).
 
 
 

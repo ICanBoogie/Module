@@ -26,6 +26,7 @@
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
+	"prefer-dist": true,
 	"replace": {
 		"icanboogie/operation": "^5.0"
 	},
@@ -39,14 +40,11 @@
 		"composer/composer": "^2.0",
 		"icanboogie/bind-activerecord": "^6.0",
 		"icanboogie/bind-event": "^6.0",
-		"icanboogie/bind-facets": "^6.0",
 		"icanboogie/bind-routing": "^6.0",
 		"icanboogie/bind-view": "^6.0",
-		"icanboogie/operation": "^5.0",
 		"phpunit/phpunit": "^9.5"
 	},
 	"suggest": {
-		"icanboogie/operation": "Required to use the 'delete' and 'save' operations.",
 		"icanboogie/facets": "In order to provide records fetchers to controllers."
 	},
 	"autoload": {
