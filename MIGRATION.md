@@ -1,10 +1,18 @@
 # Migration
 
-## v5.0x to v6.0x
+## v5.x to v6.x
+
+### New Requirements
+
+None
 
 ### New features
 
+None
+
 ### Backward Incompatible Changes
+
+- Removed all bindings to `ControllerAbstract` since it doesn't extend `Prototyped` anymore.
 
 ### Deprecated Features
 
@@ -12,3 +20,5 @@
   fragments. `Description::MODELS` now only hold model identifiers.
 
 ### Other Changes
+
+None
