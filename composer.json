@@ -61,7 +61,6 @@
 			"Test\\ICanBoogie\\": "tests/lib"
 		},
 		"classmap": [
-			"tests/Application.php",
 			"tests/modules"
 		]
 	},
