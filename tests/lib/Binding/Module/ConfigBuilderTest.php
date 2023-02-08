@@ -6,6 +6,9 @@ use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Module\Descriptor;
 use PHPUnit\Framework\TestCase;
 
+use Test\ICanBoogie\Module\ModulesTest\ModuleD\Module;
+
+use function array_keys;
 use function dirname;
 use function ICanBoogie\app;
 
@@ -15,58 +18,38 @@ final class ConfigBuilderTest extends TestCase
     {
         $config = app()->configs->config_for_class(Config::class);
 
-        $this->assertSame([
+        $this->assertSame(
+            [ 'a', 'sample', 'b', 'c', 'd' ],
+            array_keys($config->descriptors)
+        );
 
-            'a' => [
-                Descriptor::ID => 'a',
-                Descriptor::CLASSNAME => \Test\ICanBoogie\Module\ModulesTest\ModuleA\Module::class,
-                Descriptor::PARENT => null,
-                Descriptor::REQUIRES => [],
-                Descriptor::MODELS => [ 'a' ],
-                Descriptor::PATH => dirname(__DIR__, 3) . '/modules/a/',
-                Descriptor::ANCESTORS => [],
-                Descriptor::WEIGHT => 0,
-            ],
-            'sample' => [
-                Descriptor::ID => 'sample',
-                Descriptor::CLASSNAME => \Test\ICanBoogie\Module\ModulesTest\Sample\Module::class,
-                Descriptor::PARENT => null,
-                Descriptor::REQUIRES => [],
-                Descriptor::MODELS => [],
-                Descriptor::PATH => null,
-                Descriptor::ANCESTORS => [],
-                Descriptor::WEIGHT => 0,
-            ],
-            'b' => [
-                Descriptor::ID => 'b',
-                Descriptor::CLASSNAME => \Test\ICanBoogie\Module\ModulesTest\ModuleB\Module::class,
-                Descriptor::PARENT => 'a',
-                Descriptor::REQUIRES => [],
-                Descriptor::MODELS => [],
-                Descriptor::PATH => null,
-                Descriptor::ANCESTORS => [ 'a' ],
-                Descriptor::WEIGHT => 1,
-            ],
-            'c' => [
-                Descriptor::ID => 'c',
-                Descriptor::CLASSNAME => \Test\ICanBoogie\Module\ModulesTest\ModuleC\Module::class,
-                Descriptor::PARENT => 'b',
-                Descriptor::REQUIRES => [],
-                Descriptor::MODELS => [],
-                Descriptor::PATH => null,
-                Descriptor::ANCESTORS => [ 'b', 'a' ],
-                Descriptor::WEIGHT => 2,
-            ],
-            'd' => [
-                Descriptor::ID => 'd',
-                Descriptor::CLASSNAME => \Test\ICanBoogie\Module\ModulesTest\ModuleD\Module::class,
-                Descriptor::PARENT => null,
-                Descriptor::REQUIRES => [ 'b' ],
-                Descriptor::MODELS => [],
-                Descriptor::PATH => null,
-                Descriptor::ANCESTORS => [],
-                Descriptor::WEIGHT => 2,
-            ],
+        $this->assertEquals([
+
+            'a' => new Descriptor(
+                id: 'a',
+                class: \Test\ICanBoogie\Module\ModulesTest\ModuleA\Module::class,
+                models: [ 'a' ],
+                path: dirname(__DIR__, 3) . '/modules/a/',
+            ),
+            'sample' => new Descriptor(
+                id: 'sample',
+                class: \Test\ICanBoogie\Module\ModulesTest\Sample\Module::class,
+            ),
+            'b' => new Descriptor(
+                id: 'b',
+                class: \Test\ICanBoogie\Module\ModulesTest\ModuleB\Module::class,
+                parent: 'a',
+            ),
+            'c' => new Descriptor(
+                id: 'c',
+                class: \Test\ICanBoogie\Module\ModulesTest\ModuleC\Module::class,
+                parent: 'b',
+            ),
+            'd' => new Descriptor(
+                id: 'd',
+                class: Module::class,
+                required: [ 'b' ],
+            ),
 
         ], $config->descriptors);
     }

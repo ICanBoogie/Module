@@ -31,45 +31,45 @@ final class ModuleCollectionTest extends TestCase
     }
 
     /**
-	 * @dataProvider provide_test_resolve_classname
-	 *
-	 * @param class-string|false $expected
-	 */
-	public function test_resolve_classname(string $classname, string $module_id, string|false $expected)
-	{
+     * @dataProvider provide_test_resolve_classname
+     *
+     * @param class-string|false $expected
+     */
+    public function test_resolve_classname(string $classname, string $module_id, string|false $expected)
+    {
         $actual = self::$modules->resolve_classname($classname, $module_id);
 
         $this->assertEquals($expected, $actual);
-	}
+    }
 
-	public function provide_test_resolve_classname(): array
-	{
-		return [
+    public function provide_test_resolve_classname(): array
+    {
+        return [
 
-			[ 'Operation\AAAOperation', 'a', ModuleA\Operation\AAAOperation::class ],
-			[ 'Operation\AAAOperation', 'b', ModuleA\Operation\AAAOperation::class ],
-			[ 'Operation\AAAOperation', 'c', ModuleA\Operation\AAAOperation::class ],
+            [ 'Operation\AAAOperation', 'a', ModuleA\Operation\AAAOperation::class ],
+            [ 'Operation\AAAOperation', 'b', ModuleA\Operation\AAAOperation::class ],
+            [ 'Operation\AAAOperation', 'c', ModuleA\Operation\AAAOperation::class ],
 
-			[ 'Operation\BBBOperation', 'a', false ],
-			[ 'Operation\BBBOperation', 'b', ModuleB\Operation\BBBOperation::class ],
-			[ 'Operation\BBBOperation', 'c', ModuleB\Operation\BBBOperation::class ],
+            [ 'Operation\BBBOperation', 'a', false ],
+            [ 'Operation\BBBOperation', 'b', ModuleB\Operation\BBBOperation::class ],
+            [ 'Operation\BBBOperation', 'c', ModuleB\Operation\BBBOperation::class ],
 
-			[ 'Operation\CCCOperation', 'a', false ],
-			[ 'Operation\CCCOperation', 'b', false ],
-			[ 'Operation\CCCOperation', 'c', ModuleC\Operation\CCCOperation::class ],
+            [ 'Operation\CCCOperation', 'a', false ],
+            [ 'Operation\CCCOperation', 'b', false ],
+            [ 'Operation\CCCOperation', 'c', ModuleC\Operation\CCCOperation::class ],
 
-			[ 'Operation\DDDOperation', 'a', false ],
-			[ 'Operation\DDDOperation', 'b', false ],
-			[ 'Operation\DDDOperation', 'c', false ],
+            [ 'Operation\DDDOperation', 'a', false ],
+            [ 'Operation\DDDOperation', 'b', false ],
+            [ 'Operation\DDDOperation', 'c', false ],
 
-			[ 'Operation\ABCOperation', 'a', ModuleA\Operation\ABCOperation::class ],
-			[ 'Operation\ABCOperation', 'b', ModuleB\Operation\ABCOperation::class ],
-			[ 'Operation\ABCOperation', 'c', ModuleC\Operation\ABCOperation::class ],
+            [ 'Operation\ABCOperation', 'a', ModuleA\Operation\ABCOperation::class ],
+            [ 'Operation\ABCOperation', 'b', ModuleB\Operation\ABCOperation::class ],
+            [ 'Operation\ABCOperation', 'c', ModuleC\Operation\ABCOperation::class ],
 
-			[ 'Operation\AACOperation', 'a', ModuleA\Operation\AACOperation::class ],
-			[ 'Operation\AACOperation', 'b', ModuleA\Operation\AACOperation::class ],
-			[ 'Operation\AACOperation', 'c', ModuleC\Operation\AACOperation::class ]
+            [ 'Operation\AACOperation', 'a', ModuleA\Operation\AACOperation::class ],
+            [ 'Operation\AACOperation', 'b', ModuleA\Operation\AACOperation::class ],
+            [ 'Operation\AACOperation', 'c', ModuleC\Operation\AACOperation::class ]
 
-		];
-	}
+        ];
+    }
 }

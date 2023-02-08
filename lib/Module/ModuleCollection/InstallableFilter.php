@@ -13,47 +13,41 @@ namespace ICanBoogie\Module\ModuleCollection;
 
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module\Descriptor;
-use ICanBoogie\Module\ModuleCollection;
+use ICanBoogie\Module\ModuleProvider;
+use Throwable;
+
+use function count;
 
 /**
  * Filters installable module descriptors.
  */
 class InstallableFilter
 {
-	/**
-	 * @var ModuleCollection
-	 */
-	private $modules;
+    public function __construct(
+        private readonly ModuleProvider $provider
+    ) {
+    }
 
-	public function __construct(ModuleCollection $modules)
-	{
-		$this->modules = $modules;
-	}
+    /**
+     * @param Descriptor $descriptor
+     *
+     * @return bool `true` if the module may be installed, `false` otherwise.
+     */
+    public function __invoke(Descriptor $descriptor): bool
+    {
+        $module = $this->provider->module_for_id($descriptor->id);
+        $errors = new ErrorCollection;
 
-	/**
-	 * @param array $descriptor An array of {@link Descriptor::*} keys.
-	 *
-	 * @return bool `true` if the module may be installed, `false` otherwise.
-	 */
-	public function __invoke(array $descriptor): bool
-	{
-		$module = $this->modules[$descriptor[Descriptor::ID]];
-		$errors = new ErrorCollection;
+        try {
+            $is_installed = $module->is_installed($errors);
 
-		try
-		{
-			$is_installed = $module->is_installed($errors);
+            if ($is_installed && !count($errors)) {
+                return false;
+            }
+        } catch (Throwable) {
+            # there was an error, the module might not be properly installed.
+        }
 
-			if ($is_installed && !\count($errors))
-			{
-				return false;
-			}
-		}
-		catch (\Throwable $e)
-		{
-			# there was an error, the module might not be properly installed.
-		}
-
-		return true;
-	}
+        return true;
+    }
 }

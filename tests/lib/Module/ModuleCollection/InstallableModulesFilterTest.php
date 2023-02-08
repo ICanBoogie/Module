@@ -1,19 +1,12 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Test\ICanBoogie\Module\ModuleCollection;
 
+use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleCollection;
+use ICanBoogie\Module\ModuleProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,79 +15,64 @@ use PHPUnit\Framework\TestCase;
  */
 final class InstallableModulesFilterTest extends TestCase
 {
-	/**
-	 * @dataProvider provide_test_filter
-	 */
-	public function test_filter(bool $is_installed, bool $has_errors, bool $expected)
-	{
-		$module_id = uniqid();
+    /**
+     * @dataProvider provide_test_filter
+     */
+    public function test_filter(bool $is_installed, bool $has_errors, bool $expected): void
+    {
+        $module_id = uniqid();
+        $module = $this->mockModule($is_installed, $has_errors);
+        $descriptor = new Descriptor($module_id, $module::class);
 
-		$descriptor = [
+        $modules = $this->mockModuleProvider($module_id, $module);
 
-			Descriptor::ID => $module_id,
+        $filter = new ModuleCollection\InstallableFilter($modules);
+        $this->assertSame($expected, $filter($descriptor));
+    }
 
-		];
+    /**
+     * @return array<array{ bool, bool, bool }>
+     */
+    public function provide_test_filter(): array
+    {
+        return [
 
-		$module = $this->mockModule($is_installed, $has_errors);
-		$modules = $this->mockModules($module_id, $module);
+            [ false, false, true ],
+            [ false, true, true ],
+            [ true, true, true ],
+            [ true, false, false ],
 
-		$filter = new ModuleCollection\InstallableFilter($modules);
-		$this->assertSame($expected, $filter($descriptor));
-	}
+        ];
+    }
 
-	public function provide_test_filter(): array
-	{
-		return [
+    private function mockModule(bool $is_installed, bool $has_errors): Module
+    {
+        $module = $this
+            ->getMockBuilder(Module::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([ 'is_installed' ])
+            ->getMock();
+        $module
+            ->method('is_installed')
+            ->willReturnCallback(function (ErrorCollection $errors) use ($is_installed, $has_errors): bool {
+                if ($has_errors) {
+                    $errors[] = uniqid();
+                }
 
-			[ false, false, true ],
-			[ false, true, true ],
-			[ true, true, true ],
-			[ true, false, false ],
+                return $is_installed;
+            });
 
-		];
-	}
+        return $module;
+    }
 
-	private function mockModule(bool $is_installed, bool $has_errors): Module
-	{
-		$module = $this
-			->getMockBuilder(Module::class)
-			->disableOriginalConstructor()
-			->setMethods([ 'is_installed' ])
-			->getMock();
-		$module
-			->expects($this->any())
-			->method('is_installed')
-			->willReturnCallback(function($errors) use ($is_installed, $has_errors) {
+    private function mockModuleProvider(string $module_id, Module $module): ModuleProvider
+    {
+        $provider = $this->createMock(ModuleProvider::class);
+        $provider
+            ->method('module_for_id')
+            ->with($module_id)
+            ->willReturn($module);
 
-				if ($has_errors)
-				{
-					$errors[] = uniqid();
-				}
-
-				return $is_installed;
-
-			});
-
-		/* @var Module $module */
-
-		return $module;
-	}
-
-	private function mockModules(string $module_id, Module $module): ModuleCollection
-	{
-		$modules = $this
-			->getMockBuilder(ModuleCollection::class)
-			->disableOriginalConstructor()
-			->setMethods([ 'offsetGet' ])
-			->getMock();
-		$modules
-			->expects($this->any())
-			->method('offsetGet')
-			->with($module_id)
-			->willReturn($module);
-
-		/* @var ModuleCollection $modules */
-
-		return $modules;
-	}
+        return $provider;
+    }
 }

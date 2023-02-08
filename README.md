@@ -99,83 +99,72 @@ extends:
 
 
 
-## Module collection
+## Working with modules
 
-A module collection is represented by a [ModuleCollection][] instance.
-
-The following example demonstrates how a module collection can be created from a module configuration:
-
-```php
-<?php
-
-use ICanBoogie\Module\ModuleCollection;
-use ICanBoogie\Binding\Module\Config;
-
-/* @var Config $config */
-
-$modules = new ModuleCollection($config->descriptors);
-```
-
-
+There's two ways to work with modules: a provider is good enough when all your need is load a module, a collection is better if you need to work on multiple modules such as installation.
 
 
 
 ### Accessing a module
 
-Modules are accessed by using the collection as an array. The following example demonstrates how
-the `nodes` module is accessed.
+You can get a module using a module provider:
 
 ```php
 <?php
 
-/* @var \ICanBoogie\Module\ModuleCollection $modules */
+/* @var \ICanBoogie\Module\ModuleProvider $provider */
 
-$node_module = $modules['nodes'];
+$nodes = $provider->module_for_id('nodes');
 ```
 
-`isset()` is used to check if a module is defined. The [ModuleNotDefined][] exception is thrown if
-the module is not defined, and [ModuleConstructorMissing][] is thrown when the class used to
-instantiate the module is missing.
+You can check a module is defined with the `has_module` method:
 
 ```php
 <?php
 
-/* @var \ICanBoogie\Module\ModuleCollection $modules */
+/* @var \ICanBoogie\Module\ModuleProvider $provider */
 
-isset($modules['nodes']); // true
-isset($modules['undefined_module']); // false
+$provider->has_module('nodes');
 ```
 
+You can also iterate over the provider, and get modules:
 
+```php
+<?php
+
+/* @var \ICanBoogie\Module\ModuleProvider $provider */
+
+foreach ($provider as $module_id => $get) {
+    $module = $get();
+
+    // …
+}
+```
 
 
 
 ## Installing and uninstalling modules
 
-Modules are installed using the `install()` method, and uninstalled using the
-`uninstall()` method. The `is_installed()` method returns the installation state of the
-module and also collects the reasons why the module is not installed.
+Modules are installed using the `install()` method, and uninstalled using the `uninstall()` method. The `is_installed()` method returns the installation state of the module and also collects the reasons why the module is not installed.
 
 ```php
 <?php
 
 use ICanBoogie\ErrorCollection;
+use ICanBoogie\Module;
 
-/* @var \ICanBoogie\Module\ModuleCollection $modules */
+/* @var Module $nodes */
 
-$nodes = $modules['nodes'];
-$errors = new ErrorCollection;
+$errors = new ErrorCollection();
 
-if (!$nodes->is_installed($errors))
-{
+if (!$nodes->is_installed($errors)) {
     #
     # $errors might contain messages about why the module is not installed
     #
 
     $errors->clear();
 
-    if (!$nodes->install($errors))
-    {
+    if (!$nodes->install($errors)) {
         #
         # $errors might contain the reasons why the module failed to install
         #
@@ -185,23 +174,20 @@ if (!$nodes->is_installed($errors))
 $nodes->uninstall();
 ```
 
-Modules can be installed all at once using a [ModuleCollection][] instance. The
-[ModuleCollectionInstallFailed][] exception is thrown with all the errors and exceptions collected
+Modules can be installed all at once using a [ModuleCollection][] instance. The [ModuleCollectionInstallFailed][] exception is thrown with all the errors and exceptions collected
 in a [ErrorCollection][] instance if the installation fails.
 
 ```php
 <?php
 
 use ICanBoogie\Module\ModuleCollectionInstallFailed;
+use ICanBoogie\Module\ModuleCollection;
 
-/* @var \ICanBoogie\Module\ModuleCollection $modules */
+/* @var ModuleCollection $modules */
 
-try
-{
+try {
     $modules->install();
-}
-catch (ModuleCollectionInstallFailed $e)
-{
+} catch (ModuleCollectionInstallFailed $e) {
     echo get_class($e->errors); // ICanBoogie\ErrorCollection
 }
 ```
@@ -212,22 +198,7 @@ catch (ModuleCollectionInstallFailed $e)
 
 ## Autoconfig
 
-The package supports the _autoconfig_ feature of [ICanBoogie][] and provides the following:
-
-- A lazy getter for the `ICanBoogie\Application::$modules` property, that returns a [ModuleCollection][]
-instance configured to provide the modules of the application.
-
-```php
-<?php
-
-namespace ICanBoogie;
-
-use ICanBoogie\Module\ModuleCollection;/* @var Application $app */
-
-$nodes = $app->service_for_id('module.nodes', Module::class);
-# or
-$nodes = $app->service_for_class(ModuleCollection::class)['nodes'];
-```
+The package supports the _autoconfig_ feature of [ICanBoogie][].
 
 
 
@@ -284,9 +255,6 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ## License
 
 **icanboogie/module** is released under the [BSD-3-Clause](LICENSE).
-
-
-
 
 
 

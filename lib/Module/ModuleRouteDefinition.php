@@ -18,8 +18,8 @@ use ICanBoogie\Routing\RouteDefinition;
  */
 class ModuleRouteDefinition extends RouteDefinition
 {
-	/**
-	 * Module identifier
-	 */
-	public const MODULE = 'module';
+    /**
+     * Module identifier
+     */
+    public const MODULE = 'module';
 }

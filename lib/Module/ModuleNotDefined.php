@@ -12,8 +12,7 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Accessor\AccessorTrait;
-use ICanBoogie\HTTP\Status;
-
+use RuntimeException;
 use Throwable;
 
 use function ICanBoogie\format;
@@ -23,33 +22,37 @@ use function ICanBoogie\format;
  *
  * @property-read string $module_id The identifier of the module that is not defined.
  */
-final class ModuleNotDefined extends \RuntimeException
+final class ModuleNotDefined extends RuntimeException
 {
-	/**
-	 * @uses get_module_id
-	 */
-	use AccessorTrait;
+    /**
+     * @uses get_module_id
+     */
+    use AccessorTrait;
 
-	/**
-	 * Identifier of the module.
-	 *
-	 * @var string
-	 */
-	private $module_id;
+    /**
+     * Identifier of the module.
+     *
+     * @var string
+     */
+    private $module_id;
 
-	private function get_module_id(): string
-	{
-		return $this->module_id;
-	}
+    private function get_module_id(): string
+    {
+        return $this->module_id;
+    }
 
-	public function __construct(string $module_id, Throwable $previous = null)
-	{
-		$this->module_id = $module_id;
+    public function __construct(string $module_id, Throwable $previous = null)
+    {
+        $this->module_id = $module_id;
 
-		parent::__construct(format('Module is not defined: %module_id', [
+        parent::__construct(
+            format('Module is not defined: %module_id', [
 
-			'module_id' => $module_id
+                'module_id' => $module_id
 
-		]), 0, $previous);
-	}
+            ]),
+            0,
+            $previous
+        );
+    }
 }

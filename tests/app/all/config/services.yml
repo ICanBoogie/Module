@@ -8,5 +8,8 @@ services:
   test.modules:
     alias: ICanBoogie\Module\ModuleCollection
 
+  test.module_provider:
+    alias: ICanBoogie\Module\ModuleProvider
+
   test.template_resolver:
     alias: ICanBoogie\Render\BasicTemplateResolver

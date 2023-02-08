@@ -7,13 +7,13 @@ use ICanBoogie\Operation;
 
 class FailureOperation extends Operation
 {
-	protected function validate(ErrorCollection $errors)
-	{
-		return true;
-	}
+    protected function validate(ErrorCollection $errors)
+    {
+        return true;
+    }
 
-	protected function process()
-	{
-		return;
-	}
+    protected function process()
+    {
+        return;
+    }
 }

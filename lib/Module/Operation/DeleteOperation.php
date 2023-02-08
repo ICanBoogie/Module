@@ -14,68 +14,69 @@ namespace ICanBoogie\Module\Operation;
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Operation;
+use RuntimeException;
 
 /**
  * Deletes a record.
  */
 class DeleteOperation extends Operation
 {
-	/**
-	 * Modifies the following controls:
-	 *
-	 * - PERMISSION: MANAGE
-	 * - RECORD: true
-	 * - OWNERSHIP: true
-	 */
-	protected function get_controls()
-	{
-		return [
+    /**
+     * Modifies the following controls:
+     *
+     * - PERMISSION: MANAGE
+     * - RECORD: true
+     * - OWNERSHIP: true
+     */
+    protected function get_controls()
+    {
+        return [
 
-			self::CONTROL_PERMISSION => Module::PERMISSION_MANAGE,
-			self::CONTROL_RECORD => true,
-			self::CONTROL_OWNERSHIP => true
+                self::CONTROL_PERMISSION => Module::PERMISSION_MANAGE,
+                self::CONTROL_RECORD => true,
+                self::CONTROL_OWNERSHIP => true
 
-		] + parent::get_controls();
-	}
+            ] + parent::get_controls();
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	protected function validate(ErrorCollection $errors)
-	{
-		return true;
-	}
+    /**
+     * @inheritdoc
+     */
+    protected function validate(ErrorCollection $errors)
+    {
+        return true;
+    }
 
-	/**
-	 * Delete the target record.
-	 */
-	protected function process()
-	{
-		$key = $this->key;
-		$record = $this->record;
+    /**
+     * Delete the target record.
+     */
+    protected function process()
+    {
+        $key = $this->key;
+        $record = $this->record;
 
-		if (!$record->delete())
-		{
-			throw new \RuntimeException($this->format('Unable to delete the record %key from %module.', [
+        if (!$record->delete()) {
+            throw new RuntimeException(
+                $this->format('Unable to delete the record %key from %module.', [
 
-				'key' => $key,
-				'module' => $this->module->title
+                    'key' => $key,
+                    'module' => $this->module->title
 
-			]));
-		}
+                ])
+            );
+        }
 
-		if ($this->request['redirect_to'])
-		{
-			$this->response->location = $this->request['redirect_to'];
-		}
+        if ($this->request['redirect_to']) {
+            $this->response->location = $this->request['redirect_to'];
+        }
 
-		$this->response->message = $this->format('The record %key has been deleted from %module.', [
+        $this->response->message = $this->format('The record %key has been deleted from %module.', [
 
-			'key' => $key,
-			'module' => $this->module->title
+            'key' => $key,
+            'module' => $this->module->title
 
-		]);
+        ]);
 
-		return $key;
-	}
+        return $key;
+    }
 }

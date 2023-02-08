@@ -11,6 +11,8 @@
 
 namespace Test\ICanBoogie;
 
+use Composer\Autoload\ClassLoader;
+
 use function ICanBoogie\boot;
 use function ob_start;
 
@@ -20,7 +22,7 @@ const SANDBOX = __DIR__ . DIRECTORY_SEPARATOR . 'sandbox' . DIRECTORY_SEPARATOR;
 
 chdir(__DIR__);
 
-/* @var $autoload \Composer\Autoload\ClassLoader */
+/* @var $autoload ClassLoader */
 
 $autoload = require __DIR__ . '/../vendor/autoload.php';
 $autoload->setPsr4('ICanBoogie\Module\ModulesTest\ModuleA\\', __DIR__ . '/modules/a/lib');

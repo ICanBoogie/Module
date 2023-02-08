@@ -12,45 +12,46 @@
 namespace ICanBoogie\Module;
 
 use ArrayAccess;
-use ArrayIterator;
 use BadMethodCallException;
+use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Module\ModuleCollection\InstallableFilter;
 use IteratorAggregate;
+use Throwable;
 use Traversable;
 
 use function substr;
 
 /**
- * A module collection.
- *
- * @property-read array $descriptors Modules descriptors.
+ * @implements ArrayAccess<string, Module>
+ * @implements IteratorAggregate<string, (callable(): Module)>
  */
 class ModuleCollection implements ArrayAccess, IteratorAggregate
 {
     /**
-     * Instantiated modules.
-     *
-     * @var array<string, Module>
+     * @var array<string, Descriptor>
      *     Where _key_ is a module identifier.
      */
-    private array $modules = [];
+    public readonly array $descriptors;
 
-    /**
-     * @param array<string, array<Descriptor::*, mixed>> $descriptors
-     *     Where _key_ is a module identifier.
-     */
     public function __construct(
-        public array $descriptors,
+        private readonly Config $config,
+        private readonly ModuleProvider $provider
     ) {
+        $this->descriptors = $this->config->descriptors;
     }
 
-    /**
-     * The method is not supported.
-     *
-     * @inheritdoc
-     */
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->descriptors[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->provider->module_for_id($offset);
+    }
+
     public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new BadMethodCallException();
@@ -61,70 +62,32 @@ class ModuleCollection implements ArrayAccess, IteratorAggregate
         throw new BadMethodCallException();
     }
 
-    /**
-     * Checks if a module exists.
-     *
-     * Note: `empty()` will call {@link offsetGet()} to check if the value is not empty. So, unless
-     * you want to use the module you check, better check using `!isset()`, otherwise the module
-     * you check is loaded too.
-     *
-     * @param string $offset Module identifier.
-     *
-     * @return bool Whether the module is available.
-     */
-    public function offsetExists(mixed $offset): bool
-    {
-        return isset($this->descriptors[$offset]);
-    }
-
-    /**
-     * Returns a module object.
-     *
-     * If the {@link autorun} property is `true`, the {@link Module::run()} method of the module
-     * is invoked upon its first loading.
-     *
-     * @param string $offset Module identifier.
-     *
-     * @return Module
-     *
-     * @throws ModuleConstructorMissing when the class that should be used to create its instance
-     * is not defined.
-     *
-     * @throws ModuleNotDefined when the requested module is not defined.
-     *
-     */
-    public function offsetGet(mixed $offset): Module
-    {
-        if (!$this->offsetExists($offset)) {
-            throw new ModuleNotDefined($offset);
-        }
-
-        return $this->modules[$offset] ??= $this->instantiate_module($offset);
-    }
-
-    /**
-     * Returns an iterator for instantiated modules.
-     *
-     * @return Traversable<string, Module>
-     */
     public function getIterator(): Traversable
     {
-        return new ArrayIterator($this->modules);
+        return $this->provider->getIterator();
     }
 
+    /**
+     * @param (callable(Descriptor): bool) $filter
+     *
+     * @return array<string, Descriptor>
+     */
     public function filter_descriptors(callable $filter): array
     {
         return array_filter($this->descriptors, $filter);
     }
 
+    /**
+     * @return array<string, Descriptor>
+     */
     public function filter_descriptors_by_users(string $module_id): array
     {
         $users = [];
         $descriptors = $this->descriptors;
 
         foreach ($descriptors as $user_id => $descriptor) {
-            if ($descriptor[Descriptor::PARENT] == $module_id
-                || in_array($module_id, $descriptor[Descriptor::REQUIRES])) {
+            if ($descriptor->parent == $module_id
+                || in_array($module_id, $descriptor->required)) {
                 $users[$user_id] = $descriptor;
             }
         }
@@ -134,10 +97,6 @@ class ModuleCollection implements ArrayAccess, IteratorAggregate
 
     /**
      * Returns the usage of a module by other modules.
-     *
-     * @param string $module_id The identifier of the module.
-     *
-     * @return int
      */
     public function usage(string $module_id): int
     {
@@ -149,19 +108,16 @@ class ModuleCollection implements ArrayAccess, IteratorAggregate
      *
      * @param string $module_id Module identifier.
      * @param string $parent_id Identifier of the parent module.
-     *
-     * @return boolean `true` if the module inherits from the other.
      */
     public function is_inheriting(string $module_id, string $parent_id): bool
     {
         while ($module_id) {
-            if ($module_id == $parent_id) {
+            if ($module_id === $parent_id) {
                 return true;
             }
 
             $descriptor = $this->descriptors[$module_id];
-
-            $module_id = empty($descriptor[Descriptor::PARENT]) ? null : $descriptor[Descriptor::PARENT];
+            $module_id = $descriptor->parent;
         }
 
         return false;
@@ -170,22 +126,14 @@ class ModuleCollection implements ArrayAccess, IteratorAggregate
     /**
      * Install all the enabled modules.
      *
-     * @param ErrorCollection|null $errors
-     *
-     * @return ErrorCollection
-     *
      * @throws ModuleCollectionInstallFailed if an error occurs.
      */
-    public function install(ErrorCollection $errors = null): ErrorCollection
+    public function install(ErrorCollection $errors = new ErrorCollection()): ErrorCollection
     {
-        if (!$errors) {
-            $errors = new ErrorCollection;
-        }
-
-        foreach (array_keys($this->filter_descriptors(new InstallableFilter($this))) as $module_id) {
+        foreach (array_keys($this->filter_descriptors(new InstallableFilter($this->provider))) as $module_id) {
             try {
-                $this[$module_id]->install($errors);
-            } catch (\Throwable $e) {
+                $this->provider->module_for_id($module_id)->install($errors);
+            } catch (Throwable $e) {
                 $errors[$module_id] = $e;
             }
         }
@@ -203,56 +151,30 @@ class ModuleCollection implements ArrayAccess, IteratorAggregate
      * To resolve a given class name, the method checks in each module namespace—starting from the
      * specified module—if the class exists. If it does, it returns its fully qualified name.
      *
-     * @param string $unqualified_classname
-     * @param string|Module $module_id
-     * @param array $tried
-     *
-     * @return string|false The resolved file name, or `false` if it could not be resolved.
-     *
-     * @throws ModuleNotDefined if the specified module, or the module specified by
-     * {@link Descriptor::PARENT} is not defined.
+     * @param string[] $tried
      */
-    public function resolve_classname(string $unqualified_classname, string $module_id, array &$tried = [])
-    {
+    public function resolve_classname(
+        string $unqualified_classname,
+        string $module_id,
+        array &$tried = []
+    ): string|false {
         while ($module_id) {
             $descriptor = $this->descriptors[$module_id];
-            $class = $descriptor[Descriptor::CLASSNAME];
+            $class = $descriptor->class;
             $pos = strrpos($class, '\\');
+            assert($pos !== false);
             $namespace = substr($class, 0, $pos);
 
             $fully_qualified_classname = $namespace . '\\' . $unqualified_classname;
             $tried[] = $fully_qualified_classname;
 
-            if (class_exists($fully_qualified_classname, true)) {
+            if (class_exists($fully_qualified_classname)) {
                 return $fully_qualified_classname;
             }
 
-            $module_id = $descriptor[Descriptor::PARENT];
+            $module_id = $descriptor->parent;
         }
 
         return false;
-    }
-
-    private function assert_constructor_exists(string $module_id, string $class): void
-    {
-        if (!class_exists($class, true)) {
-            throw new ModuleConstructorMissing($module_id, $class);
-        }
-    }
-
-    private function instantiate_module(string $module_id): Module
-    {
-        $descriptor = $this->descriptors[$module_id];
-        $class = $descriptor[Descriptor::CLASSNAME];
-
-        $this->assert_constructor_exists($module_id, $class);
-
-        $parent = &$descriptor[Descriptor::PARENT];
-
-        if ($parent) {
-            $parent = $this[$parent];
-        }
-
-        return new $class($this, $descriptor);
     }
 }

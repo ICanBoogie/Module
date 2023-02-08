@@ -1,113 +1,103 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Test\ICanBoogie;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Module;
 use ICanBoogie\Module\Descriptor;
-use ICanBoogie\Module\ModuleCollection;
+use ICanBoogie\Module\ModuleProvider;
 use ICanBoogie\PropertyNotWritable;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 final class ModuleTest extends TestCase
 {
-	static private array $node_descriptor;
-	private Module $node_module;
-	private Module $content_module;
+    private Descriptor $node_descriptor;
+    private Module $node_module;
+    private Module $content_module;
 
-	static public function setupBeforeClass(): void
-	{
-		self::$node_descriptor = [
+    protected function setUp(): void
+    {
+        $provider = $this->createMock(ModuleProvider::class);
 
-			Descriptor::ID => 'nodes',
-			Descriptor::MODELS => [ 'nodes' ],
-			Descriptor::TITLE => 'Nodes'
+        $this->node_module = new Module(
+            $this->node_descriptor = new Descriptor(
+                id: 'nodes',
+                class: Module::class,
+                models: [ 'nodes' ]
+            ),
+            $provider
+        );
 
-		];
-	}
+        $this->content_module = new Module
+        (
+            new Descriptor(
+                id: 'contents',
+                class: Module::class,
+                parent: $this->node_module->id,
+                models: [ 'contents' ]
+            ),
+            $provider
+        );
 
-	protected function setUp(): void
-	{
-		/* @var $collection_stub ModuleCollection */
-		$collection_stub = $this
-			->getMockBuilder(ModuleCollection::class)
-			->disableOriginalConstructor()
-			->getMock();
+        $provider->method('module_for_id')
+            ->willReturnCallback(fn(string $id) => match ($id) {
+                $this->node_module->id => $this->node_module,
+                $this->content_module->id => $this->content_module,
+                default => throw new LogicException()
+            });
+    }
 
-		$this->node_module = new Module($collection_stub, self::$node_descriptor);
+    /**
+     * @dataProvider provide_test_write_readonly_property
+     */
+    public function test_write_readonly_property(string $property): void
+    {
+        $this->expectException(PropertyNotWritable::class);
+        $this->node_module->$property = null;
+    }
 
-		$this->content_module = new Module
-		(
-			$collection_stub, [
-				Descriptor::ID => 'contents',
-				Descriptor::PARENT => $this->node_module,
-				Descriptor::MODELS => [ 'contents' ],
-			]
-		);
-	}
+    /**
+     * @return array<array<string>>
+     */
+    static public function provide_test_write_readonly_property(): array
+    {
+        $properties = 'flat_id id parent path title';
 
-	/**
-	 * @dataProvider provide_test_write_readonly_property
-	 */
-	public function test_write_readonly_property(string $property): void
-	{
-		$this->expectException(PropertyNotWritable::class);
-		$this->node_module->$property = null;
-	}
+        return array_map(function ($v) {
+            return (array)$v;
+        }, explode(' ', $properties));
+    }
 
-	public function provide_test_write_readonly_property(): array
-	{
-		$properties = 'flat_id id parent path title';
+    public function test_get_descriptor(): void
+    {
+        $this->assertSame($this->node_descriptor, $this->node_module->descriptor);
+    }
 
-		return array_map(function ($v) {
-			return (array) $v;
-		}, explode(' ', $properties));
-	}
+    public function test_get_flat_id(): void
+    {
+        $provider = $this->createMock(ModuleProvider::class);
 
-	public function test_get_descriptor(): void
-	{
-		$this->assertEquals(self::$node_descriptor, $this->node_module->descriptor);
-	}
+        $m = new Module(
+            new Descriptor('name.space.to.id', Module::class),
+            $provider
+        );
 
-	public function test_get_flat_id(): void
-	{
-		/* @var $collection_stub ModuleCollection */
-		$collection_stub = $this
-			->getMockBuilder(ModuleCollection::class)
-			->disableOriginalConstructor()
-			->getMock();
+        $this->assertEquals('name_space_to_id', $m->flat_id);
+    }
 
-		$m = new Module($collection_stub, [
+    public function test_get_id(): void
+    {
+        $this->assertEquals($this->node_descriptor->id, $this->node_module->id);
+    }
 
-			Descriptor::ID => 'name.space.to.id',
-			Descriptor::TITLE => 'Nodes'
+    public function test_get_model(): void
+    {
+        $this->assertInstanceOf(Model::class, $this->node_module->model);
+    }
 
-		]);
-
-		$this->assertEquals('name_space_to_id', $m->flat_id);
-	}
-
-	public function test_get_id(): void
-	{
-		$this->assertEquals(self::$node_descriptor[Descriptor::ID], $this->node_module->id);
-	}
-
-	public function test_get_model(): void
-	{
-		$this->assertInstanceOf(Model::class, $this->node_module->model);
-	}
-
-	public function test_get_parent(): void
-	{
-		$this->assertEquals($this->node_module, $this->content_module->parent);
-	}
+    public function test_get_parent(): void
+    {
+        $this->assertSame($this->node_module, $this->content_module->parent);
+    }
 }

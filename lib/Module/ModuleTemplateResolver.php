@@ -24,74 +24,73 @@ use ICanBoogie\Render\TemplateResolverTrait;
  */
 final class ModuleTemplateResolver implements TemplateResolverDecorator
 {
-	use TemplateResolverTrait;
-	use TemplateResolverDecoratorTrait;
+    use TemplateResolverTrait;
+    use TemplateResolverDecoratorTrait;
 
-	/**
-	 * @var ModuleCollection
-	 */
-	private $modules;
+    /**
+     * @var ModuleCollection
+     */
+    private $modules;
 
-	public function __construct(TemplateResolver $template_resolver, ModuleCollection $modules)
-	{
-		$this->template_resolver = $template_resolver;
-		$this->modules = $modules;
-	}
+    public function __construct(TemplateResolver $template_resolver, ModuleCollection $modules)
+    {
+        $this->template_resolver = $template_resolver;
+        $this->modules = $modules;
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function resolve(string $name, array $extensions, array &$tried = []): ?string
-	{
-		$template_pathname = $this->template_resolver->resolve($name, $extensions, $tried);
+    /**
+     * @inheritdoc
+     */
+    public function resolve(string $name, array $extensions, array &$tried = []): ?string
+    {
+        $template_pathname = $this->template_resolver->resolve($name, $extensions, $tried);
 
-		if ($template_pathname)
-		{
-			return $template_pathname;
-		}
+        if ($template_pathname) {
+            return $template_pathname;
+        }
 
-		$modules = $this->modules;
-		$module_id = $this->resolve_module_id($name);
+        $modules = $this->modules;
+        $module_id = $this->resolve_module_id($name);
 
-		if (empty($modules[$module_id]))
-		{
-			return null;
-		}
+        if (empty($modules[$module_id])) {
+            return null;
+        }
 
-		return $this->resolve_from_module($modules[$module_id], $name, $extensions, $tried);
-	}
+        return $this->resolve_from_module($modules[$module_id], $name, $extensions, $tried);
+    }
 
-	/**
-	 * Resolves module identifier form a template name.
-	 *
-	 * @return string|null The module identifier or `null` if it cannot be determined.
-	 */
-	private function resolve_module_id(string $name): ?string
-	{
-		if (!preg_match('#^([^/]+)#', $name, $matches))
-		{
-			return null;
-		}
+    /**
+     * Resolves module identifier form a template name.
+     *
+     * @return string|null The module identifier or `null` if it cannot be determined.
+     */
+    private function resolve_module_id(string $name): ?string
+    {
+        if (!preg_match('#^([^/]+)#', $name, $matches)) {
+            return null;
+        }
 
-		return $matches[1];
-	}
+        return $matches[1];
+    }
 
-	/**
-	 * Resolves a template from a module and its parents.
-	 */
-	private function resolve_from_module(Module $module, string $name, array $extensions, array &$tried = []): ?string
-	{
-		$paths = [];
-		$name = substr($name, strlen($module->id) + 1);
+    /**
+     * Resolves a template from a module and its parents.
+     */
+    private function resolve_from_module(Module $module, string $name, array $extensions, array &$tried = []): ?string
+    {
+        $paths = [];
+        $name = substr($name, strlen($module->id) + 1);
 
-		while ($module)
-		{
-			$paths[] = $module->path . 'templates' . DIRECTORY_SEPARATOR;
+        while ($module) {
+            $paths[] = $module->path . 'templates' . DIRECTORY_SEPARATOR;
 
-			$module = $module->parent;
-		}
+            $module = $module->parent;
+        }
 
-		return $this->resolve_path($this
-			->resolve_tries($paths, $name, $extensions), $tried);
-	}
+        return $this->resolve_path(
+            $this
+                ->resolve_tries($paths, $name, $extensions),
+            $tried
+        );
+    }
 }

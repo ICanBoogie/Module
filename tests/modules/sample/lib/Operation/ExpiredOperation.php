@@ -8,13 +8,13 @@ use ICanBoogie\Operation\FormHasExpired;
 
 class ExpiredOperation extends Operation
 {
-	protected function validate(ErrorCollection $errors)
-	{
-		throw new FormHasExpired;
-	}
+    protected function validate(ErrorCollection $errors)
+    {
+        throw new FormHasExpired;
+    }
 
-	protected function process()
-	{
-		return true;
-	}
+    protected function process()
+    {
+        return true;
+    }
 }

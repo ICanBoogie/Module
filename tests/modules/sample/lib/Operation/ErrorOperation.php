@@ -7,16 +7,16 @@ use ICanBoogie\Operation;
 
 class ErrorOperation extends Operation
 {
-	protected function validate(ErrorCollection $errors)
-	{
-		$errors['one'] = 'One error.';
-		$errors[] = "General error.";
+    protected function validate(ErrorCollection $errors)
+    {
+        $errors['one'] = 'One error.';
+        $errors[] = "General error.";
 
-		return false;
-	}
+        return false;
+    }
 
-	protected function process()
-	{
-		return true;
-	}
+    protected function process()
+    {
+        return true;
+    }
 }

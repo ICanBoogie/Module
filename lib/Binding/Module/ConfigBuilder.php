@@ -3,10 +3,10 @@
 namespace ICanBoogie\Binding\Module;
 
 use ICanBoogie\Config\Builder;
+use ICanBoogie\Module;
 use ICanBoogie\Module\Descriptor;
 use LogicException;
 
-use function array_merge;
 use function rtrim;
 
 use const DIRECTORY_SEPARATOR;
@@ -16,6 +16,8 @@ use const DIRECTORY_SEPARATOR;
  *
  * The configuration is made of an array of descriptors, ordered by weight.
  * Their weight is computed from their parent and required modules.
+ *
+ * @implements Builder<Config>
  */
 final class ConfigBuilder implements Builder
 {
@@ -25,7 +27,7 @@ final class ConfigBuilder implements Builder
     }
 
     /**
-     * @var array<string, array<Descriptor::*, mixed>>
+     * @var array<string, Descriptor>
      *     Where _key_ is a module identifier.
      */
     private array $descriptors = [];
@@ -34,7 +36,6 @@ final class ConfigBuilder implements Builder
     {
         $this->assert_parents();
         $this->assert_required();
-        $this->resolve_ancestors();
         $this->order_by_weight();
 
         return new Config($this->descriptors);
@@ -43,7 +44,7 @@ final class ConfigBuilder implements Builder
     /**
      * @param string $id
      *     The identifier of the module.
-     * @param class-string $class
+     * @param class-string<Module> $class
      *     The class of the module.
      * @param ?string $parent
      *     The parent module.
@@ -73,16 +74,14 @@ final class ConfigBuilder implements Builder
             $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         }
 
-        $this->descriptors[$id] = [
-
-            Descriptor::ID => $id,
-            Descriptor::CLASSNAME => $class,
-            Descriptor::PARENT => $parent,
-            Descriptor::REQUIRES => $require,
-            Descriptor::MODELS => $models,
-            Descriptor::PATH => $path,
-
-        ];
+        $this->descriptors[$id] = new Descriptor(
+            id: $id,
+            class: $class,
+            parent: $parent,
+            required: $require,
+            models: $models,
+            path: $path
+        );
 
         return $this;
     }
@@ -90,7 +89,7 @@ final class ConfigBuilder implements Builder
     private function assert_parents(): void
     {
         foreach ($this->descriptors as $id => $descriptor) {
-            $parent = $descriptor[Descriptor::PARENT];
+            $parent = $descriptor->parent;
 
             if (!$parent) {
                 continue;
@@ -109,7 +108,7 @@ final class ConfigBuilder implements Builder
     private function assert_required(): void
     {
         foreach ($this->descriptors as $id => $descriptor) {
-            foreach ($descriptor[Descriptor::REQUIRES] as $required) {
+            foreach ($descriptor->required as $required) {
                 if ($required === $id) {
                     throw new LogicException("module '$id' cannot self-require");
                 }
@@ -118,30 +117,6 @@ final class ConfigBuilder implements Builder
                     throw new LogicException("module '$id' cannot require undefined module '$required'");
                 }
             }
-        }
-    }
-
-    private function resolve_ancestors(): void
-    {
-        /**
-         * @param string[] $ancestors
-         *
-         * @return string[]
-         */
-        $find_ancestors = function (string $id, array &$ancestors = []) use (&$find_ancestors): array {
-            $parent = $this->descriptors[$id][Descriptor::PARENT];
-
-            if ($parent) {
-                $ancestors[] = $parent;
-
-                $find_ancestors($parent, $ancestors);
-            }
-
-            return $ancestors;
-        };
-
-        foreach ($this->descriptors as $id => &$descriptor) {
-            $descriptor['ancestors'] = $find_ancestors($id);
         }
     }
 
@@ -163,23 +138,24 @@ final class ConfigBuilder implements Builder
             $i = 0;
             $descriptor = $descriptors[$id];
 
-            if ($descriptor[Descriptor::PARENT]) {
-                $i += 1 + $compute_weight($descriptor[Descriptor::PARENT]);
+            if ($descriptor->parent) {
+                $i += 1 + $compute_weight($descriptor->parent);
             }
 
-            foreach ($descriptor[Descriptor::REQUIRES] as $required) {
+            foreach ($descriptor->required as $required) {
                 $i += 1 + $compute_weight($required);
             }
 
             return $weights[$id] = $i;
         };
 
-        foreach ($descriptors as $id => &$descriptor) {
-            $descriptor[Descriptor::WEIGHT] = $compute_weight($id);
+        foreach (array_keys($descriptors) as $id) {
+            $compute_weight($id);
         }
 
-        asort($weights);
-
-        $this->descriptors = array_merge($weights, $descriptors);
+        uksort(
+            $this->descriptors,
+            fn(string $id1, string $id2): int => $weights[$id1] <=> $weights[$id2]
+        );
     }
 }

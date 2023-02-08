@@ -3,10 +3,16 @@ services:
     autowire: true
 
   ICanBoogie\Binding\Module\Config:
-    factory: [ ICanBoogie\Binding\Module\Factory, build_config ]
+    factory: [ '@ICanBoogie\ConfigProvider', config_for_class ]
+    arguments:
+    - ICanBoogie\Binding\Module\Config
 
-  ICanBoogie\Module\ModuleCollection:
-    factory: [ ICanBoogie\Binding\Module\Factory, build_modules ]
+  ICanBoogie\Module\ModuleProvider:
+    class: ICanBoogie\Module\ModuleProvider\Container
+    arguments:
+      $locator: !tagged_locator { tag: module, index_by: id }
+
+  ICanBoogie\Module\ModuleCollection: ~
 
   ICanBoogie\Module\ModuleTemplateResolver:
     decorates: ICanBoogie\Render\BasicTemplateResolver

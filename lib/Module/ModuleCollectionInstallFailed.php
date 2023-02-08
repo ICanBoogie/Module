@@ -14,7 +14,6 @@ namespace ICanBoogie\Module;
 use Exception;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\ErrorCollection;
-use ICanBoogie\HTTP\Status;
 use Throwable;
 
 /**
@@ -24,50 +23,48 @@ use Throwable;
  */
 final class ModuleCollectionInstallFailed extends Exception
 {
-	/**
-	 * @uses get_errors
-	 */
-	use AccessorTrait;
+    /**
+     * @uses get_errors
+     */
+    use AccessorTrait;
 
-	/**
-	 * @var ErrorCollection
-	 */
-	private $errors;
+    /**
+     * @var ErrorCollection
+     */
+    private $errors;
 
-	private function get_errors(): ErrorCollection
-	{
-		return $this->errors;
-	}
+    private function get_errors(): ErrorCollection
+    {
+        return $this->errors;
+    }
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @param ErrorCollection $errors Module collection installation errors.
-	 */
-	public function __construct(ErrorCollection $errors, string $message = null, Throwable $previous = null)
-	{
-		$this->errors = $errors;
+    /**
+     * @inheritdoc
+     *
+     * @param ErrorCollection $errors Module collection installation errors.
+     */
+    public function __construct(ErrorCollection $errors, string $message = null, Throwable $previous = null)
+    {
+        $this->errors = $errors;
 
-		if (!$message)
-		{
-			$message = $this->format_message($errors);
-		}
+        if (!$message) {
+            $message = $this->format_message($errors);
+        }
 
-		parent::__construct($message, 0, $previous);
-	}
+        parent::__construct($message, 0, $previous);
+    }
 
-	/**
-	 * Formats exception message given errors.
-	 */
-	protected function format_message(ErrorCollection $errors): string
-	{
-		$message = "Module collection installation failed:\n";
+    /**
+     * Formats exception message given errors.
+     */
+    protected function format_message(ErrorCollection $errors): string
+    {
+        $message = "Module collection installation failed:\n";
 
-		foreach ($errors as $module_id => $error)
-		{
-			$message .= "\n- $module_id: $error\n";
-		}
+        foreach ($errors as $module_id => $error) {
+            $message .= "\n- $module_id: $error\n";
+        }
 
-		return $message;
-	}
+        return $message;
+    }
 }

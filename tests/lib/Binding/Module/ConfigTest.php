@@ -5,6 +5,7 @@ namespace Test\ICanBoogie\Binding\Module;
 use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Module\Descriptor;
 use PHPUnit\Framework\TestCase;
+use Test\ICanBoogie\Module\ModulesTest\Sample\Module;
 use Test\ICanBoogie\SetStateHelper;
 
 final class ConfigTest extends TestCase
@@ -13,9 +14,7 @@ final class ConfigTest extends TestCase
     {
         $config = new Config(
             [
-                'articles' => [
-                    Descriptor::ID => 'articles'
-                ]
+                'articles' => new Descriptor('articles', Module::class),
             ]
         );
 

@@ -18,16 +18,16 @@ namespace ICanBoogie\Module;
  */
 trait ModuleRoute
 {
-	/**
-	 * @var string Module identifier.
-	 */
-	protected $module;
+    /**
+     * @var string Module identifier.
+     */
+    protected $module;
 
-	/**
-	 * @return string
-	 */
-	protected function get_module()
-	{
-		return $this->module;
-	}
+    /**
+     * @return string
+     */
+    protected function get_module()
+    {
+        return $this->module;
+    }
 }

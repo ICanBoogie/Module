@@ -2,7 +2,9 @@
 
 namespace Test\ICanBoogie\Module\ModulesTest\Sample;
 
-class SampleException extends \Exception
+use Exception;
+
+class SampleException extends Exception
 {
 
 }
