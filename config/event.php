@@ -12,6 +12,4 @@ return fn(ConfigBuilder $config) => $config
 	/* @deprecated */
 //	BeforeSynthesizeRoutesEvent::class => [ Hooks::class, 'before_synthesize_routes' ]
 	/* @deprecated */
-//	ICanBoogie\View\View::class . '::alter' => $hooks . 'on_view_alter',
-	/* @deprecated */
 //	ICanBoogie\HTTP\RequestDispatcher::class . '::alter' => $hooks . 'on_alter_request_dispatcher',

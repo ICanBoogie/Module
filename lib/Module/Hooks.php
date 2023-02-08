@@ -12,18 +12,13 @@
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Application;
-use ICanBoogie\Binding\Module\ControllerBindings;
 use ICanBoogie\Binding\Routing\BeforeSynthesizeRoutesEvent;
 use ICanBoogie\HTTP\RequestDispatcher;
 use ICanBoogie\Operation\OperationRouteDispatcher;
-use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\Routing\Route;
-use ICanBoogie\View\View;
 
 use function ICanBoogie\app;
-use function ICanBoogie\emit;
 use function ICanBoogie\format;
-use function trigger_error;
 
 /**
  * Hook callbacks.
@@ -80,28 +75,6 @@ class Hooks
 		}
 
 		self::$route_module_mapping = $route_module_mapping;
-	}
-
-	/**
-	 * If the view renders a module's route, the "template" directory of that module is added
-	 * to the list of templates locations. Also, the module is set as `module` view variable.
-	 *
-	 * @param View\AlterEvent $event
-	 * @param View $target
-	 */
-	static public function on_view_alter(View\AlterEvent $event, View $target): void
-	{
-		trigger_error("Too much magic for one's sake");
-
-		try {
-			/* @var $controller ControllerBindings */
-			$controller = $target->controller;
-			$module = $controller->module;
-		} catch (PropertyNotDefined $e) {
-			return;
-		}
-
-		$target['module'] = $module;
 	}
 
 	/**
