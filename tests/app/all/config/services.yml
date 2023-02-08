@@ -2,6 +2,9 @@ services:
   _defaults:
     public: true
 
+  test.config:
+    alias: ICanBoogie\Binding\Module\Config
+
   test.modules:
     alias: ICanBoogie\Module\ModuleCollection
 

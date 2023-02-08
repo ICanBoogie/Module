@@ -1,19 +1,10 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Application;
+use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Binding\SymfonyDependencyInjection\ExtensionWithFactory;
-use ICanBoogie\Module\Autoconfig\ModuleAutoconfig;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -45,9 +36,9 @@ final class ModuleContainerExtension extends Extension implements ExtensionWithF
 	 */
 	public function load(array $configs, ContainerBuilder $container): void
 	{
-        $modules = new ModuleCollection($this->app->auto_config[ModuleAutoconfig::MODULES]);
+        $config = $this->app->config_for_class(Config::class);
 
-		foreach ($modules->descriptors as $module_id => $descriptor)
+		foreach ($config->descriptors as $module_id => $descriptor)
 		{
 			$class = $descriptor[Descriptor::CLASSNAME];
 

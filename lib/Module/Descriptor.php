@@ -18,6 +18,41 @@ namespace ICanBoogie\Module;
  */
 final class Descriptor
 {
+    /**
+     * Key for the module's identifier.
+     */
+    public const ID = 'id';
+
+    /**
+     * Key for the module's class.
+     */
+    public const CLASSNAME = 'class';
+
+    /**
+     * Key for a parent module.
+     */
+    public const PARENT = 'parent';
+
+    /**
+     * Key for required modules.
+     */
+    public const REQUIRES = 'requires';
+
+    /**
+     * Key for the module's models.
+     */
+    public const MODELS = 'models';
+
+    /**
+     * Key for the module's weight.
+     */
+    public const WEIGHT = 'weight';
+
+    /**
+     * Key for the module's ancestors.
+     */
+    public const ANCESTORS = 'ancestors';
+
 	/**
 	 * Defines the category for the module.
 	 *
@@ -29,14 +64,6 @@ final class Descriptor
 	const CATEGORY = 'category';
 
 	/**
-	 * Defines the PHP class of the module.
-	 *
-	 * If the class is not defined it is resolved during indexing using the {@link NS}
-	 * tag and the following pattern : `<namespace>\Module`.
-	 */
-	const CLASSNAME = 'class';
-
-	/**
 	 * Defines a short description of what the module do.
 	 */
 	const DESCRIPTION = 'description';
@@ -45,37 +72,6 @@ final class Descriptor
 	 * Defines extra values.
 	 */
 	const EXTRA = 'extra';
-
-	/**
-	 * Defines the parent module the module inherits from.
-	 */
-	const INHERITS = 'inherits';
-
-	/**
-	 * Defines the identifier of the module.
-	 *
-	 * If the identifier is not defined the name of the module directory is used instead.
-	 */
-	const ID = 'id';
-
-	/**
-	 * Defines the modules that the module requires.
-	 *
-	 * The required modules are defined using an array of identifiers.
-	 */
-	const REQUIRES = 'requires';
-
-	/**
-	 * Defines the models of the module.
-	 */
-	const MODELS = 'models';
-
-	/**
-	 * Defines the namespace of the module.
-	 *
-	 * This attribute must be defined at construct time.
-	 */
-	const NS = 'namespace';
 
 	/**
 	 * Path to the module's directory.
@@ -100,41 +96,6 @@ final class Descriptor
 	 * The title of the module is translated within the `module_title` scope.
 	 */
 	const TITLE = 'title';
-
-	/**
-	 * Defines the weight of the module.
-	 *
-	 * The weight of the module is resolved during modules indexing according to the
-	 * {@link EXTENDS} and {@link REQUIRES} tags.
-	 */
-	const WEIGHT = 'weight';
-
-	/**
-	 * Normalizes a descriptor array.
-	 *
-	 * @param array $descriptor
-	 *
-	 * @return array
-	 */
-	static public function normalize(array $descriptor): array
-	{
-		return $descriptor + [
-
-			Descriptor::CATEGORY => null,
-			Descriptor::CLASSNAME => $descriptor[Descriptor::NS] . '\Module',
-			Descriptor::DESCRIPTION => null,
-			Descriptor::EXTRA => [],
-			Descriptor::INHERITS => null,
-			Descriptor::ID => null,
-			Descriptor::MODELS => [],
-			Descriptor::PATH => null,
-			Descriptor::PERMISSION => null,
-			Descriptor::PERMISSIONS => [],
-			Descriptor::REQUIRES => [],
-			Descriptor::WEIGHT => 0
-
-		];
-	}
 
 	private function __construct() {}
 }

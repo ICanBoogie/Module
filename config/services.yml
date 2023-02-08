@@ -2,6 +2,9 @@ services:
   _defaults:
     autowire: true
 
+  ICanBoogie\Binding\Module\Config:
+    factory: [ ICanBoogie\Binding\Module\Factory, build_config ]
+
   ICanBoogie\Module\ModuleCollection:
     factory: [ ICanBoogie\Binding\Module\Factory, build_modules ]
 

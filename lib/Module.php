@@ -26,7 +26,7 @@ use function ICanBoogie\ActiveRecord\get_model;
  * @property-read string $flat_id Underscored identifier.
  * @property-read string $id The identifier of the module, defined by {@link Descriptor::ID}.
  * @property-read Model $model The primary model of the module.
- * @property-read Module $parent The parent module, defined by {@link Descriptor::INHERITS}.
+ * @property-read Module $parent The parent module, defined by {@link Descriptor::PARENT}.
  * @property-read string $path The path to the module, defined by {@link Descriptor::PATH}.
  * @property-read string $title The localized title of the module.
  * @property-read Application $app
@@ -145,7 +145,7 @@ class Module extends Prototyped
 	 */
 	protected function get_parent(): ?Module
 	{
-		return $this->descriptor[Descriptor::INHERITS];
+		return $this->descriptor[Descriptor::PARENT];
 	}
 
 	/**

@@ -11,6 +11,7 @@
 
 namespace Test\ICanBoogie;
 
+use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Module\ModuleCollection;
 use ICanBoogie\Module\ModuleTemplateResolver;
 use PHPUnit\Framework\TestCase;
@@ -31,6 +32,7 @@ final class ServicesTest extends TestCase
 	{
 		return [
 
+			[ 'test.config', Config::class ],
 			[ 'test.modules', ModuleCollection::class ],
 			[ 'test.template_resolver', ModuleTemplateResolver::class ],
 

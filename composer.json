@@ -69,8 +69,11 @@
 	},
 	"extra": {
 		"icanboogie": {
-			"config-path": "config",
 			"autoconfig-extension": "ICanBoogie\\Module\\Autoconfig\\ModuleExtension",
+            "config-constructor": {
+                "ICanBoogie\\Binding\\Module\\Config": "ICanBoogie\\Binding\\Module\\ConfigBuilder"
+            },
+			"config-path": "config",
 			"modules-path": "tests/modules"
 		}
 	}

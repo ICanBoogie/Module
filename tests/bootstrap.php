@@ -9,9 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace Test\ICanBoogie;
 
+use function ICanBoogie\boot;
 use function ob_start;
+
+use const DIRECTORY_SEPARATOR;
+
+const SANDBOX = __DIR__ . DIRECTORY_SEPARATOR . 'sandbox' . DIRECTORY_SEPARATOR;
 
 chdir(__DIR__);
 

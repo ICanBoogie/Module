@@ -30,8 +30,8 @@ final class ModuleTest extends TestCase
 
 			Descriptor::ID => 'nodes',
 			Descriptor::MODELS => [ 'nodes' ],
-			Descriptor::NS => __CLASS__ . '\Modules\Nodes',
 			Descriptor::TITLE => 'Nodes'
+
 		];
 	}
 
@@ -49,7 +49,7 @@ final class ModuleTest extends TestCase
 		(
 			$collection_stub, [
 				Descriptor::ID => 'contents',
-				Descriptor::INHERITS => $this->node_module,
+				Descriptor::PARENT => $this->node_module,
 				Descriptor::MODELS => [ 'contents' ],
 			]
 		);

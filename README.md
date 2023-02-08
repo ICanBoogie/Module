@@ -24,22 +24,21 @@ composer require icanboogie/module
 
 ## Defining a module
 
-It takes at least two files to define a module: a descriptor and another where the class used to
-instantiate the module is defined. The descriptor is a `descriptor.php` file that must be located
-at the root of the module directory. The class is usually located in the file `lib/module.php`.
-The module directory is usually named with the identifier of the module.
+It takes at least two files to define a module: a configuration fragment and a module class. The configuration fragment is a `module.php` file located in the `config` directory. The class is usually located in the file `lib/Module.php`. The module directory is usually named with the identifier of the module.
 
 The following directory structure demonstrates how a very basic `nodes` module could be defined:
 
     nodes
-    ├─ lib
-    │  └─ Module.php
-    └─ descriptor.php
+    ├─ config
+    │  └─ module.php
+    └─ lib
+       └─ Module.php
 
 The following directory structure demonstrates a more advanced module:
 
     nodes
     ├─ config
+    │  └─ module.php
     |  └─ <configuration files>
     ├─ lib
     |  ├─ Operation
@@ -51,67 +50,32 @@ The following directory structure demonstrates a more advanced module:
     |  └─ <public assets>
     ├─ tests
     |  └─ <tests>
-    ├─ templates
-    |  └─ <view templates>
-    └─ descriptor.php
+    └─ templates
+       └─ <view templates>
 
 
 
 
 
-### The descriptor
+### The configuration fragment
 
-The descriptor is a very important file because it describes the module and its models. At the
-very least the descriptor must define the title and the namespace of the module (yes namespace is
-mandatory).
+The configuration fragment describes the module and its models. At the very least the identifier and the class of the module must be defined. The modules configuration takes care of verifying module relationships integrity, computing module weights, and sorting modules according to their weight.
 
-The following code is the descriptor of the [Nodes][] module. You'll notice that the module
-is using the namespace `Icybee\Modules\Nodes`.
+The following code could be a configuration fragment for a "nodes" module.
 
 ```php
 <?php
 
-namespace Icybee\Modules\Nodes;
+namespace Acme\Nodes;
 
-use ICanBoogie\Module\Descriptor;
+use ICanBoogie\Binding\Module\ConfigBuilder;
 
-return [
-
-    Descriptor::CATEGORY => 'contents',
-    Descriptor::DESCRIPTION => 'Centralized node system base',
-    Descriptor::MODELS => [ 'contents' ], // references to models used by the module
-    Descriptor::NS => __NAMESPACE__,
-    Descriptor::PERMISSION => false,
-    Descriptor::PERMISSIONS => [
-
-        'modify belonging site'
-
-    ],
-    Descriptor::REQUIRES => [ 'sites', 'users' ],
-    Descriptor::TITLE => 'Nodes'
-
-];
+return fn(ConfigBuilder $config) => $config
+    ->add_module(
+        id: 'nodes',
+        class: Module::class
+    );
 ```
-
-
-
-
-
-#### Descriptor tags
-
-Here are the tags (`Descriptor::<tag>`) that can be used to define the module's descriptor.
-
-- `CATEGORY`: Defines the category for the module.
-- `CLASSNAME`: Defines the PHP class of the module. Defaults to `<namespace>\Module`.
-- `DESCRIPTION`: Defines a short description of the module.
-- `INHERITS`: Defines the module that the module extends.
-- `ID`: Defines the identifier of the module. Defaults to its directory name.
-- `REQUIRES`: Defines the modules required, used to compute modules weight.
-- `MODELS`: Defines the models used by the module.
-- `NS`: Defines the namespace of the module.
-- `PERMISSION`: Defines the general permission required to use this module.
-- `PERMISSIONS`: Defines module specific permissions.
-- `TITLE`: Defines the title of the module.
 
 
 
@@ -137,32 +101,19 @@ extends:
 
 ## Module collection
 
-Modules are loaded through a module collection. The collection indexes modules and provide access to
-their descriptors. The dependencies between the modules is respected and they are sorted
-accordingly.
+A module collection is represented by a [ModuleCollection][] instance.
 
-A module collection is represented by a [ModuleCollection][] instance, constructed from an array of
-paths and an optional cache. The paths array defined where the modules are located, while the cache
-is used to store and retrieve the collection index.
-
-The following example demonstrates how a module collection can be created from two separate
-module locations and the single location of a module, a cache is also provided:
+The following example demonstrates how a module collection can be created from a module configuration:
 
 ```php
 <?php
 
 use ICanBoogie\Module\ModuleCollection;
-use ICanBoogie\Storage\FileStorage;
+use ICanBoogie\Binding\Module\Config;
 
-$vars = new FileStorage(__DIR__ . '/repository/vars');
+/* @var Config $config */
 
-$modules = new ModuleCollection([
-
-    __DIR__ . '/vendor/icanboogie-modules',
-    __DIR__ . '/protected/modules',
-    __DIR__ . '/path/to/my/module'
-
-], $vars);
+$modules = new ModuleCollection($config->descriptors);
 ```
 
 
@@ -355,4 +306,3 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 [icanboogie/facets]:             https://github.com/ICanBoogie/Facets
 [icanboogie/i18n]:               https://github.com/ICanBoogie/I18n
 [ActiveRecord package]:          https://github.com/ICanBoogie/ActiveRecord
-[Nodes]:                         https://github.com/Icybee/module-nodes
