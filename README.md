@@ -265,46 +265,17 @@ The package supports the _autoconfig_ feature of [ICanBoogie][] and provides the
 
 - A lazy getter for the `ICanBoogie\Application::$modules` property, that returns a [ModuleCollection][]
 instance configured to provide the modules of the application.
-- A lazy getter for the `ICanBoogie\Application::$models` property, that returns a [ModelCollection][]
-instance configured to provide the models defined by the modules.
 
 ```php
 <?php
 
-/* @var \ICanBoogie\Application $app */
+namespace ICanBoogie;
 
-$app->modules['nodes'];
-$app->models['nodes'];
-```
+use ICanBoogie\Module\ModuleCollection;/* @var Application $app */
 
-
-
-
-
-## An enhanced model provider
-
-The package provides an enhanced model provider, which extends the model provider that comes with
-the [ActiveRecord package] to add support for models defined by modules.
-
-For instance, using this provider you can access the primary model defined by the [Nodes][] module
-as follows:
-
-```php
-<?php
-
-/* @var \ICanBoogie\Application $app */
-
-$nodes_model = $app->models['nodes'];
-```
-
-And if the [Nodes][] module was defining an `attachments` model:
-
-```php
-<?php
-
-/* @var \ICanBoogie\Application $app */
-
-$nodes_attachments_model = $app->models['nodes/attachments'];
+$nodes = $app->service_for_id('module.nodes', Module::class);
+# or
+$nodes = $app->service_for_class(ModuleCollection::class)['nodes'];
 ```
 
 

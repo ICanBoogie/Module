@@ -13,6 +13,7 @@ namespace ICanBoogie\Module;
 
 use ICanBoogie\Application;
 use ICanBoogie\Binding\SymfonyDependencyInjection\ExtensionWithFactory;
+use ICanBoogie\Module\Autoconfig\ModuleAutoconfig;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -44,12 +45,14 @@ final class ModuleContainerExtension extends Extension implements ExtensionWithF
 	 */
 	public function load(array $configs, ContainerBuilder $container): void
 	{
-		foreach ($this->app->modules->descriptors as $module_id => $descriptor)
+        $modules = new ModuleCollection($this->app->auto_config[ModuleAutoconfig::MODULES]);
+
+		foreach ($modules->descriptors as $module_id => $descriptor)
 		{
 			$class = $descriptor[Descriptor::CLASSNAME];
 
 			$definition = (new Definition($class))
-				->setFactory([ new Reference('modules'), 'offsetGet' ])
+				->setFactory([ new Reference(ModuleCollection::class), 'offsetGet' ])
 				->setArguments([ $module_id ]);
 
 			$container->setDefinition($class, $definition);

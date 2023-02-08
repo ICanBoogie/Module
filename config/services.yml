@@ -3,7 +3,7 @@ services:
     autowire: true
 
   ICanBoogie\Module\ModuleCollection:
-    factory: [ ICanBoogie\Binding\Module\Hooks, get_modules ]
+    factory: [ ICanBoogie\Binding\Module\Factory, build_modules ]
 
   ICanBoogie\Module\ModuleTemplateResolver:
     decorates: ICanBoogie\Render\BasicTemplateResolver

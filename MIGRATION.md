@@ -13,6 +13,7 @@ None
 ### Backward Incompatible Changes
 
 - Removed all bindings to `ControllerAbstract` since it doesn't extend `Prototyped` anymore.
+- Removed prototype method `Application::get_modules`.
 
 ### Deprecated Features
 

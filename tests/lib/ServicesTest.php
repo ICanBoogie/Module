@@ -24,7 +24,7 @@ final class ServicesTest extends TestCase
 	 */
 	public function test_service(string $id, string $class): void
 	{
-		$this->assertInstanceOf($class, app()->container->get($id));
+		$this->assertInstanceOf($class, app()->service_for_id($id, $class));
 	}
 
 	public function provide_service(): array
