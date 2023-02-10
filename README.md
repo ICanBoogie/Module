@@ -180,14 +180,13 @@ in a [ErrorCollection][] instance if the installation fails.
 ```php
 <?php
 
-use ICanBoogie\Module\ModuleCollectionInstallFailed;
-use ICanBoogie\Module\ModuleCollection;
+use ICanBoogie\Module\ModuleCollection;use ICanBoogie\Module\ModuleInstaller\ModuleInstallFailed;
 
 /* @var ModuleCollection $modules */
 
 try {
     $modules->install();
-} catch (ModuleCollectionInstallFailed $e) {
+} catch (ModuleInstallFailed $e) {
     echo get_class($e->errors); // ICanBoogie\ErrorCollection
 }
 ```

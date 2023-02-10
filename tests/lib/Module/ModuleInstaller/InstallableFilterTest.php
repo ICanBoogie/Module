@@ -1,11 +1,10 @@
 <?php
 
-namespace Test\ICanBoogie\Module\ModuleCollection;
+namespace Test\ICanBoogie\Module\ModuleInstaller;
 
 use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
-use ICanBoogie\Module\Descriptor;
-use ICanBoogie\Module\ModuleCollection;
+use ICanBoogie\Module\ModuleInstaller\InstallableFilter;
 use ICanBoogie\Module\ModuleProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @small
  * @group install
  */
-final class InstallableModulesFilterTest extends TestCase
+final class InstallableFilterTest extends TestCase
 {
     /**
      * @dataProvider provide_test_filter
@@ -22,12 +21,10 @@ final class InstallableModulesFilterTest extends TestCase
     {
         $module_id = uniqid();
         $module = $this->mockModule($is_installed, $has_errors);
-        $descriptor = new Descriptor($module_id, $module::class);
-
         $modules = $this->mockModuleProvider($module_id, $module);
 
-        $filter = new ModuleCollection\InstallableFilter($modules);
-        $this->assertSame($expected, $filter($descriptor));
+        $filter = new InstallableFilter($modules);
+        $this->assertSame($expected, $filter($module_id));
     }
 
     /**

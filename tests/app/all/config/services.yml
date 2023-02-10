@@ -5,11 +5,14 @@ services:
   test.config:
     alias: ICanBoogie\Binding\Module\Config
 
-  test.modules:
-    alias: ICanBoogie\Module\ModuleCollection
+  test.module_installer:
+    alias: ICanBoogie\Module\ModuleInstaller
 
   test.module_provider:
     alias: ICanBoogie\Module\ModuleProvider
+
+  test.modules:
+    alias: ICanBoogie\Module\ModuleCollection
 
   test.template_resolver:
     alias: ICanBoogie\Render\BasicTemplateResolver

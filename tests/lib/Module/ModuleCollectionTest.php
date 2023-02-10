@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Test\ICanBoogie\Module;
 
 use ICanBoogie\Module\ModuleCollection;
@@ -35,13 +26,16 @@ final class ModuleCollectionTest extends TestCase
      *
      * @param class-string|false $expected
      */
-    public function test_resolve_classname(string $classname, string $module_id, string|false $expected)
+    public function test_resolve_classname(string $classname, string $module_id, string|false $expected): void
     {
         $actual = self::$modules->resolve_classname($classname, $module_id);
 
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @return array<array{ string, string, class-string|false }>
+     */
     public function provide_test_resolve_classname(): array
     {
         return [

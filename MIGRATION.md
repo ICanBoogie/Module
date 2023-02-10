@@ -21,6 +21,8 @@
   fragments. `Descriptor::$models` now only hold model identifiers.
 - Removed all bindings to `ControllerAbstract` since it doesn't extend `Prototyped` anymore.
 - Removed prototype method `Application::get_modules`.
+- Renamed `ModuleCollectionInstallFailed` as `ModuleInstallFailed`.
+- Moved module installation from `ModuleCollection` to `BasicModuleInstaller`.
 
 ### Deprecated Features
 

@@ -13,6 +13,7 @@ namespace Test\ICanBoogie;
 
 use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Module\ModuleCollection;
+use ICanBoogie\Module\ModuleInstaller;
 use ICanBoogie\Module\ModuleProvider;
 use ICanBoogie\Module\ModuleTemplateResolver;
 use PHPUnit\Framework\TestCase;
@@ -22,6 +23,8 @@ use function ICanBoogie\app;
 final class ContainerTest extends TestCase
 {
     /**
+     * @param class-string $class
+     *
      * @dataProvider provide_service
      */
     public function test_service(string $id, string $class): void
@@ -29,13 +32,17 @@ final class ContainerTest extends TestCase
         $this->assertInstanceOf($class, app()->service_for_id($id, $class));
     }
 
+    /**
+     * @return array<array{ string, class-string }>
+     */
     public function provide_service(): array
     {
         return [
 
             [ 'test.config', Config::class ],
-            [ 'test.modules', ModuleCollection::class ],
+            [ 'test.module_installer', ModuleInstaller::class ],
             [ 'test.module_provider', ModuleProvider::class ],
+            [ 'test.modules', ModuleCollection::class ],
             [ 'test.template_resolver', ModuleTemplateResolver::class ],
 
         ];

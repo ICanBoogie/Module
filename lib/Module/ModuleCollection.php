@@ -14,11 +14,8 @@ namespace ICanBoogie\Module;
 use ArrayAccess;
 use BadMethodCallException;
 use ICanBoogie\Binding\Module\Config;
-use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
-use ICanBoogie\Module\ModuleCollection\InstallableFilter;
 use IteratorAggregate;
-use Throwable;
 use Traversable;
 
 use function substr;
@@ -121,28 +118,6 @@ class ModuleCollection implements ArrayAccess, IteratorAggregate
         }
 
         return false;
-    }
-
-    /**
-     * Install all the enabled modules.
-     *
-     * @throws ModuleCollectionInstallFailed if an error occurs.
-     */
-    public function install(ErrorCollection $errors = new ErrorCollection()): ErrorCollection
-    {
-        foreach (array_keys($this->filter_descriptors(new InstallableFilter($this->provider))) as $module_id) {
-            try {
-                $this->provider->module_for_id($module_id)->install($errors);
-            } catch (Throwable $e) {
-                $errors[$module_id] = $e;
-            }
-        }
-
-        if ($errors->count()) {
-            throw new ModuleCollectionInstallFailed($errors);
-        }
-
-        return $errors;
     }
 
     /**

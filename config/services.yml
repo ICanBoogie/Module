@@ -7,6 +7,10 @@ services:
     arguments:
     - ICanBoogie\Binding\Module\Config
 
+  ICanBoogie\Module\ModuleInstaller:
+    class: ICanBoogie\Module\ModuleInstaller\BasicModuleInstaller
+    lazy: true
+
   ICanBoogie\Module\ModuleProvider:
     class: ICanBoogie\Module\ModuleProvider\Container
     arguments:

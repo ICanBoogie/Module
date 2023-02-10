@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Module\ModuleCollection;
+namespace ICanBoogie\Module\ModuleInstaller;
 
 use ICanBoogie\ErrorCollection;
-use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleProvider;
 use Throwable;
 
@@ -21,7 +20,7 @@ use function count;
 /**
  * Filters installable module descriptors.
  */
-class InstallableFilter
+final class InstallableFilter
 {
     public function __construct(
         private readonly ModuleProvider $provider
@@ -29,13 +28,11 @@ class InstallableFilter
     }
 
     /**
-     * @param Descriptor $descriptor
-     *
      * @return bool `true` if the module may be installed, `false` otherwise.
      */
-    public function __invoke(Descriptor $descriptor): bool
+    public function __invoke(string $module_id): bool
     {
-        $module = $this->provider->module_for_id($descriptor->id);
+        $module = $this->provider->module_for_id($module_id);
         $errors = new ErrorCollection;
 
         try {
