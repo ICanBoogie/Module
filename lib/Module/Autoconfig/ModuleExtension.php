@@ -19,21 +19,26 @@ use ICanBoogie\Autoconfig\ExtensionAbstract;
 use function array_merge;
 use function getcwd;
 use function is_dir;
+use function is_string;
 
 /**
  * Autoconfig extension to handle modules, their config and locale messages.
  */
 final class ModuleExtension extends ExtensionAbstract
 {
-    public const TYPE_MODULE = "icanboogie-module";
+    /**
+     * Identifier for module packages.
+     */
+    public const PACKAGE_TYPE_MODULE = "icanboogie-module";
+
+    /**
+     * composer.json extra property for modules path. (root-only)
+     */
     public const OPTION_MODULES_PATH = 'modules-path';
 
-    private AutoconfigGenerator $generator;
-
-    public function __construct(AutoconfigGenerator $generator)
-    {
-        $this->generator = $generator;
-
+    public function __construct(
+        private readonly AutoconfigGenerator $generator
+    ) {
         parent::__construct($generator);
     }
 
@@ -65,6 +70,7 @@ final class ModuleExtension extends ExtensionAbstract
 
         foreach ($modules_directories as $pathname) {
             if (is_dir("$pathname/config")) {
+                /** @phpstan-ignore-next-line */
                 $autoconfig[Autoconfig::CONFIG_PATH][] = [
 
                     $this->find_shortest_path_code("$pathname/config"),
@@ -74,6 +80,7 @@ final class ModuleExtension extends ExtensionAbstract
             }
 
             if (is_dir("$pathname/locale")) {
+                /** @phpstan-ignore-next-line */
                 $autoconfig[Autoconfig::LOCALE_PATH][] = $this
                     ->find_shortest_path_code("$pathname/locale");
             }
@@ -110,7 +117,7 @@ final class ModuleExtension extends ExtensionAbstract
         $directories = [];
 
         foreach ($this->generator->packages as $pathname => $package) {
-            if ($package->getType() != self::TYPE_MODULE) {
+            if ($package->getType() != self::PACKAGE_TYPE_MODULE) {
                 continue;
             }
 
@@ -120,19 +127,23 @@ final class ModuleExtension extends ExtensionAbstract
         return $directories;
     }
 
+    /**
+     * @return string[]
+     */
     private function collect_modules_directories_from_root_package(): array
     {
         $package = $this->generator->root_package;
-        $extra = $package->getExtra();
+        /** @phpstan-ignore-next-line */
+        $path = $package->getExtra()['icanboogie'][self::OPTION_MODULES_PATH] ?? null;
 
-        if (empty($extra['icanboogie'][self::OPTION_MODULES_PATH])) {
+        if (!$path) {
             return [];
         }
 
+        assert(is_string($path));
+
         $directories = [];
-        $iterator = new DirectoryIterator(
-            getcwd() . DIRECTORY_SEPARATOR . $extra['icanboogie'][self::OPTION_MODULES_PATH]
-        );
+        $iterator = new DirectoryIterator(getcwd() . DIRECTORY_SEPARATOR . $path);
 
         foreach ($iterator as $file) {
             if ($file->isDot() || $file->isFile()) {
