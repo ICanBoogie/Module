@@ -19,4 +19,4 @@ services:
   ICanBoogie\Module\ModuleCollection: ~
 
   ICanBoogie\Module\ModuleTemplateResolver:
-    decorates: ICanBoogie\Render\BasicTemplateResolver
+    decorates: ICanBoogie\Render\TemplateResolver\Basic

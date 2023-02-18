@@ -11,31 +11,23 @@
 
 namespace ICanBoogie\Module;
 
-use ICanBoogie\Module;
+use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Render\TemplateResolver;
-use ICanBoogie\Render\TemplateResolverDecorator;
-use ICanBoogie\Render\TemplateResolverDecoratorTrait;
 use ICanBoogie\Render\TemplateResolverTrait;
 
 /**
  * Decorates a template resolver and adds support for module defined templates.
  *
- * Templates are inherited between modules.
+ * Templates are inherited from parents.
  */
-final class ModuleTemplateResolver implements TemplateResolverDecorator
+final class ModuleTemplateResolver implements TemplateResolver
 {
     use TemplateResolverTrait;
-    use TemplateResolverDecoratorTrait;
 
-    /**
-     * @var ModuleCollection
-     */
-    private $modules;
-
-    public function __construct(TemplateResolver $template_resolver, ModuleCollection $modules)
-    {
-        $this->template_resolver = $template_resolver;
-        $this->modules = $modules;
+    public function __construct(
+        private readonly TemplateResolver $template_resolver,
+        private readonly Config $config
+    ) {
     }
 
     /**
@@ -49,14 +41,14 @@ final class ModuleTemplateResolver implements TemplateResolverDecorator
             return $template_pathname;
         }
 
-        $modules = $this->modules;
+        $descriptors = $this->config->descriptors;
         $module_id = $this->resolve_module_id($name);
 
-        if (empty($modules[$module_id])) {
+        if (!$module_id || empty($descriptors[$module_id])) {
             return null;
         }
 
-        return $this->resolve_from_module($modules[$module_id], $name, $extensions, $tried);
+        return $this->resolve_from_module($descriptors, $module_id, $name, $extensions, $tried);
     }
 
     /**
@@ -75,22 +67,35 @@ final class ModuleTemplateResolver implements TemplateResolverDecorator
 
     /**
      * Resolves a template from a module and its parents.
+     *
+     * @param array<string, Descriptor> $descriptors
+     * @param string[] $extensions
+     * @param string[] $tried
      */
-    private function resolve_from_module(Module $module, string $name, array $extensions, array &$tried = []): ?string
-    {
+    private function resolve_from_module(
+        array $descriptors,
+        string $module_id,
+        string $name,
+        array $extensions,
+        array &$tried = []
+    ): ?string {
         $paths = [];
-        $name = substr($name, strlen($module->id) + 1);
+        $name = substr($name, strlen($module_id) + 1);
 
-        while ($module) {
-            $paths[] = $module->path . 'templates' . DIRECTORY_SEPARATOR;
+        while ($module_id) {
+            $descriptor = $descriptors[$module_id];
 
-            $module = $module->parent;
+            if (!$descriptor->path) {
+                continue;
+            }
+
+            $paths[] = $descriptor->path . 'templates' . DIRECTORY_SEPARATOR;
+
+            $module_id = $descriptor->parent;
         }
 
-        return $this->resolve_path(
-            $this
-                ->resolve_tries($paths, $name, $extensions),
-            $tried
-        );
+        $tries = $this->resolve_tries($paths, $name, $extensions);
+
+        return $this->resolve_path($tries, $tried);
     }
 }
