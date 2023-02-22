@@ -25,7 +25,6 @@ final class ModuleTemplateResolver implements TemplateResolver
     use TemplateResolverTrait;
 
     public function __construct(
-        private readonly TemplateResolver $template_resolver,
         private readonly Config $config
     ) {
     }
@@ -35,12 +34,6 @@ final class ModuleTemplateResolver implements TemplateResolver
      */
     public function resolve(string $name, array $extensions, array &$tried = []): ?string
     {
-        $template_pathname = $this->template_resolver->resolve($name, $extensions, $tried);
-
-        if ($template_pathname) {
-            return $template_pathname;
-        }
-
         $descriptors = $this->config->descriptors;
         $module_id = $this->resolve_module_id($name);
 

@@ -15,7 +15,7 @@ use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Module\ModuleCollection;
 use ICanBoogie\Module\ModuleInstaller;
 use ICanBoogie\Module\ModuleProvider;
-use ICanBoogie\Module\ModuleTemplateResolver;
+use ICanBoogie\Render\TemplateResolver;
 use PHPUnit\Framework\TestCase;
 
 use function ICanBoogie\app;
@@ -43,7 +43,7 @@ final class ContainerTest extends TestCase
             [ 'test.module_installer', ModuleInstaller::class ],
             [ 'test.module_provider', ModuleProvider::class ],
             [ 'test.modules', ModuleCollection::class ],
-            [ 'test.template_resolver', ModuleTemplateResolver::class ],
+            [ 'test.template_resolver', TemplateResolver::class ],
 
         ];
     }

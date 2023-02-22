@@ -18,5 +18,10 @@ services:
 
   ICanBoogie\Module\ModuleCollection: ~
 
+  # Render
+
+  # The resolver needs to be *after* the basic resolver in the chain,
+  # so that module templates may be overwritten
   ICanBoogie\Module\ModuleTemplateResolver:
-    decorates: ICanBoogie\Render\TemplateResolver\Basic
+    tags:
+    - { name: render.template_resolver, priority: -10 }

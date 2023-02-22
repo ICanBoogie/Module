@@ -15,4 +15,4 @@ services:
     alias: ICanBoogie\Module\ModuleCollection
 
   test.template_resolver:
-    alias: ICanBoogie\Render\TemplateResolver\Basic
+    alias: ICanBoogie\Render\TemplateResolver
