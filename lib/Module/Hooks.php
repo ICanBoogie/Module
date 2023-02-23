@@ -101,22 +101,6 @@ class Hooks
         });
     }
 
-    /**
-     * Clears modules cache.
-     *
-     * @param Application\ClearCacheEvent $event
-     * @param Application $app
-     */
-    static public function on_app_clear_cache(Application\ClearCacheEvent $event, Application $app): void
-    {
-        $vars = $app->vars;
-        $iterator = new RegexIterator($vars->getIterator(), '/^cached_modules_/');
-
-        foreach ($iterator as $key) {
-            $vars->eliminate($key);
-        }
-    }
-
     /*
      * Support
      */
