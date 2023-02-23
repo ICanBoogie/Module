@@ -25,3 +25,13 @@ services:
   ICanBoogie\Module\ModuleTemplateResolver:
     tags:
     - { name: render.template_resolver, priority: -10 }
+
+  # Console
+
+  console.command.modules.list:
+    class: ICanBoogie\Module\Console\ListModulesCommand
+    arguments:
+      $style: '%console.style.table%'
+    tags:
+    - { name: console.command, command: 'modules' }
+    - { name: console.command, command: 'modules:list' }

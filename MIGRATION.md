@@ -10,6 +10,7 @@
 
 - Added a configuration builder for module descriptors.
 - Added `ModuleProvider` interface, implemented by `ModuleProvider\Container`. Modules are now loaded from the dependency-injection container.
+- Added the console command `modules:list` (and alias `modules`).
 
 ### Backward Incompatible Changes
 
