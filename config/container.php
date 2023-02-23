@@ -12,6 +12,5 @@
 use ICanBoogie\Binding\SymfonyDependencyInjection\ConfigBuilder;
 use ICanBoogie\Module\ModuleContainerExtension;
 
-return function (ConfigBuilder $config): void {
-	$config->add_extension(ModuleContainerExtension::class);
-};
+return fn(ConfigBuilder $config) => $config
+    ->add_extension(ModuleContainerExtension::class);
