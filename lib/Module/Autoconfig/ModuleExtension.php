@@ -71,7 +71,7 @@ final class ModuleExtension extends ExtensionAbstract
         foreach ($modules_directories as $pathname) {
             if (is_dir("$pathname/config")) {
                 /** @phpstan-ignore-next-line */
-                $autoconfig[Autoconfig::CONFIG_PATH][] = [
+                $autoconfig[Autoconfig::ARG_CONFIG_PATHS][] = [
 
                     $this->find_shortest_path_code("$pathname/config"),
                     Autoconfig::CONFIG_WEIGHT_MODULE
@@ -81,7 +81,7 @@ final class ModuleExtension extends ExtensionAbstract
 
             if (is_dir("$pathname/locale")) {
                 /** @phpstan-ignore-next-line */
-                $autoconfig[Autoconfig::LOCALE_PATH][] = $this
+                $autoconfig[Autoconfig::ARG_LOCALE_PATHS][] = $this
                     ->find_shortest_path_code("$pathname/locale");
             }
         }
