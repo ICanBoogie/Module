@@ -5,7 +5,6 @@ namespace Test\ICanBoogie\Binding\Module;
 use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Module\Descriptor;
 use PHPUnit\Framework\TestCase;
-
 use Test\ICanBoogie\Module\ModulesTest\ModuleD\Module;
 
 use function array_keys;

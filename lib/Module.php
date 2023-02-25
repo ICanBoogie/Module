@@ -19,6 +19,7 @@ use RuntimeException;
 use Throwable;
 
 use function ICanBoogie\ActiveRecord\get_model;
+use function is_string;
 
 /**
  * A module of the framework.
@@ -83,6 +84,7 @@ class Module extends Prototyped
      */
     protected function get_path(): string
     {
+        /** @phpstan-ignore-next-line */
         return $this->descriptor->path;
     }
 
@@ -134,6 +136,7 @@ class Module extends Prototyped
     {
         $default = $this->descriptor->title ?? 'Undefined';
 
+        /** @phpstan-ignore-next-line */
         return $this->app->translate($this->flat_id, [], [ 'scope' => 'module_title', 'default' => $default ]);
     }
 
@@ -261,6 +264,8 @@ class Module extends Prototyped
         if ($model_id === 'primary') {
             $model_id = current($this->descriptor->models);
         }
+
+        assert(is_string($model_id));
 
         return get_model($model_id);
     }

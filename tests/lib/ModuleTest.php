@@ -29,8 +29,7 @@ final class ModuleTest extends TestCase
             $provider
         );
 
-        $this->content_module = new Module
-        (
+        $this->content_module = new Module(
             new Descriptor(
                 id: 'contents',
                 class: Module::class,
@@ -60,7 +59,7 @@ final class ModuleTest extends TestCase
     /**
      * @return array<array<string>>
      */
-    static public function provide_test_write_readonly_property(): array
+    public static function provide_test_write_readonly_property(): array
     {
         $properties = 'flat_id id parent path title';
 

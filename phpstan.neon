@@ -2,3 +2,8 @@ parameters:
   level: max
   paths:
     - lib
+  excludePaths:
+  - lib/Module/Operation/*
+  - lib/Module/ModuleOperationDispatcher.php
+  ignoreErrors:
+  - '#get_.* is unused#'

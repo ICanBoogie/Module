@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 final class ModuleContainerExtension extends Extension implements ExtensionWithFactory
 {
-    static public function from(Application $app): self
+    public static function from(Application $app): self
     {
         return new self($app);
     }

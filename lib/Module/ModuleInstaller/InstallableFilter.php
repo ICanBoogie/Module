@@ -33,7 +33,7 @@ final class InstallableFilter
     public function __invoke(string $module_id): bool
     {
         $module = $this->provider->module_for_id($module_id);
-        $errors = new ErrorCollection;
+        $errors = new ErrorCollection();
 
         try {
             $is_installed = $module->is_installed($errors);

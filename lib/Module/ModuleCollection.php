@@ -83,8 +83,7 @@ class ModuleCollection implements ArrayAccess, IteratorAggregate
         $descriptors = $this->descriptors;
 
         foreach ($descriptors as $user_id => $descriptor) {
-            if ($descriptor->parent == $module_id
-                || in_array($module_id, $descriptor->required)) {
+            if ($descriptor->parent == $module_id || in_array($module_id, $descriptor->required)) {
                 $users[$user_id] = $descriptor;
             }
         }

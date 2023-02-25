@@ -10,7 +10,7 @@ class ExpiredOperation extends Operation
 {
     protected function validate(ErrorCollection $errors)
     {
-        throw new FormHasExpired;
+        throw new FormHasExpired();
     }
 
     protected function process()
