@@ -13,12 +13,12 @@ namespace ICanBoogie;
 
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\ActiveRecord\ModelNotDefined;
+use ICanBoogie\ActiveRecord\StaticModelProvider;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleProvider;
 use RuntimeException;
 use Throwable;
 
-use function ICanBoogie\ActiveRecord\get_model;
 use function is_string;
 
 /**
@@ -267,7 +267,7 @@ class Module extends Prototyped
 
         assert(is_string($model_id));
 
-        return get_model($model_id);
+        return StaticModelProvider::model_for_record($model_id);
     }
 
     /**

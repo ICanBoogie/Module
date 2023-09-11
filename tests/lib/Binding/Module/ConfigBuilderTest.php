@@ -4,6 +4,7 @@ namespace Test\ICanBoogie\Binding\Module;
 
 use ICanBoogie\Binding\Module\Config;
 use ICanBoogie\Module\Descriptor;
+use modules\a\lib\ArA;
 use PHPUnit\Framework\TestCase;
 use Test\ICanBoogie\Module\ModulesTest\ModuleD\Module;
 
@@ -27,7 +28,7 @@ final class ConfigBuilderTest extends TestCase
             'a' => new Descriptor(
                 id: 'a',
                 class: \Test\ICanBoogie\Module\ModulesTest\ModuleA\Module::class,
-                models: [ 'a' ],
+                models: [ ArA::class ],
                 path: dirname(__DIR__, 3) . '/modules/a/',
             ),
             'sample' => new Descriptor(

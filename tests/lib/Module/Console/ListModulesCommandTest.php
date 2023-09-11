@@ -4,6 +4,7 @@ namespace Test\ICanBoogie\Module\Console;
 
 use ICanBoogie\Console\Test\CommandTestCase;
 use ICanBoogie\Module\Console\ListModulesCommand;
+use modules\a\lib\ArA;
 
 final class ListModulesCommandTest extends CommandTestCase
 {
@@ -19,7 +20,7 @@ final class ListModulesCommandTest extends CommandTestCase
                     'a',
                     '',
                     '',
-                    'a',
+                    ArA::class,
                     'modules/a/'
                 ]
             ],

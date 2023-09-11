@@ -1,13 +1,12 @@
 <?php
 
-use ICanBoogie\ActiveRecord\Schema;
-use ICanBoogie\ActiveRecord\SchemaColumn;
+use ICanBoogie\ActiveRecord\SchemaBuilder;
 use ICanBoogie\Binding\ActiveRecord\ConfigBuilder;
+use modules\a\lib\ArA;
 
 return fn(ConfigBuilder $config) => $config
     ->add_model(
-        id: 'a',
-        schema: new Schema([
-            'id' => SchemaColumn::serial(),
-        ])
+        activerecord_class: ArA::class,
+        schema_builder: fn(SchemaBuilder $builder) => $builder
+            ->add_serial('id', primary: true)
     );

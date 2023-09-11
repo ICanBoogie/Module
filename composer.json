@@ -22,7 +22,10 @@
 		"source": "https://github.com/ICanBoogie/Module"
 	},
 	"config": {
-		"sort-packages": true
+		"sort-packages": true,
+		"allow-plugins": {
+			"olvlvl/composer-attribute-collector": true
+		}
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
