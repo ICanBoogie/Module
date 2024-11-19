@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie\Module;
 
 use ICanBoogie\Module;
@@ -18,7 +9,7 @@ use ICanBoogie\Module;
  *
  * @package ICanBoogie\Module
  */
-final class Descriptor
+final readonly class Descriptor
 {
     /**
      * @param array{
@@ -47,17 +38,17 @@ final class Descriptor
      * @param string[] $required
      *     The modules required by this module.
      * @param string[] $models
-     *     The models associated to this module.
+     *     The models associated with this module.
      * @param ?string $path
      *     Path to the root of the module. Might be useful.
      */
     public function __construct(
-        public readonly string $id,
-        public readonly string $class,
-        public readonly ?string $parent = null,
-        public readonly array $required = [],
-        public readonly array $models = [],
-        public readonly ?string $path = null,
+        public string $id,
+        public string $class,
+        public ?string $parent = null,
+        public array $required = [],
+        public array $models = [],
+        public ?string $path = null,
     ) {
     }
 }

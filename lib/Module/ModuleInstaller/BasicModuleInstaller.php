@@ -7,10 +7,10 @@ use ICanBoogie\Module\ModuleInstaller;
 use ICanBoogie\Module\ModuleProvider;
 use Throwable;
 
-final class BasicModuleInstaller implements ModuleInstaller
+final readonly class BasicModuleInstaller implements ModuleInstaller
 {
     public function __construct(
-        private readonly ModuleProvider $module_provider
+        private ModuleProvider $module_provider
     ) {
     }
 

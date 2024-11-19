@@ -10,18 +10,18 @@ use Traversable;
 use function array_combine;
 use function array_keys;
 
-final class Container implements ModuleProvider
+final readonly class Container implements ModuleProvider
 {
     /**
      * @var string[]
      */
-    private readonly array $ids;
+    private array $ids;
 
     /**
      * @param ServiceProviderInterface<Module> $locator
      */
     public function __construct(
-        private readonly ServiceProviderInterface $locator
+        private ServiceProviderInterface $locator
     ) {
         $keys = array_keys($this->locator->getProvidedServices());
         $this->ids = array_combine($keys, $keys);
@@ -30,7 +30,7 @@ final class Container implements ModuleProvider
     /**
      * @inheritdoc
      */
-    public function module_for_id(string $id, string $class = null): Module
+    public function module_for_id(string $id, ?string $class = null): Module
     {
         $service = $this->locator->get($id);
 

@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie\Module\Operation;
 
 use ICanBoogie\ActiveRecord;
@@ -68,7 +59,7 @@ class SaveOperation extends Operation
      * If the property is not empty in the operation params, the property value is trimmed using the
      * trim() function, ensuring that there is no leading or trailing white spaces.
      *
-     * **Note::** The getter should only be called during the {@link process()} method.
+     * **Note::** The getter should only be called during the {@see process()} method.
      *
      * @return array The properties of the operation.
      */

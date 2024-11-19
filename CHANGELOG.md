@@ -1,10 +1,10 @@
-# Migration
+# CHANGELOG
 
-## v5.x to v6.x
+## v5.x to v6.0
 
 ### New Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 
 ### New features
 
@@ -18,7 +18,7 @@
 - Module descriptors are now instances of `Descriptor` instead of arrays.
 - Renamed `Descriptor::INHERIT` as `Descriptor::$parent`.
 - Removed `Descriptor::NS`.
-- Models are no longer maintained by modules, they need to be defined with `activerecord` config
+- Modules no longer maintain models, they need to be defined with `activerecord` config
   fragments. `Descriptor::$models` now only hold model identifiers.
 - Removed all bindings to `ControllerAbstract` since it doesn't extend `Prototyped` anymore.
 - Removed prototype method `Application::get_modules`.

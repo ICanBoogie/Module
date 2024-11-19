@@ -1,8 +1,7 @@
 # Module
 
-[![Packagist](https://img.shields.io/packagist/v/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Module.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Module)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Module.svg)](https://coveralls.io/r/ICanBoogie/Module)
+[![Release](https://img.shields.io/packagist/v/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
+[![Code Coverage](https://coveralls.io/repos/github/ICanBoogie/Module/badge.svg?branch=6.0)](https://coveralls.io/r/ICanBoogie/Module?branch=6.0)
 [![Downloads](https://img.shields.io/packagist/dt/icanboogie/module.svg)](https://packagist.org/packages/icanboogie/module)
 
 This package provides support for modules to the framework [ICanBoogie](https://icanboogie.org).
@@ -15,7 +14,7 @@ functionality.
 
 #### Installation
 
-```bash
+```shell
 composer require icanboogie/module
 ```
 
@@ -232,28 +231,22 @@ holds the identifier of the module that defines the route.
 
 The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Module/actions).
 
-[![Tests](https://github.com/ICanBoogie/Module/workflows/test/badge.svg?branch=master)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Atest)
-[![Static Analysis](https://github.com/ICanBoogie/Module/workflows/static-analysis/badge.svg?branch=master)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Astatic-analysis)
-[![Code Style](https://github.com/ICanBoogie/Module/workflows/code-style/badge.svg?branch=master)](https://github.com/ICanBoogie/Module/actions?query=workflow%3Acode-style)
+[![Tests](https://github.com/ICanBoogie/Module/actions/workflows/test.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Module/actions/workflows/test.yml)
+[![Static Analysis](https://github.com/ICanBoogie/Module/actions/workflows/static-analysis.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Module/actions/workflows/static-analysis.yml)
+[![Code Style](https://github.com/ICanBoogie/Module/actions/workflows/code-style.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Module/actions/workflows/code-style.yml)
 
 
 
 ## Code of Conduct
 
 This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in
-this project and its community, you are expected to uphold this code.
+this project and its community, you're expected to uphold this code.
 
 
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-
-
-## License
-
-**icanboogie/module** is released under the [BSD-3-Clause](LICENSE).
+See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
 

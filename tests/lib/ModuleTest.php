@@ -8,6 +8,7 @@ use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleProvider;
 use ICanBoogie\PropertyNotWritable;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Test\ICanBoogie\Acme\Article;
 use Test\ICanBoogie\Acme\Node;
@@ -49,9 +50,7 @@ final class ModuleTest extends TestCase
             });
     }
 
-    /**
-     * @dataProvider provide_test_write_readonly_property
-     */
+    #[DataProvider('provide_test_write_readonly_property')]
     public function test_write_readonly_property(string $property): void
     {
         $this->expectException(PropertyNotWritable::class);

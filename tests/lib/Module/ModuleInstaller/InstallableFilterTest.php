@@ -6,17 +6,14 @@ use ICanBoogie\ErrorCollection;
 use ICanBoogie\Module;
 use ICanBoogie\Module\ModuleInstaller\InstallableFilter;
 use ICanBoogie\Module\ModuleProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @small
- * @group install
- */
+#[Group('install')]
 final class InstallableFilterTest extends TestCase
 {
-    /**
-     * @dataProvider provide_test_filter
-     */
+    #[DataProvider('provide_test_filter')]
     public function test_filter(bool $is_installed, bool $has_errors, bool $expected): void
     {
         $module_id = uniqid();
@@ -30,7 +27,7 @@ final class InstallableFilterTest extends TestCase
     /**
      * @return array<array{ bool, bool, bool }>
      */
-    public function provide_test_filter(): array
+    public static function provide_test_filter(): array
     {
         return [
 

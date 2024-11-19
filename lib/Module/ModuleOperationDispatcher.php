@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie\Module;
 
 use ICanBoogie\HTTP\Request;
@@ -48,7 +39,7 @@ final class ModuleOperationDispatcher extends Operation\OperationRouteDispatcher
     /**
      * Resolves module route.
      *
-     * @return Route|null A made up {@link Route} instance or `null` if the route
+     * @return Route|null A made up {@see Route} instance or `null` if the route
      * cannot be resolved.
      */
     private function resolve_module_route(Request $request, string $normalized_path, array &$captured): ?Route

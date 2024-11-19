@@ -63,7 +63,7 @@ final class ConfigBuilder implements Builder
         string $parent = null,
         array $require = [],
         array $models = [],
-        string $path = null
+        string $path = null,
     ): self {
         if (isset($this->descriptors[$id])) {
             throw new LogicException("module '$id' already defined");
@@ -80,7 +80,7 @@ final class ConfigBuilder implements Builder
             parent: $parent,
             required: $require,
             models: $models,
-            path: $path
+            path: $path,
         );
 
         return $this;
@@ -130,7 +130,7 @@ final class ConfigBuilder implements Builder
          */
         $weights = [];
 
-        $compute_weight = static function (string $id) use (&$compute_weight, &$weights, $descriptors) {
+        $compute_weight = static function (string $id) use (&$compute_weight, &$weights, $descriptors): int {
             if (isset($weights[$id])) {
                 return $weights[$id];
             }
@@ -155,7 +155,7 @@ final class ConfigBuilder implements Builder
 
         uksort(
             $this->descriptors,
-            fn(string $id1, string $id2): int => $weights[$id1] <=> $weights[$id2]
+            fn(string $id1, string $id2): int => $weights[$id1] <=> $weights[$id2],
         );
     }
 }

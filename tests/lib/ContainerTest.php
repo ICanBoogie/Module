@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Test\ICanBoogie;
 
 use ICanBoogie\Binding\Module\Config;
@@ -16,6 +7,7 @@ use ICanBoogie\Module\ModuleCollection;
 use ICanBoogie\Module\ModuleInstaller;
 use ICanBoogie\Module\ModuleProvider;
 use ICanBoogie\Render\TemplateResolver;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function ICanBoogie\app;
@@ -24,9 +16,8 @@ final class ContainerTest extends TestCase
 {
     /**
      * @param class-string $class
-     *
-     * @dataProvider provide_service
      */
+    #[DataProvider('provide_service')]
     public function test_service(string $id, string $class): void
     {
         $this->assertInstanceOf($class, app()->service_for_id($id, $class));
@@ -35,7 +26,7 @@ final class ContainerTest extends TestCase
     /**
      * @return array<array{ string, class-string }>
      */
-    public function provide_service(): array
+    public static function provide_service(): array
     {
         return [
 

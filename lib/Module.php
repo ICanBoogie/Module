@@ -1,18 +1,8 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie;
 
 use ICanBoogie\ActiveRecord\Model;
-use ICanBoogie\ActiveRecord\ModelNotDefined;
 use ICanBoogie\ActiveRecord\StaticModelProvider;
 use ICanBoogie\Module\Descriptor;
 use ICanBoogie\Module\ModuleProvider;
@@ -25,10 +15,10 @@ use function is_string;
  * A module of the framework.
  *
  * @property-read string $flat_id Underscored identifier.
- * @property-read string $id The identifier of the module, defined by {@link Descriptor::$id}.
- * @property-read Model $model The primary model of the module.
- * @property-read Module $parent The parent module, defined by {@link Descriptor::$parent}.
- * @property-read string $path The path to the module, defined by {@link Descriptor::$path}.
+ * @property-read string $id The identifier of the module, defined by {@see Descriptor::$id}.
+ * @property-read Model<ActiveRecord> $model The primary model of the module.
+ * @property-read Module $parent The parent module, defined by {@see Descriptor::$parent}.
+ * @property-read string $path The path to the module, defined by {@see Descriptor::$path}.
  * @property-read string $title The localized title of the module.
  * @property-read Application $app
  */
@@ -70,7 +60,7 @@ class Module extends Prototyped
     /**
      * Returns the identifier of the module as defined by its descriptor.
      *
-     * This method is the getter for the {@link $id} magic property.
+     * This method is the getter for the {@see $id} magic property.
      */
     protected function get_id(): string
     {
@@ -80,7 +70,7 @@ class Module extends Prototyped
     /**
      * Returns the path of the module as defined by its descriptor.
      *
-     * This method is the getter for the {@link $path} magic property.
+     * This method is the getter for the {@see $path} magic property.
      */
     protected function get_path(): string
     {
@@ -105,7 +95,7 @@ class Module extends Prototyped
     /**
      * Returns the _flat_ version of the module's identifier.
      *
-     * This method is the getter for the {@link $flat_id} magic property.
+     * This method is the getter for the {@see $flat_id} magic property.
      */
     protected function get_flat_id(): string
     {
@@ -120,9 +110,9 @@ class Module extends Prototyped
     /**
      * Returns the primary model of the module.
      *
-     * This is the getter for the {@link $model} magic property.
+     * This is the getter for the {@see $model} magic property.
      */
-    protected function get_model(): ActiveRecord\Model
+    protected function get_model(): ActiveRecord\Model // @phpstan-ignore-line
     {
         return $this->model();
     }
@@ -134,6 +124,7 @@ class Module extends Prototyped
      */
     protected function get_title(): string
     {
+        // @phpstan-ignore-next-line
         $default = $this->descriptor->title ?? 'Undefined';
 
         /** @phpstan-ignore-next-line */
@@ -256,10 +247,9 @@ class Module extends Prototyped
      *
      * If the model has not been created yet, it is created on the fly.
      *
-     * @throws ModelNotDefined when the model is not defined by the module.
-     * @throws RuntimeException when the class of the model does not exist.
+     * @throws RuntimeException when the class of the model doesn't exist.
      */
-    public function model(string $model_id = 'primary'): Model
+    public function model(string $model_id = 'primary'): Model // @phpstan-ignore-line
     {
         if ($model_id === 'primary') {
             $model_id = current($this->descriptor->models);
@@ -267,7 +257,7 @@ class Module extends Prototyped
 
         assert(is_string($model_id));
 
-        return StaticModelProvider::model_for_record($model_id);
+        return StaticModelProvider::model_for_record($model_id); // @phpstan-ignore-line
     }
 
     /**

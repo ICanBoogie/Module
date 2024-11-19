@@ -3,6 +3,7 @@
 namespace ICanBoogie\Module\Console;
 
 use ICanBoogie\Binding\Module\Config;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,10 +16,9 @@ use function str_starts_with;
 use function strlen;
 use function substr;
 
+#[AsCommand('modules:list', "List modules", [ 'modules' ])]
 final class ListModulesCommand extends Command
 {
-    protected static $defaultDescription = "List modules";
-
     public function __construct(
         private readonly Config $config,
         private readonly string $style,

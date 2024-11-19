@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie\Module\ModuleInstaller;
 
 use ICanBoogie\ErrorCollection;
@@ -20,10 +11,10 @@ use function count;
 /**
  * Filters installable module descriptors.
  */
-final class InstallableFilter
+final readonly class InstallableFilter
 {
     public function __construct(
-        private readonly ModuleProvider $provider
+        private ModuleProvider $provider
     ) {
     }
 

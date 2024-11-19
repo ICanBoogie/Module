@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie\Module;
 
 use ArrayAccess;
@@ -24,17 +15,17 @@ use function substr;
  * @implements ArrayAccess<string, Module>
  * @implements IteratorAggregate<string, (callable(): Module)>
  */
-class ModuleCollection implements ArrayAccess, IteratorAggregate
+readonly class ModuleCollection implements ArrayAccess, IteratorAggregate
 {
     /**
      * @var array<string, Descriptor>
      *     Where _key_ is a module identifier.
      */
-    public readonly array $descriptors;
+    public array $descriptors;
 
     public function __construct(
-        private readonly Config $config,
-        private readonly ModuleProvider $provider
+        private Config $config,
+        private ModuleProvider $provider
     ) {
         $this->descriptors = $this->config->descriptors;
     }

@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the ICanBoogie package.
- *
- * (c) Olivier Laviale <olivier.laviale@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace ICanBoogie\Module\Autoconfig;
 
 use DirectoryIterator;
@@ -91,9 +82,9 @@ final class ModuleExtension extends ExtensionAbstract
     {
         return $this->render_array_entry(
             ModuleAutoconfig::MODULES,
-            $this->modules_directories,
+            $this->modules_directories, // @phpstan-ignore-line
             function ($directory) {
-                return $this->find_shortest_path_code($directory);
+                return $this->find_shortest_path_code($directory); // @phpstan-ignore-line
             }
         );
     }

@@ -3,6 +3,7 @@
 namespace Test\ICanBoogie\Module;
 
 use ICanBoogie\Module\ModuleCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Test\ICanBoogie\Module\ModulesTest\ModuleA;
 use Test\ICanBoogie\Module\ModulesTest\ModuleB;
@@ -22,10 +23,9 @@ final class ModuleCollectionTest extends TestCase
     }
 
     /**
-     * @dataProvider provide_test_resolve_classname
-     *
      * @param class-string|false $expected
      */
+    #[DataProvider('provide_test_resolve_classname')]
     public function test_resolve_classname(string $classname, string $module_id, string|false $expected): void
     {
         $actual = self::$modules->resolve_classname($classname, $module_id);
@@ -36,7 +36,7 @@ final class ModuleCollectionTest extends TestCase
     /**
      * @return array<array{ string, string, class-string|false }>
      */
-    public function provide_test_resolve_classname(): array
+    public static function provide_test_resolve_classname(): array
     {
         return [
 
