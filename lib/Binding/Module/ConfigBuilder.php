@@ -60,10 +60,10 @@ final class ConfigBuilder implements Builder
     public function add_module(
         string $id,
         string $class,
-        string $parent = null,
+        ?string $parent = null,
         array $require = [],
         array $models = [],
-        string $path = null,
+        ?string $path = null,
     ): self {
         if (isset($this->descriptors[$id])) {
             throw new LogicException("module '$id' already defined");
