@@ -33,7 +33,7 @@ final class ModuleContainerExtension extends Extension implements ExtensionWithF
             // descriptor
             $descriptor_id = "module_descriptor.$id";
 
-            $definition = (new Definition(Descriptor::class))
+            $definition = new Definition(Descriptor::class)
                 ->setFactory([ new Reference(Config::class), 'descriptor_for' ])
                 ->setArguments([ $id ])
                 ->addTag('module_descriptor', [ 'id' => $id ]);
@@ -43,7 +43,7 @@ final class ModuleContainerExtension extends Extension implements ExtensionWithF
             // module
             $class = $descriptor->class;
 
-            $definition = (new Definition($class))
+            $definition = new Definition($class)
                 ->setAutowired(true)
                 ->setArgument('$descriptor', new Reference($descriptor_id))
                 ->addTag('module', [ 'id' => $id ]);

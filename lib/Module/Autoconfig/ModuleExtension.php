@@ -20,12 +20,12 @@ final class ModuleExtension extends ExtensionAbstract
     /**
      * Identifier for module packages.
      */
-    public const PACKAGE_TYPE_MODULE = "icanboogie-module";
+    public const string PACKAGE_TYPE_MODULE = "icanboogie-module";
 
     /**
      * composer.json extra property for modules path. (root-only)
      */
-    public const OPTION_MODULES_PATH = 'modules-path';
+    public const string OPTION_MODULES_PATH = 'modules-path';
 
     public function __construct(
         private readonly AutoconfigGenerator $generator

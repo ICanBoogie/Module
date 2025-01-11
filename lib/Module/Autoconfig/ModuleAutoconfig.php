@@ -7,5 +7,5 @@ namespace ICanBoogie\Module\Autoconfig;
  */
 interface ModuleAutoconfig
 {
-    public const MODULES = 'modules';
+    public const string MODULES = 'modules';
 }

@@ -50,25 +50,6 @@ final class ModuleTest extends TestCase
             });
     }
 
-    #[DataProvider('provide_test_write_readonly_property')]
-    public function test_write_readonly_property(string $property): void
-    {
-        $this->expectException(PropertyNotWritable::class);
-        $this->node_module->$property = null;
-    }
-
-    /**
-     * @return array<array<string>>
-     */
-    public static function provide_test_write_readonly_property(): array
-    {
-        $properties = 'flat_id id parent path title';
-
-        return array_map(function ($v) {
-            return (array)$v;
-        }, explode(' ', $properties));
-    }
-
     public function test_get_descriptor(): void
     {
         $this->assertSame($this->node_descriptor, $this->node_module->descriptor);

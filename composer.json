@@ -2,7 +2,7 @@
   "name": "icanboogie/module",
   "type": "library",
   "description": "Provides module support to ICanBoogie.",
-  "version": "6.0",
+  "version": "7.0",
   "keywords": [
     "framework",
     "module"
@@ -34,20 +34,20 @@
     "icanboogie/operation": "^5.0"
   },
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.4",
     "icanboogie/errors": "^6.0",
-    "icanboogie/event": "^6.0",
-    "icanboogie/icanboogie": "^6.0"
+    "icanboogie/event": "^7.0",
+    "icanboogie/icanboogie": "^7.0"
   },
   "require-dev": {
     "composer/composer": "^2.0",
-    "icanboogie/bind-activerecord": "^6.0",
-    "icanboogie/bind-event": "^6.0",
-    "icanboogie/bind-routing": "^6.0",
-    "icanboogie/bind-view": "^6.0",
-    "icanboogie/console": "^6.0",
-    "phpstan/phpstan": "^2.0",
-    "phpunit/phpunit": "^11.4"
+    "icanboogie/bind-activerecord": "^7.0",
+    "icanboogie/bind-event": "^7.0",
+    "icanboogie/bind-routing": "^7.0",
+    "icanboogie/bind-view": "^7.0",
+    "icanboogie/console": "^7.0",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^11.5"
   },
   "suggest": {
     "icanboogie/facets": "In order to provide records fetchers to controllers."

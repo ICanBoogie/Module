@@ -13,16 +13,8 @@ use function is_string;
 
 /**
  * A module of the framework.
- *
- * @property-read string $flat_id Underscored identifier.
- * @property-read string $id The identifier of the module, defined by {@see Descriptor::$id}.
- * @property-read Model<ActiveRecord> $model The primary model of the module.
- * @property-read Module $parent The parent module, defined by {@see Descriptor::$parent}.
- * @property-read string $path The path to the module, defined by {@see Descriptor::$path}.
- * @property-read string $title The localized title of the module.
- * @property-read Application $app
  */
-class Module extends Prototyped
+class Module
 {
     /*
      * PERMISSIONS:
@@ -40,43 +32,38 @@ class Module extends Prototyped
      * ADMINISTER: You have complete control over the module
      *
      */
-    public const PERMISSION_NONE = 0;
-    public const PERMISSION_ACCESS = 1;
-    public const PERMISSION_CREATE = 2;
-    public const PERMISSION_MAINTAIN = 3;
-    public const PERMISSION_MANAGE = 4;
-    public const PERMISSION_ADMINISTER = 5;
+    public const int PERMISSION_NONE = 0;
+    public const int PERMISSION_ACCESS = 1;
+    public const int PERMISSION_CREATE = 2;
+    public const int PERMISSION_MAINTAIN = 3;
+    public const int PERMISSION_MANAGE = 4;
+    public const int PERMISSION_ADMINISTER = 5;
 
     /**
      * Defines the name of the operation used to save the records of the module.
      */
-    public const OPERATION_SAVE = 'save';
+    public const string OPERATION_SAVE = 'save';
 
     /**
      * Defines the name of the operation used to delete the records of the module.
      */
-    public const OPERATION_DELETE = 'delete';
+    public const string OPERATION_DELETE = 'delete';
 
     /**
-     * Returns the identifier of the module as defined by its descriptor.
-     *
-     * This method is the getter for the {@see $id} magic property.
+     * The identifier of the module as defined by its descriptor.
      */
-    protected function get_id(): string
-    {
-        return $this->descriptor->id;
+    public string $id {
+        get => $this->descriptor->id;
     }
 
     /**
-     * Returns the path of the module as defined by its descriptor.
-     *
-     * This method is the getter for the {@see $path} magic property.
+     * The path of the module as defined by its descriptor.
      */
-    protected function get_path(): string
-    {
-        /** @phpstan-ignore-next-line */
-        return $this->descriptor->path;
-    }
+    public string $path
+        {
+            /** @phpstan-ignore-next-line */
+            get => $this->descriptor->path;
+        }
 
     public function __construct(
         public readonly Descriptor $descriptor,
@@ -93,52 +80,33 @@ class Module extends Prototyped
     }
 
     /**
-     * Returns the _flat_ version of the module's identifier.
-     *
-     * This method is the getter for the {@see $flat_id} magic property.
+     * The _flat_ version of the module's identifier.
      */
-    protected function get_flat_id(): string
-    {
-        return strtr($this->id, [
+    public string $flat_id {
+        get => strtr($this->id, [
 
             '.' => '_',
-            '-' => '_'
+            '-' => '_',
 
         ]);
     }
 
     /**
-     * Returns the primary model of the module.
-     *
-     * This is the getter for the {@see $model} magic property.
+     * The primary model of the module.
      */
-    protected function get_model(): ActiveRecord\Model // @phpstan-ignore-line
-    {
-        return $this->model();
+    public ActiveRecord\Model $model {
+        get => $this->model();
     }
 
     /**
-     * Returns the module title, translated to the current language.
-     *
-     * @deprecated
+     * The parent module, if any.
      */
-    protected function get_title(): string
-    {
-        // @phpstan-ignore-next-line
-        $default = $this->descriptor->title ?? 'Undefined';
+    public ?Module $parent {
+        get {
+            $parent = $this->descriptor->parent;
 
-        /** @phpstan-ignore-next-line */
-        return $this->app->translate($this->flat_id, [], [ 'scope' => 'module_title', 'default' => $default ]);
-    }
-
-    /**
-     * Returns the parent module.
-     */
-    protected function get_parent(): ?Module
-    {
-        $parent = $this->descriptor->parent;
-
-        return $parent ? $this->module_provider->module_for_id($parent) : null;
+            return $parent ? $this->module_provider->module_for_id($parent) : null;
+        }
     }
 
     /**
@@ -159,7 +127,7 @@ class Module extends Prototyped
             if (!$this->model($id)->is_installed()) {
                 $errors->add($this->id, "The model %name is not installed.", [
 
-                    'name' => $id
+                    'name' => $id,
 
                 ]);
 
@@ -173,7 +141,7 @@ class Module extends Prototyped
     /**
      * Install the module.
      *
-     * If the module has models they are installed.
+     * If the module has any model, they're installed as well.
      *
      * @return bool|null true if the module has successfully been installed, false if the
      * module (or parts of the module) fails to install or null if the module has
@@ -200,7 +168,7 @@ class Module extends Prototyped
                 $errors->add($this->id, "Unable to install model %model: !message", [
 
                     'model' => $id,
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
 
                 ]);
 
@@ -282,9 +250,9 @@ class Module extends Prototyped
 
                     '%method' => $callback,
                     '%module' => $this->id,
-                    '%type' => $name
+                    '%type' => $name,
 
-                ])
+                ]),
             );
         }
 
